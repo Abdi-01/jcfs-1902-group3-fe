@@ -31,3 +31,31 @@ export const addProductAction = (data) => {
         }
     }
 }
+
+export const updateProductAction = (idproduct,data) => {
+    return async (dispatch) => {
+        try {
+            let res = await axios.patch(`${API_URL}/products/${idproduct}`, data)
+
+            if(res.data.success) {
+                dispatch(getProductAction())
+                return {success: res.data.success}
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+
+export const updateImgProductAction = (idimage,data) => {
+    return async (dispatch) => {
+        try {
+            let res  = await axios.patch(`${API_URL}/products/image/${idimage}`,data)
+            if(res.data.success) {
+                return {success: res.data.success}
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
