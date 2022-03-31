@@ -82,8 +82,7 @@ const ModalAddProduct = (props) => {
     const btSimpan = async () => {
 
         let formData = new FormData()
-        let date = new Date()
-        date = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
         let data = {
             ...product,
             date: date
