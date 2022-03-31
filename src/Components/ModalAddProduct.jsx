@@ -83,7 +83,7 @@ const ModalAddProduct = (props) => {
 
         let formData = new FormData()
         let date = new Date()
-        date = `${date.toLocaleDateString().replaceAll('/', '-')} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        date = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
         let data = {
             ...product,
             date: date
