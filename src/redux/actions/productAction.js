@@ -59,3 +59,16 @@ export const updateImgProductAction = (idimage,data) => {
         }
     }
 }
+
+export const deleteProductAction = (idproduct) => {
+    return async (dispatch) => {
+        try {
+            let res = await axios.delete(`${API_URL}/products/${idproduct}`)
+            if(res.data.success){
+                dispatch(getProductAction())
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
