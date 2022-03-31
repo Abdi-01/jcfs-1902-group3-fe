@@ -6,7 +6,7 @@ export const getProductAction = () => {
     return async (dispatch) => {
         try {
             let res = await axios.get(`${API_URL}/products`)
-
+            console.log('isi data product =>', res.data.dataProduct)
             dispatch({
                 type: 'GET DATA PRODUCT',
                 payload: res.data.dataProduct
