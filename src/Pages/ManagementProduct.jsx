@@ -1,4 +1,4 @@
-import { Box, Button, Heading, Icon, Input, InputGroup, InputRightElement, NumberInput, NumberInputField, NumberInputStepper, Select, Table, TableContainer, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react'
+import { Box, Button, Center, Heading, Icon, Input, InputGroup, InputRightElement, NumberInput, NumberInputField, NumberInputStepper, Select, Table, TableContainer, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import MenuManagement from '../Components/MenuManagement'
 import { MdSearch } from 'react-icons/md'
@@ -6,33 +6,36 @@ import ModalAddProduct from '../Components/ModalAddProduct'
 import { useSelector, useDispatch } from 'react-redux'
 import ModalEditProduct from '../Components/ModalEditProduct'
 import { deleteProductAction } from '../redux/actions'
+import { Pagination } from '@mantine/core'
 
 const ManagementProduct = (props) => {
 
     const [modalOpen, setModalOpen] = useState(false)
     const [modalEditOpen, setModalEditOpen] = useState(false)
     const [detailProduct, setDetailProduct] = useState({})
+    const [page, setPage] = useState(1)
+    const [limitData, setLimitData] = useState(3)
 
     const { dataProduct } = useSelector((state) => {
         return {
             dataProduct: state.productReducer.listProduct
         }
     })
-   
+
     const dispatch = useDispatch()
 
     const printProduct = () => {
         if (dataProduct.length > 0) {
-            return dataProduct.map((item, index) => {
+            return dataProduct.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
                 return (
                     <>
                         <Tr>
-                            <Th textAlign='center'>{index+1}</Th>
+                            <Th textAlign='center'>{page > 1 ? (page - 1) * limitData + index + 1 : index + 1}</Th>
                             <Th textAlign='center'>{item.nama}</Th>
                             <Th textAlign='center'>{item.kategori}</Th>
                             <Th textAlign='center'>Rp.{item.harga.toLocaleString()}</Th>
                             <Th textAlign='center'>
-                                <Button colorScheme='yellow' mx='3' size='sm' onClick={() => handleBtEdit(item,true)}>Edit</Button>
+                                <Button colorScheme='yellow' mx='3' size='sm' onClick={() => handleBtEdit(item, true)}>Edit</Button>
                                 <Button colorScheme='red' size='sm' onClick={() => btDelete(item.idproduct)}>Delete</Button>
                             </Th>
                         </Tr>
@@ -41,7 +44,6 @@ const ManagementProduct = (props) => {
             })
         }
     }
-
     const btDelete = async (idproduct) => {
 
         try {
@@ -50,15 +52,18 @@ const ManagementProduct = (props) => {
             console.log(error)
         }
     }
-
-    const handleBtEdit = (item,open) => {
+    const handleBtEdit = (item, open) => {
         setDetailProduct(item)
         setModalEditOpen(open)
+    }
+    const handleLImitData = (event) => {
+        setLimitData(event.target.value)
+        setPage(1)
     }
 
     return (
         <>
-        {console.log('isi detail', detailProduct)}
+            {console.log('isi detail', detailProduct)}
             <Box mx='60px' my='20px'>
                 <Box display='flex'>
                     <MenuManagement />
@@ -107,6 +112,18 @@ const ManagementProduct = (props) => {
                                         </Tbody>
                                     </Table>
                                 </TableContainer>
+                            </Box>
+                            <Box my='25px' position='absolute' bottom='0' left='45%' p='10'>
+                                <Center>
+                                    <InputGroup>
+                                        <Select w='20' mx='5' onChange={(event) => handleLImitData(event)}>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option selected value="3">3</option>
+                                        </Select>
+                                        <Pagination total={Math.ceil(dataProduct.length / limitData)} page={page} onChange={(event) => setPage(event)} />
+                                    </InputGroup>
+                                </Center>
                             </Box>
                         </Box>
                     </Box>
