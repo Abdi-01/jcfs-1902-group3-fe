@@ -1,7 +1,7 @@
 import { Box, Button, Center, Heading, Icon, Input, InputGroup, InputRightElement, NumberInput, NumberInputField, NumberInputStepper, Select, Table, TableContainer, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import MenuManagement from '../Components/MenuManagement'
-import { MdSearch } from 'react-icons/md'
+import { AiOutlinePlusSquare, AiOutlineEdit, AiOutlineDelete} from 'react-icons/ai'
 import ModalAddProduct from '../Components/ModalAddProduct'
 import { useSelector, useDispatch } from 'react-redux'
 import ModalEditProduct from '../Components/ModalEditProduct'
@@ -35,8 +35,8 @@ const ManagementProduct = (props) => {
                             <Th textAlign='center'>{item.kategori}</Th>
                             <Th textAlign='center'>Rp.{item.harga.toLocaleString()}</Th>
                             <Th textAlign='center'>
-                                <Button colorScheme='yellow' mx='3' size='sm' onClick={() => handleBtEdit(item, true)}>Edit</Button>
-                                <Button colorScheme='red' size='sm' onClick={() => btDelete(item.idproduct)}>Delete</Button>
+                                <Button colorScheme='yellow' mx='3' size='xs' onClick={() => handleBtEdit(item, true)}><Icon as={AiOutlineEdit}  boxSize='20px' color='white' /></Button>
+                                <Button colorScheme='red' size='xs' onClick={() => btDelete(item.idproduct)}><Icon as={AiOutlineDelete}  boxSize='20px'/></Button>
                             </Th>
                         </Tr>
                     </>
@@ -45,7 +45,6 @@ const ManagementProduct = (props) => {
         }
     }
     const btDelete = async (idproduct) => {
-
         try {
             let res = dispatch(deleteProductAction(idproduct))
         } catch (error) {
@@ -91,7 +90,7 @@ const ManagementProduct = (props) => {
                                 </Box>
                             </Box>
                             <Box mt='10vh' display='flex' justifyContent='end'>
-                                <Button colorScheme='green' onClick={() => { setModalOpen(true) }}>Tambah Product</Button>
+                                <Button colorScheme='green' size='xs' fontSize='13px' fontWeight='bold' onClick={() => { setModalOpen(true) }}>Product <Icon as={AiOutlinePlusSquare}  boxSize='20px' ml='5px' /> </Button>
                             </Box>
                             <ModalAddProduct modalOpen={modalOpen} modalClose={() => { setModalOpen(false) }} />
                             <Box>
