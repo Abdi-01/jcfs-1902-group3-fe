@@ -3,8 +3,9 @@ import React, { useState } from 'react'
 import MenuManagement from '../Components/MenuManagement'
 import { MdSearch } from 'react-icons/md'
 import ModalAddProduct from '../Components/ModalAddProduct'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import ModalEditProduct from '../Components/ModalEditProduct'
+import { deleteProductAction } from '../redux/actions'
 
 const ManagementProduct = (props) => {
 
@@ -18,6 +19,7 @@ const ManagementProduct = (props) => {
         }
     })
    
+    const dispatch = useDispatch()
 
     const printProduct = () => {
         if (dataProduct.length > 0) {
@@ -31,12 +33,21 @@ const ManagementProduct = (props) => {
                             <Th textAlign='center'>Rp.{item.harga.toLocaleString()}</Th>
                             <Th textAlign='center'>
                                 <Button colorScheme='yellow' mx='3' size='sm' onClick={() => handleBtEdit(item,true)}>Edit</Button>
-                                <Button colorScheme='red' size='sm'>Delete</Button>
+                                <Button colorScheme='red' size='sm' onClick={() => btDelete(item.idproduct)}>Delete</Button>
                             </Th>
                         </Tr>
                     </>
                 )
             })
+        }
+    }
+
+    const btDelete = async (idproduct) => {
+
+        try {
+            let res = dispatch(deleteProductAction(idproduct))
+        } catch (error) {
+            console.log(error)
         }
     }
 
