@@ -4,15 +4,50 @@ import MenuManagement from '../Components/MenuManagement'
 import { MdSearch } from 'react-icons/md'
 import ModalAddProduct from '../Components/ModalAddProduct'
 import { useSelector } from 'react-redux'
+import ModalEditProduct from '../Components/ModalEditProduct'
 
 const ManagementProduct = (props) => {
 
     const [modalOpen, setModalOpen] = useState(false)
+    const [modalEditOpen, setModalEditOpen] = useState(false)
+    const [detailProduct, setDetailProduct] = useState({})
 
-    
+    const { dataProduct } = useSelector((state) => {
+        return {
+            dataProduct: state.productReducer.listProduct
+        }
+    })
+   
+
+    const printProduct = () => {
+        if (dataProduct.length > 0) {
+            return dataProduct.map((item, index) => {
+                return (
+                    <>
+                        <Tr>
+                            <Th textAlign='center'>{index+1}</Th>
+                            <Th textAlign='center'>{item.nama}</Th>
+                            <Th textAlign='center'>{item.kategori}</Th>
+                            <Th textAlign='center'>Rp.{item.harga.toLocaleString()}</Th>
+                            <Th textAlign='center'>
+                                <Button colorScheme='yellow' mx='3' size='sm' onClick={() => handleBtEdit(item,true)}>Edit</Button>
+                                <Button colorScheme='red' size='sm'>Delete</Button>
+                            </Th>
+                        </Tr>
+                    </>
+                )
+            })
+        }
+    }
+
+    const handleBtEdit = (item,open) => {
+        setDetailProduct(item)
+        setModalEditOpen(open)
+    }
 
     return (
         <>
+        {console.log('isi detail', detailProduct)}
             <Box mx='60px' my='20px'>
                 <Box display='flex'>
                     <MenuManagement />
@@ -56,26 +91,8 @@ const ManagementProduct = (props) => {
                                             </Tr>
                                         </Thead>
                                         <Tbody>
-                                            <Tr>
-                                                <Th textAlign='center'>1</Th>
-                                                <Th textAlign='center'>Buffet 4 laci dan 2 pintu</Th>
-                                                <Th textAlign='center'>Ruang Keluarga</Th>
-                                                <Th textAlign='center'>Rp.13.000.000</Th>
-                                                <Th textAlign='center'>
-                                                    <Button colorScheme='yellow' mx='3' size='sm'>Edit</Button>
-                                                    <Button colorScheme='red' size='sm'>Delete</Button>
-                                                </Th>
-                                            </Tr>
-                                            <Tr>
-                                                <Th textAlign='center'>2</Th>
-                                                <Th textAlign='center'>Buffet 4 laci dan 2 pintu</Th>
-                                                <Th textAlign='center'>Ruang Keluarga</Th>
-                                                <Th textAlign='center'>Rp.13.000.000</Th>
-                                                <Th textAlign='center'>
-                                                    <Button colorScheme='yellow' mx='3' size='sm'>Edit</Button>
-                                                    <Button colorScheme='red' size='sm'>Delete</Button>
-                                                </Th>
-                                            </Tr>
+                                            {printProduct()}
+                                            <ModalEditProduct detailProduct={detailProduct} openEdit={modalEditOpen} closeEdit={() => setModalEditOpen(false)} />
                                         </Tbody>
                                     </Table>
                                 </TableContainer>
