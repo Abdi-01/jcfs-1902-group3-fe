@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Button, Center, Flex, Heading, HStack, Icon, Image, Input, InputGroup, Spacer, Text, Checkbox, Select } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getJenisProductAction, getProductAction } from '../redux/actions'
+import { getJenisProductAction, getProductAction, sortingProductAction } from '../redux/actions'
 import { Link, useLocation } from 'react-router-dom'
 import semuaProduct from '../assets/semua produk.png'
 import { transform } from 'framer-motion'
@@ -14,6 +14,7 @@ const ProductPage = () => {
     const [valueJenis, setValueJenis] = useState('')
     const [valueMaterial, setValueMaterial] = useState('')
     const [valueProduct, setValueProduct] = useState('')
+    const [valueSort, setvalueSort] =useState('')
     const [product, setProduct] = useState([])
     const { dataMaterial } = useSelector((state) => {
         return {
@@ -128,7 +129,17 @@ const ProductPage = () => {
         } catch (error) {
             console.log(error)
         }
-
+    }
+    const handleSort = async (event) => {
+        let temp = event.split('-')
+        try {
+            let res = await dispatch(sortingProductAction(temp[0], temp[1]))
+            if(res.success){
+                setProduct(res.data)
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -176,6 +187,15 @@ const ProductPage = () => {
             </Box>
             <hr></hr>
             <Box marginX={'15vw'} marginY={'5vh'} >
+                <Box w='250px' ml='auto' my='30px'>
+                    <Select placeholder='Sorting berdasarkan' onChange={(event) => handleSort(event.target.value)}>
+                        <option value="harga-asc">Harga Asc</option>
+                        <option value="harga-desc">Harga Desc</option>
+                        <option value="nama-asc">A - Z</option>
+                        <option value="nama-desc">Z - A</option>
+                        <option value="idproduct-asc">Reset</option>
+                    </Select>
+                </Box>
                 <Box display={'flex'} justifyContent='space-between' flexWrap={'wrap'} >
                     {printProduct()}
                 </Box>

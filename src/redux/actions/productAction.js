@@ -94,3 +94,25 @@ export const deleteProductAction = (idproduct) => {
         }
     }
 }
+
+export const sortingProductAction = (sort = null, order = null) => {
+    return async (dispatch) => {
+        try {
+            let res
+            if (sort && order) {
+                res = await axios.get(`${API_URL}/products?sort=${sort}&order=${order}`)
+            } else {
+                res = await axios.get(`${API_URL}/products`)
+            }
+            if (res.data.success) {
+                dispatch({
+                    type: 'GET DATA PRODUCT',
+                    payload: res.data.dataProduct
+                })
+                return { success: res.data.success, data: res.data.dataProduct }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
