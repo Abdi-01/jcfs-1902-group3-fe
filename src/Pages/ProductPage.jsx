@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Box, Button, Center, Flex, Heading, HStack, Icon, Image, Input, InputGroup, Spacer, Text, Checkbox, Select } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getJenisProductAction, getProductAction } from '../redux/actions'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import semuaProduct from '../assets/semua produk.png'
 import { transform } from 'framer-motion'
 
@@ -79,27 +79,37 @@ const ProductPage = () => {
             return product.map((item, index) => {
                 return (
                     <>
-                        <Box maxW={'275px'} mt='3vh' cursor='pointer'>
-                            <Box maxW={'250px'} overflow='hidden' borderRadius='15px' boxShadow='lg' className='item-product'>
-                                <Image src={`http://localhost:2000/${item.images[0].url}`} width='100%' transition='transform 1.2s ease-in-out' _hover={{ transform: "scale(1.1)" }} />
-                                <Box position='absolute' display='none' >
-                                    <Button position='relative' colorScheme='facebook' top='-35px' ml='75px' size='sm'  >Lihat product</Button>
+                        <Link to={`detail/product?idproduct=${item.idproduct}`}  >
+                            <Box maxW={'275px'} mt='3vh' cursor='pointer' color='#6B3C3B' >
+                                <Box display='flex'>
+                                    <Box position='absolute'>
+                                        <Image src={`http://localhost:2000/${item.material[0].url}`} zIndex='1' boxSize='45px' position='relative' top='-5px' left='30px' />
+                                    </Box>
+                                    <Box ml='85px'>
+                                        <Text fontSize='15px' top='-5px' position='relative'>{item.material[0].material}</Text>
+                                    </Box>
+                                </Box>
+                                <Box maxW={'250px'} overflow='hidden' borderRadius='15px' boxShadow='lg' className='item-product'>
+                                    <Image src={`http://localhost:2000/${item.images[0].url}`} width='100%' transition='transform 1.2s ease-in-out' _hover={{ transform: "scale(1.1)" }} />
+                                    <Box position='absolute' display='none' >
+                                        <Button position='relative' colorScheme='facebook' top='-35px' ml='75px' size='sm'  >Lihat product</Button>
+                                    </Box>
+                                </Box>
+                                <Box p='3px'>
+                                    <Center>
+                                        <Box mt='2vh'>
+                                            <Text fontWeight={'bold'} fontSize='18px' color={'grey'}>{item.nama.split(' ')[0]}</Text>
+                                        </Box>
+                                    </Center>
+                                    <Center>
+                                        <Text fontSize='15px'>{item.nama}</Text>
+                                    </Center>
+                                    <Center>
+                                        <Text fontSize='20px' mt='2vh' fontWeight={'bold'}>IDR {item.harga.toLocaleString()}</Text>
+                                    </Center>
                                 </Box>
                             </Box>
-                            <Box p='3px'>
-                                <Center>
-                                    <Box mt='2vh'>
-                                        <Text fontWeight={'bold'} fontSize='18px' color={'grey'}>Circa 17</Text>
-                                    </Box>
-                                </Center>
-                                <Center>
-                                    <Text fontSize='15px'>{item.nama}</Text>
-                                </Center>
-                                <Center>
-                                    <Text fontSize='20px' mt='2vh' fontWeight={'bold'}>IDR {item.harga.toLocaleString()}</Text>
-                                </Center>
-                            </Box>
-                        </Box>
+                        </Link>
                     </>
                 )
             })
