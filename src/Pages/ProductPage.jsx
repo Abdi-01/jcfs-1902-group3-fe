@@ -5,6 +5,7 @@ import { getJenisProductAction, getProductAction, sortingProductAction } from '.
 import { Link, useLocation } from 'react-router-dom'
 import semuaProduct from '../assets/semua produk.png'
 import { transform } from 'framer-motion'
+import { Pagination } from '@mantine/core'
 
 const ProductPage = () => {
 
@@ -14,7 +15,9 @@ const ProductPage = () => {
     const [valueJenis, setValueJenis] = useState('')
     const [valueMaterial, setValueMaterial] = useState('')
     const [valueProduct, setValueProduct] = useState('')
-    const [valueSort, setvalueSort] =useState('')
+    const [valueSort, setvalueSort] = useState('')
+    const [page, setPage] = useState(1)
+    const [limitData, setLimitData] = useState(6)
     const [product, setProduct] = useState([])
     const { dataMaterial } = useSelector((state) => {
         return {
@@ -77,7 +80,7 @@ const ProductPage = () => {
     }
     const printProduct = () => {
         if (product.length > 0) {
-            return product.map((item, index) => {
+            return product.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
                 return (
                     <>
                         <Link to={`detail/product?idproduct=${item.idproduct}`}  >
@@ -134,12 +137,16 @@ const ProductPage = () => {
         let temp = event.split('-')
         try {
             let res = await dispatch(sortingProductAction(temp[0], temp[1]))
-            if(res.success){
+            if (res.success) {
                 setProduct(res.data)
             }
         } catch (error) {
             console.log(error)
         }
+    }
+    const handleLImitData = (event) => {
+        setLimitData(event.target.value)
+        setPage(1)
     }
 
     return (
@@ -198,6 +205,18 @@ const ProductPage = () => {
                 </Box>
                 <Box display={'flex'} justifyContent='space-between' flexWrap={'wrap'} >
                     {printProduct()}
+                </Box>
+                <Box mt='80px' mb='40px'>
+                    <Center>
+                        <InputGroup ml='250'>
+                            <Select w='20' mx='5' onChange={(event) => handleLImitData(event)}>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option selected value="3">3</option>
+                            </Select>
+                            <Pagination total={Math.ceil(product.length / limitData)} page={page} onChange={(event) => setPage(event)} />
+                        </InputGroup>
+                    </Center>
                 </Box>
             </Box>
         </>
