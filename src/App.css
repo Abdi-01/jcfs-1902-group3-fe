@@ -36,3 +36,32 @@
     transform: rotate(360deg);
   }
 }
+
+.checkJenisProduct, .checkMaterial {
+  display: none;
+}
+
+.checkJenisProduct:checked + label > p {
+  font-weight: bolder;
+  font-size: 13px;
+}
+
+.checkMaterial:checked + label  > p {
+  font-weight: bolder;
+}
+
+.item-product:hover > div {
+  display: inline-flex;
+}
+.item-product:hover > div >button {
+  animation: move 1s 1;
+  animation-delay: 0.1;
+}
+@keyframes move {
+  from {transform: scale(0.5);}
+  to{transform: scale(1);}
+}
+.item-product:hover > img {
+  background-color: white;
+  opacity: 0.5;
+}

@@ -6,18 +6,19 @@ export const getJenisProductAction = (idkategori = null) => {
         try {
             let res
             if (idkategori) {
-                 res = await axios.get(`${API_URL}/jenis/products?kategori=${idkategori}`)
-                
+                res = await axios.get(`${API_URL}/jenis/products?kategori=${idkategori}`)
             } else {
-                 res = await axios.get(`${API_URL}/jenis/products`)
+                res = await axios.get(`${API_URL}/jenis/products`)
 
             }
-            dispatch({
-                type: 'GET DATA JENIS PRODUCT',
-                payload: res.data.dataJenisProduct
-            })
+            if (res.data.success) {
+                dispatch({
+                    type: 'GET DATA JENIS PRODUCT',
+                    payload: res.data.dataJenisProduct
+                })
+                return { success: res.data.success, dataJenisProduct: res.data.dataJenisProduct }
+            }
 
-            return {success: res.data.success}
         } catch (error) {
             console.log(error)
         }

@@ -8,6 +8,8 @@ import ManagementProduct from './Pages/ManagementProduct';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction } from './redux/actions';
+import ProductPage from './Pages/ProductPage';
+import Footer from './Components/Footer';
 
 function App() {
 
@@ -25,7 +27,9 @@ function App() {
       <Navbar />
       <Routes>
           <Route path='/management/product' element={<ManagementProduct/>}/>
+          <Route path='/product' element={<ProductPage/>}/>
       </Routes>
+      <Footer/>
     </>
   );
 }
