@@ -208,7 +208,7 @@ const ProductPage = () => {
                 </Box>
                 <Box mt='80px' mb='40px'>
                     <Center>
-                        <InputGroup ml='250'>
+                        <InputGroup ml='330'>
                             <Select w='20' mx='5' onChange={(event) => handleLImitData(event)}>
                                 <option value="1">1</option>
                                 <option value="2">2</option>

@@ -112,7 +112,7 @@ const ManagementProduct = (props) => {
                                     </Table>
                                 </TableContainer>
                             </Box>
-                            <Box my='25px' position='absolute' bottom='2%' left='50%' p='5'>
+                            <Box my='25px' position='absolute' bottom='30%' left='48%' p='5'>
                                 <InputGroup>
                                     <Select w='20' mx='5' onChange={(event) => handleLImitData(event)}>
                                         <option value="1">1</option>
