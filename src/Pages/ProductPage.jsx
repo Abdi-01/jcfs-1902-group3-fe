@@ -41,10 +41,10 @@ const ProductPage = () => {
         if (dataMaterial.length > 0) {
             return dataMaterial.map((item, index) => {
                 return (
-                    <Box onClick={() => setValueMaterial(item.material)}>
+                    <Box onClick={() => setValueMaterial(item.material)} >
                         <input type='radio' className='checkMaterial' name='material' id={item.material} />
-                        <label for={item.material}>
-                            <Center><Image src={`http://localhost:2000/${item.url}`} alt='images' boxSize={'60px'} /></Center>
+                        <label for={item.material} >
+                            <Center><Image src={`http://localhost:2000/${item.url}`} alt='images' boxSize={'60px'}  /></Center>
                             <Text marginTop={'2vh'} >
                                 {item.material}
                             </Text>
@@ -61,7 +61,7 @@ const ProductPage = () => {
                 return (
                     <Box cursor='pointer' onClick={() => setValueJenis(item.jenis_product)} >
                         <input type='radio' className='checkJenisProduct' name='jenis product' id={item.jenis_product} />
-                        <label for={item.jenis_product} >
+                        <label htmlFor={item.jenis_product}>
                             <Center>
                                 <Image src={`http://localhost:2000/${item.url}`} alt='images' boxSize='30px' />
                             </Center>
@@ -86,7 +86,7 @@ const ProductPage = () => {
                                         <Image src={`http://localhost:2000/${item.material[0].url}`} zIndex='1' boxSize='45px' position='relative' top='-5px' left='30px' />
                                     </Box>
                                     <Box ml='85px'>
-                                        <Text fontSize='15px' top='-5px' position='relative'>{item.material[0].material}</Text>
+                                        <Text fontSize='15px' fontWeight='medium' top='-5px' position='relative'>{item.material[0].material}</Text>
                                     </Box>
                                 </Box>
                                 <Box maxW={'250px'} overflow='hidden' borderRadius='15px' boxShadow='lg' className='item-product'>
@@ -102,7 +102,7 @@ const ProductPage = () => {
                                         </Box>
                                     </Center>
                                     <Center>
-                                        <Text fontSize='15px'>{item.nama}</Text>
+                                        <Text fontSize='15px' fontWeight='semibold'>{item.nama}</Text>
                                     </Center>
                                     <Center>
                                         <Text fontSize='20px' mt='2vh' fontWeight={'bold'}>IDR {item.harga.toLocaleString()}</Text>
@@ -139,11 +139,11 @@ const ProductPage = () => {
                 </Box>
                 <Box>
                     <Box>
-                        <Text fontSize={'lg'}>
+                        <Text fontSize={'lg'} fontWeight='semibold'>
                             Pilih Material Kayu
                         </Text>
                     </Box>
-                    <Box marginTop={'5vh'} marginLeft='2vw'>
+                    <Box marginTop={'5vh'} marginLeft='2vw' >
                         <HStack spacing={'50px'}>
                             {printMaterial()}
                         </HStack>
@@ -151,7 +151,7 @@ const ProductPage = () => {
                 </Box>
                 <Box mt='20vh' mb='15vh'>
                     <Box>
-                        <Text fontSize={'lg'}>
+                        <Text fontSize={'lg'} fontWeight='semibold' >
                             Pilih Produk
                         </Text>
                     </Box>

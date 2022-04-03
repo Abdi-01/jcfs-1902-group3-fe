@@ -43,11 +43,13 @@
 
 .checkJenisProduct:checked + label > p {
   font-weight: bolder;
+  color: #6B3C3B;
   font-size: 13px;
 }
 
 .checkMaterial:checked + label  > p {
   font-weight: bolder;
+  color: #6B3C3B;
 }
 
 .item-product:hover > div {
