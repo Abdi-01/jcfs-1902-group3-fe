@@ -14,7 +14,7 @@ const ManagementProduct = (props) => {
     const [modalEditOpen, setModalEditOpen] = useState(false)
     const [detailProduct, setDetailProduct] = useState({})
     const [page, setPage] = useState(1)
-    const [limitData, setLimitData] = useState(3)
+    const [limitData, setLimitData] = useState(5)
 
     const { dataProduct } = useSelector((state) => {
         return {
@@ -70,7 +70,7 @@ const ManagementProduct = (props) => {
                         <Heading as='h3' size='lg'>
                             Management Product
                         </Heading>
-                        <Box w='68vw' h='80vh' my='4vh' p='6' borderRadius='15px' border={'2px solid #F3F4F5'}  >
+                        <Box w='68vw' my='4vh' p='6' borderRadius='15px' border={'2px solid #F3F4F5'}  >
                             <Box display='flex' justifyContent='space-between'>
                                 <Box display='flex'>
                                     <Input placeholder='cari Produk' w='15vw' />
@@ -112,15 +112,19 @@ const ManagementProduct = (props) => {
                                     </Table>
                                 </TableContainer>
                             </Box>
-                            <Box my='25px' position='absolute' bottom='30%' left='48%' p='5'>
-                                <InputGroup>
-                                    <Select w='20' mx='5' onChange={(event) => handleLImitData(event)}>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option selected value="3">3</option>
-                                    </Select>
-                                    <Pagination total={Math.ceil(dataProduct.length / limitData)} page={page} onChange={(event) => setPage(event)} />
-                                </InputGroup>
+                            <Box mt='20px'>
+                                <Center>
+                                    <InputGroup>
+                                        <Select w='20' mx='5' onChange={(event) => handleLImitData(event)}>
+                                            <option selected value="5">5</option>
+                                            <option value="10">10</option>
+                                            <option value="15">15</option>
+                                            <option value="20">20</option>
+                                            <option value="25">25</option>
+                                        </Select>
+                                        <Pagination total={Math.ceil(dataProduct.length / limitData)} boundaries={2} siblings={2} page={page} onChange={(event) => setPage(event)} />
+                                    </InputGroup>
+                                </Center>
                             </Box>
                         </Box>
                     </Box>

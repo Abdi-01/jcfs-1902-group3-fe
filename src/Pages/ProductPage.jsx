@@ -84,7 +84,7 @@ const ProductPage = () => {
                 return (
                     <>
                         <Link to={`detail/product?idproduct=${item.idproduct}`}  >
-                            <Box maxW={'275px'} mt='3vh' cursor='pointer' color='#6B3C3B' >
+                            <Box maxW={'275px'} mt='80px' cursor='pointer' color='#6B3C3B' >
                                 <Box display='flex'>
                                     <Box position='absolute'>
                                         <Image src={`http://localhost:2000/${item.material[0].url}`} zIndex='1' boxSize='45px' position='relative' top='-5px' left='30px' />
@@ -208,13 +208,15 @@ const ProductPage = () => {
                 </Box>
                 <Box mt='80px' mb='40px'>
                     <Center>
-                        <InputGroup ml='330'>
-                            <Select w='20' mx='5' onChange={(event) => handleLImitData(event)}>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option selected value="3">3</option>
+                        <InputGroup>
+                            <Select w='20' mr='5' onChange={(event) => handleLImitData(event)}>
+                                <option selected value="6">6</option>
+                                <option value="9">9</option>
+                                <option value="12">12</option>
+                                <option value="15">15</option>
+                                <option value="18">18</option>
                             </Select>
-                            <Pagination total={Math.ceil(product.length / limitData)} page={page} onChange={(event) => setPage(event)} />
+                            <Pagination total={Math.ceil(product.length / limitData)} page={page} onChange={(event) => setPage(event)} size='lg' radius='xl' color='dark' />
                         </InputGroup>
                     </Center>
                 </Box>
