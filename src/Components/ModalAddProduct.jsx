@@ -93,7 +93,7 @@ const ModalAddProduct = (props) => {
             inputPhoto.forEach((item) => formData.append('images', item.file))
             let res = await dispatch(addProductAction(formData))
             if (res.success) {
-                setOpen(false)
+                props.modalClose()
             }
         } catch (error) {
             console.log(error)
