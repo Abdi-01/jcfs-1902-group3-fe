@@ -83,7 +83,7 @@ const ProductPage = () => {
             return product.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
                 return (
                     <>
-                        <Link to={`detail/product?idproduct=${item.idproduct}`}  >
+                        <Link to={`/detail/product?idproduct=${item.idproduct}`}  >
                             <Box maxW={'275px'} mt='80px' cursor='pointer' color='#6B3C3B' >
                                 <Box display='flex'>
                                     <Box position='absolute'>

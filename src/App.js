@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction } from './redux/actions';
 import ProductPage from './Pages/ProductPage';
 import Footer from './Components/Footer';
+import DetailProduct from './Pages/DetailProduct';
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
       <Routes>
           <Route path='/management/product' element={<ManagementProduct/>}/>
           <Route path='/product' element={<ProductPage/>}/>
+          <Route path='/detail/product' element={<DetailProduct/>}/>
       </Routes>
       <Footer/>
     </>
