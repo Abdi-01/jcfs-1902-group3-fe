@@ -132,8 +132,8 @@ const ModalEditProduct = (props) => {
         let formImage = new FormData()
         try {
             formImage.append('data', JSON.stringify(images[index]))
-            formImage.append('images', temp[0].file)
-            let res = await dispatch(updateImgProductAction(temp[0].idimage, formImage))
+            formImage.append('images', temp[index].file)
+            let res = await dispatch(updateImgProductAction(temp[index].idimage, formImage))
             if (res.success) {
                 dispatch(getProductAction())
                 btKlikCancel()
