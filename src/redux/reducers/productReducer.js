@@ -5,7 +5,7 @@ const INITIAL_STATE = {
 export const productReducer = (state=INITIAL_STATE, action) => {
     switch (action.type) {
         case 'GET DATA PRODUCT':
-            console.log("data dari action payload ==>", action.payload)
+            // console.log("data dari action payload ==>", action.payload)
             return{
                 ...state,
                 listProduct: action.payload
