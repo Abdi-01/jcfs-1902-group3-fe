@@ -7,7 +7,7 @@ import MenuManagement from './Components/MenuManagement';
 import ManagementProduct from './Pages/ManagementProduct';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction } from './redux/actions';
+import { getCartAction, getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction } from './redux/actions';
 import ProductPage from './Pages/ProductPage';
 import Footer from './Components/Footer';
 import DetailProduct from './Pages/DetailProduct';
@@ -21,6 +21,7 @@ function App() {
     dispatch(getMaterialAction())
     dispatch(getJenisProductAction())
     dispatch(getProductAction())
+    dispatch(getCartAction())
   },[])
 
   return (
