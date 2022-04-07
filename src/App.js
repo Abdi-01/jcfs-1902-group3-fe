@@ -11,6 +11,7 @@ import { getCartAction, getJenisProductAction, getKategoriAction, getMaterialAct
 import ProductPage from './Pages/ProductPage';
 import Footer from './Components/Footer';
 import DetailProduct from './Pages/DetailProduct';
+import CheckoutPage from './Pages/CheckoutPage';
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
           <Route path='/management/product' element={<ManagementProduct/>}/>
           <Route path='/product' element={<ProductPage/>}/>
           <Route path='/detail/product' element={<DetailProduct/>}/>
+          <Route path='/product/checkout' element={<CheckoutPage/>}/>
       </Routes>
       <Footer/>
     </>
