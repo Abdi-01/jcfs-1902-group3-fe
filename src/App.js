@@ -7,7 +7,7 @@ import MenuManagement from './Components/MenuManagement';
 import ManagementProduct from './Pages/ManagementProduct';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction, keepLoginAction } from './redux/actions';
+import { getCartAction, getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction, keepLoginAction } from './redux/actions';
 import LandingPage from './Pages/LandingPage';
 import LoginPage from './Pages/LoginPage';
 import RegisterPage from './Pages/RegisterPage';
@@ -30,7 +30,8 @@ function App() {
     dispatch(getMaterialAction())
     dispatch(getJenisProductAction())
     dispatch(getProductAction())
-  }, [])
+    dispatch(getCartAction())
+  },[])
 
   return (
     <>

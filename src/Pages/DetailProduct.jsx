@@ -3,9 +3,12 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { API_URL } from '../helper'
-import { getProductAction } from '../redux/actions'
+import { getProductAction, getStock } from '../redux/actions'
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { FiEdit2 } from 'react-icons/fi'
+import { useLocation } from 'react-router-dom'
+import { addCartAction } from '../redux/actions/transactionAction'
+import DrawerCart from '../Components/DrawerCart'
 
 const DetailProduct = () => {
 
@@ -14,7 +17,11 @@ const DetailProduct = () => {
     const [jumlah, setJumlah] = useState(1)
     const [btDisplay, setBtDisplay] = useState('none')
     const [inputCatatan, setInputCatatan] = useState('Tambah Catatan')
-    let { nama, harga, material, stock, deskripsi, kategori, images } = detailProduct
+    const [catatan, setCatatan] = useState('')
+    let getTotalStock = useLocation()
+    let { idproduct ,nama, harga, material, stock, deskripsi, kategori, images } = detailProduct
+    const [totalStock, setTotalStock] = useState({})
+    const [openCart,setOpenCart] = useState(false)
     let dispatch = useDispatch()
 
     useEffect(() => {
@@ -22,9 +29,11 @@ const DetailProduct = () => {
     }, [])
     const getData = async () => {
         try {
-            let res = await axios.get(`${API_URL}/products${window.location.search}`)
-            if (res.data.success) {
-                setDetailProduct(res.data.dataProduct[0])
+            let res = await dispatch(getStock(getTotalStock.state.nama))
+            let respon = await axios.get(`${API_URL}/products${getTotalStock.search}`)
+            if (res.success) {
+                setTotalStock(res.data)
+                setDetailProduct(respon.data.dataProduct[0])
             }
         } catch (error) {
             console.log(error)
@@ -50,21 +59,41 @@ const DetailProduct = () => {
         }
     }
     const btIncrement = () => {
-        if( jumlah < stock[0].qty) {
+        if (jumlah < totalStock[0].stok) {
             setJumlah(jumlah + 1)
         }
     }
     const btDecrement = () => {
-        if( jumlah > 1) {
+        if (jumlah > 1) {
             setJumlah(jumlah - 1)
+        }
+    }
+    const btKeranjang = async () => {
+        try {
+            let temp = {
+               idproduct,
+               idstock: stock[0].idstock,
+               qty: Number(jumlah),
+               catatan
+            }
+
+            console.log('isi cart', temp)
+
+            let res = await dispatch(addCartAction(temp))
+            if(res.success){
+                setOpenCart(!openCart)
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
 
     return (
         <>
-            <Box marginX={'10vw'} marginY={'10vh'}>
+        {/* {console.log(getTotalStock)} */}
+            <Box marginX={'8vw'} marginY={'10vh'}>
                 {
-                    detailProduct && material && images && stock &&
+                    detailProduct && material && images && totalStock[0] &&
                     <>
                         <Box mt='20px' display='flex'>
                             <Box>
@@ -117,15 +146,15 @@ const DetailProduct = () => {
                                 <Box mt='20px'>
                                     <Box display='flex'>
                                         <InputGroup w='100px'>
-                                            <InputLeftElement children={<Icon as={AiOutlineMinus} />} cursor='pointer' onClick={btDecrement}/>
+                                            <InputLeftElement children={<Icon as={AiOutlineMinus} />} cursor='pointer' onClick={btDecrement} />
                                             <Input value={jumlah} />
                                             <InputRightElement children={<Icon as={AiOutlinePlus} />} cursor='pointer' onClick={btIncrement} />
                                         </InputGroup>
-                                        <Center><Text ml='10px'>Stock : {stock[0].qty}</Text></Center>
+                                        <Center><Text ml='10px'>Stock : {totalStock[0].stok}</Text></Center>
                                     </Box>
                                 </Box>
                                 <Box mt='15px'>
-                                    <Input placeholder='tulis catatan' display={btDisplay} />
+                                    <Input placeholder='tulis catatan' display={btDisplay} onChange={(event) => setCatatan(event.target.value)} />
                                     <Heading as='h5' mt='10px' size='sm' onClick={btCatatan} cursor='pointer' color='#6B3C3B'>
                                         <Icon as={FiEdit2} /> {inputCatatan}
                                     </Heading>
@@ -135,7 +164,8 @@ const DetailProduct = () => {
                                     <Text fontWeight='semibold'>Rp.{(jumlah * harga).toLocaleString()}</Text>
                                 </Box>
                                 <Box mt='20px'>
-                                    <Button colorScheme='blackAlpha' w='100%' bgColor='#6B3C3B' ><Icon as={AiOutlinePlus} mr='10px' /> Keranjang</Button>
+                                    <Button colorScheme='blackAlpha' w='100%' bgColor='#6B3C3B' onClick={btKeranjang} ><Icon as={AiOutlinePlus} mr='10px'  /> Keranjang</Button>
+                                    <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)}/>
                                 </Box>
                             </Box>
                         </Box>

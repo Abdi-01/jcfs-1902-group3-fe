@@ -1,13 +1,20 @@
-import React from 'react'
-import { Box, Button, Center, Flex, Heading, HStack, Icon, Image, Input, InputGroup, Spacer, Text } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
+import { Badge, Box, Button, Center, Flex, Heading, HStack, Icon, Image, Input, InputGroup, Spacer, Text } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { BsCart3, BsPerson } from 'react-icons/bs'
+import logoWeb from '../assets/web-icon.png'
+import DrawerCart from './DrawerCart'
 const Navbar = () => {
-    const { dataKategori } = useSelector((state) => {
+
+    const [openCart, setOpenCart] = useState(false)
+    const { dataKategori, carts } = useSelector((state) => {
         return {
-            dataKategori: state.kategoriReducer.listKategori
+            dataKategori: state.kategoriReducer.listKategori,
+            carts: state.transactionReducer.carts
         }
     })
+
     const printKategori = () => {
         if (dataKategori.length > 0) {
             return dataKategori.map((item, index) => {
@@ -20,6 +27,15 @@ const Navbar = () => {
                 )
             })
         }
+    }
+    const setTotalCart = () => {
+        let total = 0
+        if (carts.length > 0) {
+            carts.forEach((item, index) => {
+                total = total + item.qty
+            })
+        }
+        return total
     }
     return (
         <>
