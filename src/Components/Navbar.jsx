@@ -1,49 +1,123 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Button, Center, Flex, Heading, HStack, Icon, Image, Input, InputGroup, Spacer, Text } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { BsCart3, BsPerson } from 'react-icons/bs'
+import logoWeb from '../assets/woodavenue.jpeg'
+import DrawerCart from './DrawerCart'
+import DrawerUser from './DrawerUser'
+
 const Navbar = () => {
-    // const { dataKategori } = useSelector((state) => {
-    //     return {
-    //         dataKategori: state.kategoriReducer.listKategori
-    //     }
-    // })
-    // const printKategori = () => {
-    //     if (dataKategori.length > 0) {
-    //         return dataKategori.map((item, index) => {
-    //             return (
-    //                 <Link to={`/product?kategori=${item.idkategori}`} state={dataKategori[index]}>
-    //                     <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
-    //                         {item.kategori}
-    //                     </Text>
-    //                 </Link>
-    //             )
-    //         })
-    //     }
-    // }
+    
+    const [openCart,setOpenCart] = useState(false)
+    const [openUser,setOpenUser] = useState(false)
+    const { dataKategori } = useSelector((state) => {
+        return {
+            dataKategori: state.kategoriReducer.listKategori
+        }
+    })
+    const printKategori = () => {
+        if (dataKategori.length > 0) {
+            return dataKategori.map((item, index) => {
+                return (
+                    <Link to={`/product?kategori=${item.idkategori}`} state={dataKategori[index]}>
+                        <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
+                            {item.kategori}
+                        </Text>
+                    </Link>
+                )
+            })
+        }
+    }
     return (
         <>
-            <Box bg={'white'} height='10vh' boxShadow='md'>
-                <Center>
-                    <HStack spacing={'50px'} margin='2vw' height='2vh' color={'white'}>
-                        {/* {printKategori()} */}
-                        <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
-                            Ruang Keluarga
+            <Box bg={'white'} boxShadow='md' mb='5px' height='10vh' position='sticky'>
+                <Box mx='90px' display='flex'>
+                    <Center>
+                        <Box position='absolute'>
+                            <Image src={logoWeb} w='200px' position='relative' left='55px' />
+                        </Box>
+                    </Center>
+                    <Center ml='45vh'>
+                        <HStack spacing={'80px'} margin='2vw' height='2vh' color={'white'}>
+                            {/* {printKategori()} */}
+                            <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
+                             Ruang Keluarga
+                         </Text>
+                         <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
+                             Kamar Mandi
                         </Text>
-                        <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
-                            Kamar Mandi
-                        </Text>
-                        <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
-                            Kamar Tidur
-                        </Text>
-                    </HStack>
-                </Center>
+                         <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
+                           Kamar Tidur
+                         </Text>
+                        </HStack>
+                    </Center>
+                    <Center ml='25vh'>
+                        <Box display='flex'>
+                            <Box mr='20px'>
+                                <Icon as={BsCart3} boxSize='20px' cursor='pointer' onClick={() => setOpenCart(!openCart)}/>
+                                <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)} />
+                            </Box>
+                            <Box>
+                            <Icon as={BsPerson} boxSize='20px' cursor='pointer' onClick={() => setOpenUser(!openUser)}/>
+                            <DrawerUser openUser={openUser} closeUser={() => setOpenUser(!openUser)} />
+                            </Box>
+                        </Box>
+                    </Center>
+                </Box>
             </Box>
         </>
     )
 }
 
 export default Navbar
+
+// import React from 'react'
+// import { Box, Button, Center, Flex, Heading, HStack, Icon, Image, Input, InputGroup, Spacer, Text } from '@chakra-ui/react'
+// import { Link } from 'react-router-dom'
+// import { useDispatch, useSelector } from 'react-redux'
+// const Navbar = () => {
+//     const { dataKategori } = useSelector((state) => {
+//         return {
+//             dataKategori: state.kategoriReducer.listKategori
+//         }
+//     })
+//     const printKategori = () => {
+//         if (dataKategori.length > 0) {
+//             return dataKategori.map((item, index) => {
+//                 return (
+//                     <Link to={`/product?kategori=${item.idkategori}`} state={dataKategori[index]}>
+//                         <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
+//                             {item.kategori}
+//                         </Text>
+//                     </Link>
+//                 )
+//             })
+//         }
+//     }
+//     return (
+//         <>
+//             <Box bg={'white'} height='10vh' boxShadow='md'>
+//                 <Center>
+//                     <HStack spacing={'50px'} margin='2vw' height='2vh' color={'white'}>
+//                         {/* {printKategori()} */}
+//                         <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
+//                             Ruang Keluarga
+//                         </Text>
+//                         <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
+//                             Kamar Mandi
+//                         </Text>
+//                         <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
+//                             Kamar Tidur
+//                         </Text>
+//                     </HStack>
+//                 </Center>
+//             </Box>
+//         </>
+//     )
+// }
+
+// export default Navbar
 
 // import React from 'react';
 // import { Link } from "react-router-dom";

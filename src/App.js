@@ -20,7 +20,7 @@ class App extends React.Component {
   state = {}
 
   componentDidMount() {
-    this.props.keepLoginAction()
+    this.props.keepLoginAction()    
   }
 
   // keepLogin = async () => {
