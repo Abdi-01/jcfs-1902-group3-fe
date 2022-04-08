@@ -32,4 +32,31 @@ export const getCartAction = () => {
             console.log(error)
         }
     }
+
+}
+export const updateQtyCartAction = (idcart,data) => {
+    return async (dispatch) => {
+        try {
+            let res = await axios.patch(`${API_URL}/transactions/carts/${idcart}`, data)
+            if(res.data.success){
+                dispatch(getCartAction())
+                return {success: res.data.success}
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+export const deleteCartAction = (idcart) => {
+    return async (dispatch) => {
+        try {
+            let res = await axios.delete(`${API_URL}/transactions/carts/${idcart}`)
+            if(res.data.success){
+                dispatch(getCartAction())
+                return {success: res.data.success}
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }

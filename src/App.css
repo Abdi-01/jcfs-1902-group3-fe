@@ -75,3 +75,34 @@
   background-image: linear-gradient(45deg, #91dada 0%, #af9ea4 100%);
   box-shadow: 10px 10px 8px #319795;
 }
+
+.checkJenisProduct, .checkMaterial {
+  display: none;
+}
+
+.checkJenisProduct:checked + label > p {
+  font-weight: bolder;
+  color: #6B3C3B;
+  font-size: 13px;
+}
+
+.checkMaterial:checked + label  > p {
+  font-weight: bolder;
+  color: #6B3C3B;
+}
+
+.item-product:hover > div {
+  display: inline-flex;
+}
+.item-product:hover > div >button {
+  animation: move 1s 1;
+  animation-delay: 0.1;
+}
+@keyframes move {
+  from {transform: scale(0.5);}
+  to{transform: scale(1);}
+}
+.item-product:hover > img {
+  background-color: white;
+  opacity: 0.8;
+}

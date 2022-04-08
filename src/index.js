@@ -3,22 +3,22 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from 'react-router-dom';
-import { applyMiddleware, createStore } from 'redux';
-import ReduxThunk from 'redux-thunk'
-import { rootReducers } from './redux/reducers';
-import { Provider } from 'react-redux';
+import { BrowserRouter } from "react-router-dom";
+import { ChakraProvider } from '@chakra-ui/react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { ChakraProvider } from '@chakra-ui/react'
+import { Provider } from 'react-redux';
+import { applyMiddleware, createStore } from 'redux';
+import { rootReducers } from './redux/reducers'
+import thunk from 'redux-thunk';
 
-const globalStore = createStore(rootReducers, {}, applyMiddleware(ReduxThunk));
+const globalStore = createStore(rootReducers, {}, applyMiddleware(thunk))
 ReactDOM.render(
   <Provider store={globalStore}>
-    <ChakraProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <ChakraProvider>
         <App />
-      </BrowserRouter>
-    </ChakraProvider>
+      </ChakraProvider>
+    </BrowserRouter>
   </Provider>,
   document.getElementById('root')
 );

@@ -1,6 +1,7 @@
-import { Box, Button, Center, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Image, Text } from '@chakra-ui/react'
+import { Box, Button, Center, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Heading, Image, Text } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link, useLocation } from 'react-router-dom'
 import { API_URL } from '../helper'
 import { getCartAction } from '../redux/actions'
 
@@ -26,7 +27,7 @@ const DrawerCart = (props) => {
     const printListProduct = () => {
         if (carts.length > 0) {
             return carts.map((item, index) => {
-                let namaProduct = item.products[0].nama.substr(0, 30)
+                let namaProduct = item.products[0].nama.substr(0, 25)
                 return (
                     <>
                         <Box mt='25px' display='flex'>
@@ -36,7 +37,7 @@ const DrawerCart = (props) => {
                             <Center>
                                 <Box>
                                     <Box>
-                                        <Text fontWeight='semibold'>{namaProduct.length > 30 ? `${namaProduct}...` : namaProduct}</Text>
+                                        <Text fontWeight='semibold'>{namaProduct.length > 18 ? `${namaProduct}. . .` : namaProduct}</Text>
                                     </Box>
                                     <Box mt='10px'>
                                         <Box display='flex'>
@@ -50,6 +51,16 @@ const DrawerCart = (props) => {
                     </>
                 )
             })
+        } else {
+            return (
+                <>
+                    <Box mt='30px'>
+                        <Center>
+                            <Heading as='h3' size='md'>Belum ada produk dikeranjang</Heading>
+                        </Center>
+                    </Box>
+                </>
+            )
         }
     }
 
@@ -67,7 +78,12 @@ const DrawerCart = (props) => {
                         {printListProduct()}
                     </DrawerBody>
                     <DrawerFooter>
-                        <Button colorScheme='blackAlpha' bgColor='#6B3C3B'>Proses Pesanan</Button>
+                        {
+                            carts.length > 0 &&
+                            <Link to='/product/checkout'>
+                                <Button colorScheme='blackAlpha' bgColor='#6B3C3B' onClick={() => props.closeCart()}>Proses Pesanan</Button>
+                            </Link>
+                        }
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
