@@ -26,8 +26,7 @@ class ModalAddAddress extends React.Component {
             })
     }
 
-    render() {
-        console.log("cek nama penerima", this.props.addressList[0].nama_penerima)
+    render() {        
         return (
             <div>                
                 <Modal
