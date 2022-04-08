@@ -126,3 +126,22 @@ export const newPassword = (password) => {
         }
     }
 }
+
+export const getAddress = () => {
+    return async (dispatch) => {
+        try {
+            let token = localStorage.getItem('data')
+            let res = await axios.get(`${API_URL}/users/getaddress`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            dispatch({
+                type: "GET_ADDRESS",
+                payload: res.data.address
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}

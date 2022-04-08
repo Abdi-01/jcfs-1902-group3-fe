@@ -32,6 +32,7 @@ export const getCartAction = () => {
             console.log(error)
         }
     }
+
 }
 export const updateQtyCartAction = (idcart,data) => {
     return async (dispatch) => {

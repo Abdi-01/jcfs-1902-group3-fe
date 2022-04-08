@@ -5,9 +5,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { BsCart3, BsPerson } from 'react-icons/bs'
 import logoWeb from '../assets/web-icon.png'
 import DrawerCart from './DrawerCart'
+import DrawerUser from './DrawerUser'
+  
 const Navbar = () => {
 
     const [openCart, setOpenCart] = useState(false)
+    const [openUser,setOpenUser] = useState(false)
     const { dataKategori, carts } = useSelector((state) => {
         return {
             dataKategori: state.kategoriReducer.listKategori,
@@ -59,7 +62,8 @@ const Navbar = () => {
                                 <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)} />
                             </Box>
                             <Box>
-                                <Icon as={BsPerson} boxSize='22px' cursor='pointer' />
+                            <Icon as={BsPerson} boxSize='20px' cursor='pointer' onClick={() => setOpenUser(!openUser)}/>
+                            <DrawerUser openUser={openUser} closeUser={() => setOpenUser(!openUser)} />
                             </Box>
                         </Box>
                     </Center>
@@ -70,6 +74,53 @@ const Navbar = () => {
 }
 
 export default Navbar
+
+// import React from 'react'
+// import { Box, Button, Center, Flex, Heading, HStack, Icon, Image, Input, InputGroup, Spacer, Text } from '@chakra-ui/react'
+// import { Link } from 'react-router-dom'
+// import { useDispatch, useSelector } from 'react-redux'
+// const Navbar = () => {
+//     const { dataKategori } = useSelector((state) => {
+//         return {
+//             dataKategori: state.kategoriReducer.listKategori
+//         }
+//     })
+//     const printKategori = () => {
+//         if (dataKategori.length > 0) {
+//             return dataKategori.map((item, index) => {
+//                 return (
+//                     <Link to={`/product?kategori=${item.idkategori}`} state={dataKategori[index]}>
+//                         <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
+//                             {item.kategori}
+//                         </Text>
+//                     </Link>
+//                 )
+//             })
+//         }
+//     }
+//     return (
+//         <>
+//             <Box bg={'white'} height='10vh' boxShadow='md'>
+//                 <Center>
+//                     <HStack spacing={'50px'} margin='2vw' height='2vh' color={'white'}>
+//                         {/* {printKategori()} */}
+//                         <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
+//                             Ruang Keluarga
+//                         </Text>
+//                         <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
+//                             Kamar Mandi
+//                         </Text>
+//                         <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
+//                             Kamar Tidur
+//                         </Text>
+//                     </HStack>
+//                 </Center>
+//             </Box>
+//         </>
+//     )
+// }
+
+// export default Navbar
 
 // import React from 'react';
 // import { Link } from "react-router-dom";

@@ -19,6 +19,7 @@ class ModalChangePassword extends React.Component {
                 alert("Kami sudah mengirimkan link melalui email, silahkan periksa email anda")
             }).catch(err => {
                 console.log(err)
+                alert('email belum terdaftar')
             })
     }
 
@@ -44,7 +45,7 @@ class ModalChangePassword extends React.Component {
                                 <MdEmail />
                             </InputGroupText>
                             <Input style={{ marginTop: 50, borderTopRightRadius: 10, borderBottomRightRadius: 10 }} innerRef={(element) => this.emailConfirmation = element} />
-                        </InputGroup>                                                    
+                        </InputGroup>
                         <div>
                             <Button className='' style={{ borderRadius: 10, marginTop: 30, width: "100%" }} onClick={this.sendForgotPassword}>Send</Button>
                         </div>

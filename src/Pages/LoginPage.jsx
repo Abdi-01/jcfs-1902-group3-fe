@@ -108,7 +108,7 @@ class LoginPage extends React.Component {
 
 const mapToProps = (state) => {
     return {
-        iduser: state.userReducer.id,
+        iduser: state.userReducer.iduser,
         email: state.userReducer.email,
         username: state.userReducer.username
     }

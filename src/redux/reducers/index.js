@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import { kategoriReducer } from "./kategoriReducer";
 import { userReducer } from "./userReducer";
 import {kategoriReducer} from './kategoriReducer'
 import {materialReducer} from './materialReducer'

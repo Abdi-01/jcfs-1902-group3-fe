@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Button } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Button, Heading, Stack, Text } from '@chakra-ui/react'
 import { Card, CardBody, CardImg, CardLink, CardSubtitle, CardText, CardTitle, FormGroup, FormText, Input, Label, Row } from 'reactstrap';
 import { connect } from 'react-redux';
 import { BiUser } from 'react-icons/bi';
@@ -10,6 +10,9 @@ import { API_URL } from '../helper';
 import axios from 'axios';
 import ModalChangePassword from '../Components/ModalChangePassword';
 import ModalChangePhone from '../Components/ModalChangePhone';
+import { getAddress, onLogin } from '../redux/actions';
+import ModalAddAddress from '../Components/ModalAddAddress';
+
 
 class ProfilePage extends React.Component {
     constructor(props) {
@@ -21,6 +24,11 @@ class ProfilePage extends React.Component {
         modalOpenGender: false,
         modalOpenPassword: false,
         modalOpenPhone: false,
+        openModalAddAddress: false,
+    }
+
+    componentDidMount() {
+        this.props.getAddress()
     }
 
     onBtUbah = () => {
@@ -41,6 +49,78 @@ class ProfilePage extends React.Component {
             }).catch((err) => {
                 console.log(err)
             })
+    }
+
+    onBtPilih = (idaddress) => {
+        let valueAddress = {
+            idaddress: idaddress
+        }
+        let token = localStorage.getItem("data");
+        axios.patch(`${API_URL}/users/chooseaddress`, valueAddress, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(async (res) => {
+            await alert("Berhasil Pilih Alamat")
+            window.location.reload()
+            this.printAddressList();
+            this.props.getAddress();
+        }).catch((err) => {
+            console.log(err)
+        })
+
+    }
+
+    onBtRemove = (idaddress) => {
+        let token = localStorage.getItem("data");
+        axios.delete(`${API_URL}/users/deleteaddress/${idaddress}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then((res) => {
+            alert("Berhasil Hapus Alamat")
+            this.props.getAddress();
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+
+    printAddressList = () => {
+        return this.props.addressList.map((value, index) => {
+            // console.log("cek value address", value.idaddress)
+            // console.log("cek props address", this.props.idaddress)
+            return (
+                <Box>
+                    {
+                        value.idaddress === this.props.idaddress
+                            ?
+                            <Box style={{ borderRadius: 9, border: "10px solid", borderColor: "blue", backgroundColor: "#fde7b7" }}>
+                                <Box className='row'>
+                                    <Box className='col-10'>
+                                        <p>{value.alamat}</p>
+                                    </Box>
+                                </Box>
+                            </Box>
+                            :
+                            <Box style={{ borderRadius: 9, border: "1px solid" }}>
+                                <Box className='row'>
+                                    <Box className='col-10'>
+                                        <h4>{value.alamat}</h4>
+                                        {/* <Stack spacing={'4'}>
+                                        <Heading fontSize={'xl'}>{value.nama_penerima}</Heading>
+                                        <Text>{value.alamat}</Text>
+                                        <Button onClick={() => this.onBtRemove(value.idaddress)} className='bt-blue' style={{ borderRadius: 10 }}>Hapus</Button>
+                                    </Stack> */}
+                                    </Box>
+                                    <Box className='col-2' style={{ display: "flex", justifyContent: "space-around" }}>
+                                        <Button onClick={() => this.onBtPilih(value.idaddress)} className='bt-orange' style={{ borderRadius: 10 }}>Pilih</Button>
+                                    </Box>
+                                </Box>
+                            </Box>
+                    }
+                </Box>
+            )
+        })
     }
 
     render() {
@@ -66,16 +146,20 @@ class ProfilePage extends React.Component {
                     modalOpenPhone={this.state.modalOpenPhone}
                     btClose={() => this.setState({ modalOpenPhone: !this.state.modalOpenPhone })}
                 />
-                <Box className='container' style={{ padding: 50 }}>
+                <ModalAddAddress
+                    openModalAddAddress={this.state.openModalAddAddress}
+                    btClose={() => this.setState({ openModalAddAddress: !this.state.openModalAddAddress })}
+                />
+                <Box className='container' style={{}}>
                     <Box className='row' paddingTop={5} paddingBottom={5}>
-                        <Box className='col-2'>
+                        {/* <Box className='col-2'>
                             <Box style={{}}>
 
                             </Box>
-                        </Box>
-                        <Box className='col-8'>
+                        </Box> */}
+                        <Box className='col-8' style={{ margin: "auto" }}>
                             <Box className='d-flex' paddingBottom={2}>
-                                <BiUser style={{ marginTop: 5, marginRight: 10 }} /><p style={{ fontSize: "16px", fontWeight: 600, color: "gray" }}>{this.props.nama}</p>
+                                <BiUser style={{ marginTop: 5, marginRight: 10 }} /><p style={{ fontSize: "16px", fontWeight: 600, color: "gray" }}>{this.props.username}</p>
                             </Box>
                             <Box boxShadow={"sm"} style={{ height: '67vh', background: "white", border: "none", borderRadius: "9px" }}>
                                 <Tabs>
@@ -168,7 +252,46 @@ class ProfilePage extends React.Component {
                                             </Box>
                                         </TabPanel>
                                         <TabPanel>
-                                            <p>two!</p>
+                                            <Box className='container'>
+                                                <div style={{ textAlign: "end", marginTop: "5%" }}>
+                                                    <Button onClick={() => this.setState({ openModalAddAddress: !this.state.openModalAddAddress })} className='bt-orange' style={{ borderRadius: 10, fontSize: "20px" }}>Tambah Alamat</Button>
+                                                </div>
+                                                <div>
+                                                    {this.printAddressList()}
+                                                </div>
+                                            </Box>
+                                            {/* <Box>                                                
+                                                <Box>
+                                                    <Box style={{ height: '45vh', background: "white", border: "none", borderRadius: "9px" }}>
+                                                        <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Ubah Biodata Diri</p>
+                                                        <Row style={{ paddingTop: "10px" }}>
+                                                            <Box className='row'>
+                                                                <span className='text-muted col-4' style={{ paddingRight: "50px", fontSize: "13px" }}>Nama</span>
+                                                                <span className='text-muted col-8' style={{ paddingRight: "20px", fontSize: "13px" }}>{this.props.nama} <a onClick={() => this.setState({ modalOpenNama: !this.state.modalOpenNama })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></span>
+                                                            </Box>
+                                                            <Box className='row' style={{ paddingTop: "10px" }}>
+                                                                <span className='text-muted col-4' style={{ paddingRight: "50px", fontSize: "13px" }}>Tanggal Lahir</span>
+                                                                <span className='text-muted col-8' style={{ paddingRight: "20px", fontSize: "13px" }}>{this.props.umur} <a onClick={() => this.setState({ modalOpenUmur: !this.state.modalOpenUmur })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></span>
+                                                            </Box>
+                                                            <Box className='row' style={{ paddingTop: "10px" }}>
+                                                                <span className='text-muted col-4' style={{ paddingRight: "50px", fontSize: "13px" }}>Jenis Kelamin</span>
+                                                                <span className='text-muted col-8' style={{ paddingRight: "20px", fontSize: "13px" }}>{this.props.gender} <a onClick={() => this.setState({ modalOpenGender: !this.state.modalOpenGender })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></span>
+                                                            </Box>
+                                                        </Row>
+                                                        <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Ubah Kontak</p>
+                                                        <Row style={{ paddingTop: "10px" }}>
+                                                            <Box className='row'>
+                                                                <span className='text-muted col-4' style={{ paddingRight: "50px", fontSize: "13px" }}>Email</span>
+                                                                <span className='text-muted col-8' style={{ paddingRight: "20px", fontSize: "13px" }}>{this.props.email} <a style={{ color: "#6b3c3b" }}>Ubah</a></span>
+                                                            </Box>
+                                                            <Box className='row' style={{ paddingTop: "10px" }}>
+                                                                <span className='text-muted col-4' style={{ paddingRight: "50px", fontSize: "13px" }}>Nomor HP</span>
+                                                                <span className='text-muted col-8' style={{ paddingRight: "20px", fontSize: "13px" }}>{this.props.no_telpon} <a onClick={() => this.setState({ modalOpenPhone: !this.state.modalOpenPhone })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></span>
+                                                            </Box>
+                                                        </Row>
+                                                    </Box>
+                                                </Box>                                                
+                                            </Box> */}
                                         </TabPanel>
                                         <TabPanel>
                                             <p>three!</p>
@@ -193,11 +316,15 @@ const mapToProps = (state) => {
     return {
         photo: state.userReducer.photo,
         nama: state.userReducer.nama,
+        idaddress: state.userReducer.idaddress,
         umur: state.userReducer.umur,
         email: state.userReducer.email,
         no_telpon: state.userReducer.no_telpon,
-        gender: state.userReducer.gender
+        gender: state.userReducer.gender,
+        iduser: state.userReducer.iduser,
+        addressList: state.userReducer.addressList,
+        username: state.userReducer.username
     }
 }
 
-export default connect(mapToProps)(ProfilePage);
+export default connect(mapToProps, { getAddress, onLogin })(ProfilePage);
