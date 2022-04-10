@@ -47,7 +47,7 @@ const Navbar = () => {
     return (
         <>
             {console.log("cek props", username)}
-            <Box bg={'white'} height='10vh' boxShadow='md' mb='5px' position='sticky'>
+            <Box bg={'white'} height='10vh' boxShadow='md' position='sticky'>
                 <Box mx='90px' display='flex'>
                     <Center>
                         <Box position='absolute'>

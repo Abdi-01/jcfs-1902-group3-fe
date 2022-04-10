@@ -20,6 +20,7 @@ import ProductPage from './Pages/ProductPage';
 import Footer from './Components/Footer';
 import DetailProduct from './Pages/DetailProduct';
 import CheckoutPage from './Pages/CheckoutPage';
+import VerifyPage from './Pages/Verify';
 
 function App() {
 
@@ -43,7 +44,8 @@ function App() {
         <Route path="/resetpassword/:token" element={<ResetPasswordPage />} />
         <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/verification/:token" element={<VerificationPage />} />
+        {/* <Route path="/verification/:token" element={<VerificationPage />} /> */}
+        <Route path="/verification/:token" element={<VerifyPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path='/management/product' element={<ManagementProduct />} />
         <Route path='/product' element={<ProductPage />} />

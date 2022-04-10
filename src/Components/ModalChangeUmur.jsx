@@ -1,9 +1,10 @@
+import { Box, Button } from '@chakra-ui/react';
 import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Input } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader, Input } from 'reactstrap';
+import Swal from 'sweetalert2';
 import { API_URL } from '../helper';
-
 
 class ModalChangeUmur extends React.Component {
     constructor(props) {
@@ -26,10 +27,18 @@ class ModalChangeUmur extends React.Component {
         })
             .then(res => {
                 console.log("cek res.data", res.data)
-                alert("update success")
+                return Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Update Tanggal Lahir Berhasil',
+                    showConfirmButton: false,
+                    timer: 1500
+                })                   
+            }).then(result => {
                 this.props.btClose()
                 window.location.reload()
-            }).catch((err) => {
+            })
+            .catch((err) => {
                 console.log(err)
             })
     }
@@ -42,32 +51,36 @@ class ModalChangeUmur extends React.Component {
                         centered
                         isOpen={this.props.modalOpenUmur}
                         toggle={this.props.btClose}
+                        style={{ paddingBottom: "200px" }}
                     >
                         <ModalHeader toggle={this.props.btClose}>
-                            Modal title
+                            <Box style={{ fontSize: "24px", fontWeight: 400 }}>
+                                <Box>Ubah Tanggal Lahir</Box>
+                            </Box>
                         </ModalHeader>
                         <ModalBody>
                             <div>
                                 <Input
                                     innerRef={element => this.inUmur = element}
                                     defaultValue={this.props.umur}
-                                    style={{ fontWeight: 900 }}
+                                    style={{ fontWeight: 600 }}
                                     type='date'
                                 />
-                            </div>
-                            <div style={{ marginTop: 30 }}>
-                                <p onClick={this.props.modalToggleUmur}>Kembali ke halaman Login</p>
                             </div>
                         </ModalBody>
                         <ModalFooter>
                             <Button
-                                color="primary"
+                                color="#6c3b3c"
+                                colorScheme={'blackAlpha'}
+                                variant='outline'
                                 onClick={this.onBtSave}
                             >
-                                Do Something
+                                Simpan
                             </Button>
-                            {' '}
-                            <Button onClick={this.onBtCancel}>
+                            <Button
+                                colorScheme={'teal'}
+                                onClick={this.onBtCancel}
+                            >
                                 Cancel
                             </Button>
                         </ModalFooter>
