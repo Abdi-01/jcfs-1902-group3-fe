@@ -6,11 +6,11 @@ import { BsCart3, BsPerson } from 'react-icons/bs'
 import logoWeb from '../assets/web-icon.png'
 import DrawerCart from './DrawerCart'
 import DrawerUser from './DrawerUser'
-  
+
 const Navbar = () => {
 
     const [openCart, setOpenCart] = useState(false)
-    const [openUser,setOpenUser] = useState(false)
+    const [openUser, setOpenUser] = useState(false)
     const { dataKategori, carts } = useSelector((state) => {
         return {
             dataKategori: state.kategoriReducer.listKategori,
@@ -58,12 +58,15 @@ const Navbar = () => {
                         <Box display='flex'>
                             <Box mr='20px'>
                                 <Icon as={BsCart3} boxSize='22px' position='relative' left='8px' cursor='pointer' onClick={() => setOpenCart(!openCart)} />
-                                <Badge position='absolute' borderRadius='full' color='white' w='19px' h='19px' bgColor='#6B3C3B'><Center>{setTotalCart()}</Center></Badge>
+                                {
+                                   carts.length > 0 && <Badge position='absolute' borderRadius='full' color='white' w='19px' h='19px' bgColor='#6B3C3B'><Center>{setTotalCart()}</Center></Badge>
+
+                                }
                                 <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)} />
                             </Box>
                             <Box>
-                            <Icon as={BsPerson} boxSize='20px' cursor='pointer' onClick={() => setOpenUser(!openUser)}/>
-                            <DrawerUser openUser={openUser} closeUser={() => setOpenUser(!openUser)} />
+                                <Icon as={BsPerson} boxSize='20px' cursor='pointer' onClick={() => setOpenUser(!openUser)} />
+                                <DrawerUser openUser={openUser} closeUser={() => setOpenUser(!openUser)} />
                             </Box>
                         </Box>
                     </Center>

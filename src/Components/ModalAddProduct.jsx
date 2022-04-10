@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box, Center, Icon, Image, Menu, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, ModalFooter, Button, Select, NumberInput, NumberInputField, Textarea } from '@chakra-ui/react'
-import { FiPlusCircle } from 'react-icons/fi'
+import { FiPlusCircle, FiMinusCircle } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
 import { addProductAction, getJenisProductAction } from '../redux/actions'
 import axios from 'axios'
@@ -9,7 +9,7 @@ import { API_URL } from '../helper'
 const ModalAddProduct = (props) => {
     const [inputPhoto, setInputPhoto] = useState([{}])
     const [open, setOpen] = useState(true)
-    const [product, setProduct] = useState({ idmaterial: null, idkategori: null, idjenis_product: null, nama: '', harga: 0, deskripsi: '', stock: 1 })
+    const [product, setProduct] = useState({ idmaterial: null, idkategori: null, idjenis_product: null, nama: '', harga: 0, deskripsi: '', berat: 1, stock: 1 })
     const dispatch = useDispatch()
     const { dataKategori, dataMaterial, dataJenisProduct } = useSelector((state) => {
         return {
@@ -53,7 +53,11 @@ const ModalAddProduct = (props) => {
         data.push({})
         setInputPhoto(data)
     }
-
+    const btDelPhoto = () => {
+        let data = [...inputPhoto]
+        data.splice(data.length - 1, 1)
+        setInputPhoto(data)
+    }
     const printInputPhoto = () => {
         return inputPhoto.map((item, index) => {
             return (
@@ -116,10 +120,16 @@ const ModalAddProduct = (props) => {
                             <Input type='text' placeholder='nama product' onChange={(text) => setProduct({ ...product, nama: text.target.value })} />
                         </FormControl>
                         <Box display='flex' my='1.5vh'>
-                            <FormControl mr='1vw'>
+                            <FormControl>
                                 <FormLabel>Stock</FormLabel>
                                 <NumberInput defaultValue={1} min={1}>
                                     <NumberInputField onChange={(event) => setProduct({ ...product, stock: Number(event.target.value) })} />
+                                </NumberInput>
+                            </FormControl>
+                            <FormControl mx='10px'>
+                                <FormLabel>Berat(kg)</FormLabel>
+                                <NumberInput defaultValue={1} min={1}>
+                                    <NumberInputField onChange={(event) => setProduct({ ...product, berat: Number(event.target.value) })} />
                                 </NumberInput>
                             </FormControl>
                             <FormControl>
@@ -156,7 +166,10 @@ const ModalAddProduct = (props) => {
                         <FormControl>
                             <Box display='flex' justifyContent='space-between'>
                                 <FormLabel>Photo Product</FormLabel>
-                                <Button colorScheme='green' size='xs' onClick={btAddPhoto}>Photo<Icon as={FiPlusCircle} boxSize='15px' ml='5px' /></Button>
+                                <Box display='flex'>
+                                <Button mr='10px' colorScheme='green' size='xs' onClick={btAddPhoto}>Photo<Icon as={FiPlusCircle} boxSize='15px' ml='5px' /></Button>
+                                <Button colorScheme='red' size='xs' onClick={btDelPhoto}><Icon as={FiMinusCircle} boxSize='15px' mr='5px' />Photo</Button>
+                                </Box>
                             </Box>
                             {printInputPhoto()}
                         </FormControl>
