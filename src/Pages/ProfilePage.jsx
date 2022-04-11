@@ -29,6 +29,10 @@ class ProfilePage extends React.Component {
         photo: [""]
     }
 
+    componentDidMount() {
+        this.props.getAddress()
+    }
+
     handlePhoto = (e) => {
         let temp = [...this.state.photo]
         temp[0] = { name: e.target.files[0].name, file: e.target.files[0] }
