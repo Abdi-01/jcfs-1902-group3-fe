@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { API_URL } from '../helper'
 import { AiOutlineMinus, AiOutlinePlus, AiOutlineDelete } from 'react-icons/ai'
-import { deleteCartAction, getAddress, getOngkirAction, updateQtyCartAction } from '../redux/actions'
+import { deleteCartAction, getAddress, getCartAction, getOngkirAction, updateQtyCartAction } from '../redux/actions'
 import ModalSetAlamat from '../Components/ModalSetAlamat'
+import axios from 'axios'
 
 const CheckoutPage = () => {
 
@@ -26,17 +27,25 @@ const CheckoutPage = () => {
         }
         dispatch(updateQtyCartAction(idcart, { qty: temp[index].qty }))
     }
-    const btDecrement = (index, idcart) => {
+    const btDecrement = async (index, idcart) => {
         let temp = [...carts]
         if (temp[index].qty > 1) {
             temp[index].qty -= 1
         } else {
-            dispatch(deleteCartAction(idcart))
+            let res = await dispatch(deleteCartAction(idcart))
+            if (res.success) {
+                setSelectedWarehouse(null)
+                setDataOngkir({})
+            }
         }
         dispatch(updateQtyCartAction(idcart, { qty: temp[index].qty }))
     }
-    const btDeleteCart = (idcart) => {
-        dispatch(deleteCartAction(idcart))
+    const btDeleteCart = async (idcart) => {
+        let res = await dispatch(deleteCartAction(idcart))
+        if (res.success) {
+            setSelectedWarehouse(null)
+            setDataOngkir({})
+        }
     }
     const printSubtotal = () => {
         let total = 0
@@ -143,9 +152,39 @@ const CheckoutPage = () => {
             }
         }
     }
+    const btCheckout = async () => {
+        let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        let token = localStorage.getItem('data')
+        let data = {
+            idwarehouse: selectedWarehouse.idwarehouse,
+            idstatus: 6,
+            invoice: `INV/${new Date().getTime()}`,
+            total_tagihan: Number((printSubtotal() + dataOngkir.costs[1].cost[0].value) + (printSubtotal() + dataOngkir.costs[1].cost[0].value) * 0.1),
+            ongkir: Number(dataOngkir.costs[1].cost[0].value),
+            pajak: Number((printSubtotal() + dataOngkir.costs[1].cost[0].value) * 0.1),
+            added_date: date,
+            detail: [...carts]
+        }
+        try {
+            if (token) {
+                let res = await axios.post(`${API_URL}/transactions/checkout`, data, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                if (res.data.success) {
+                    dispatch(getCartAction())
+                    setSelectedWarehouse(null)
+                    setDataOngkir({})
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <>
-            {/* {console.log('isi ongkir', dataOngkir)} */}
+            {console.log('isi cart', carts)}
             <Box marginX={'8vw'} marginY={'5vh'}>
                 <Box display='flex' justifyContent='space-between'>
                     <Box >
@@ -211,18 +250,28 @@ const CheckoutPage = () => {
                                             <Text fontWeight='semibold' mb='10px'>Total Ongkos Kirim</Text>
                                             <Text fontWeight='semibold' mb='10px'>Rp.{(dataOngkir.costs[1].cost[0].value).toLocaleString()}</Text>
                                         </Box>
+                                        <Box display='flex' justifyContent='space-between'>
+                                            <Text fontWeight='semibold' mb='10px'>Pajak 10%</Text>
+                                            <Text fontWeight='semibold' mb='10px'>Rp.{((printSubtotal() + dataOngkir.costs[1].cost[0].value) * 0.1).toLocaleString()}</Text>
+                                        </Box>
                                     </Box>
                                     <Box mt='15px'>
                                         <Box display='flex' justifyContent='space-between'>
                                             <Text fontWeight='bold' mb='10px'>Total Tagihan</Text>
-                                            <Text fontWeight='semibold' mb='10px'>Rp.{(printSubtotal() + dataOngkir.costs[1].cost[0].value).toLocaleString()}</Text>
+                                            <Text fontWeight='semibold' mb='10px'>Rp.{((printSubtotal() + dataOngkir.costs[1].cost[0].value) + (printSubtotal() + dataOngkir.costs[1].cost[0].value) * 0.1).toLocaleString()}</Text>
                                         </Box>
                                     </Box>
                                 </>
                             }
                             <Box mt='15px'>
                                 <Center>
-                                    <Button colorScheme='blackAlpha' bgColor='#6B3C3B' w='100%'>Checkout</Button>
+                                    {
+                                        carts.length > 0
+                                            ?
+                                            <Button colorScheme='blackAlpha' bgColor='#6B3C3B' w='100%' onClick={btCheckout}>Checkout</Button>
+                                            :
+                                            <Button colorScheme='blackAlpha' bgColor='#6B3C3B' w='100%' disabled='true'>Checkout</Button>
+                                    }
                                 </Center>
                             </Box>
                         </Box>
