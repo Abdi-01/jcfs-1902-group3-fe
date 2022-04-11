@@ -6,15 +6,20 @@ import { BsCart3, BsPerson } from 'react-icons/bs'
 import logoWeb from '../assets/web-icon.png'
 import DrawerCart from './DrawerCart'
 import DrawerUser from './DrawerUser'
+import DrawerAdmin from './DrawerAdmin'
 
 const Navbar = () => {
 
     const [openCart, setOpenCart] = useState(false)
     const [openUser, setOpenUser] = useState(false)
-    const { dataKategori, carts } = useSelector((state) => {
+    const [openAdmin, setOpenAdmin] = useState(false)
+    const { dataKategori, carts, username, idrole } = useSelector((state) => {
+
         return {
             dataKategori: state.kategoriReducer.listKategori,
-            carts: state.transactionReducer.carts
+            carts: state.transactionReducer.carts,
+            username: state.userReducer.username,
+            idrole: state.userReducer.idrole
         }
     })
 
@@ -43,10 +48,13 @@ const Navbar = () => {
     return (
         <>
             <Box bg={'white'} height='10vh' boxShadow='md' position='sticky'>
+
                 <Box mx='90px' display='flex'>
                     <Center>
                         <Box position='absolute'>
-                            <Image src={logoWeb} w='200px' position='relative' left='55px' />
+                            <Link to='/'>
+                                <Image src={logoWeb} w='200px' position='relative' left='55px' />
+                            </Link>
                         </Box>
                     </Center>
                     <Center ml='45vh'>
@@ -54,22 +62,34 @@ const Navbar = () => {
                             {printKategori()}
                         </HStack>
                     </Center>
-                    <Center ml='25vh'>
-                        <Box display='flex'>
-                            <Box mr='20px'>
-                                <Icon as={BsCart3} boxSize='22px' position='relative' left='8px' cursor='pointer' onClick={() => setOpenCart(!openCart)} />
+                    {username &&
+                        <Center ml='25vh'>
+                            <Box display='flex'>
+                                <Box mr='20px'>
+                                    <Icon as={BsCart3} boxSize='22px' position='relative' left='8px' cursor='pointer' onClick={() => setOpenCart(!openCart)} />
+                                    <Badge position='absolute' borderRadius='full' color='white' w='19px' h='19px' bgColor='#6B3C3B'><Center>{setTotalCart()}</Center></Badge>
+                                    <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)} />
+                                </Box>
                                 {
-                                   carts.length > 0 && <Badge position='absolute' borderRadius='full' color='white' w='19px' h='19px' bgColor='#6B3C3B'><Center>{setTotalCart()}</Center></Badge>
-
+                                    idrole == 3 ?
+                                        <Box>
+                                            <Icon as={BsPerson} boxSize='20px' cursor='pointer' onClick={() => setOpenUser(!openUser)} />
+                                            <DrawerUser openUser={openUser} closeUser={() => setOpenUser(!openUser)} />
+                                        </Box>
+                                        :
+                                        idrole == 2 ?
+                                            <Box>
+                                                <Icon as={BsPerson} boxSize='20px' cursor='pointer' onClick={() => setOpenAdmin(!openAdmin)} />
+                                                <DrawerAdmin openAdmin={openAdmin} closeAdmin={() => setOpenAdmin(!openAdmin)} />
+                                            </Box>
+                                            :
+                                            <Box>
+                                                <Icon as={BsPerson} boxSize='20px' cursor='pointer'/>                                                
+                                            </Box>
                                 }
-                                <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)} />
                             </Box>
-                            <Box>
-                                <Icon as={BsPerson} boxSize='20px' cursor='pointer' onClick={() => setOpenUser(!openUser)} />
-                                <DrawerUser openUser={openUser} closeUser={() => setOpenUser(!openUser)} />
-                            </Box>
-                        </Box>
-                    </Center>
+                        </Center>
+                    }
                 </Box>
             </Box>
         </>
