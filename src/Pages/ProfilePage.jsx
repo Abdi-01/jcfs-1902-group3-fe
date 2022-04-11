@@ -179,6 +179,10 @@ class ProfilePage extends React.Component {
                     modalOpenPhone={this.state.modalOpenPhone}
                     btClose={() => this.setState({ modalOpenPhone: !this.state.modalOpenPhone })}
                 />
+                <ModalAddAddress 
+                    openModalAddAddress={this.state.openModalAddAddress}
+                    btClose={() => this.setState({openModalAddAddress: !this.state.openModalAddAddress})}
+                />
                 <Box className='container' style={{}}>
                     <Box className='row' paddingTop={5} paddingBottom={5}>
                         <Box className='col-8' style={{ margin: "auto" }}>
