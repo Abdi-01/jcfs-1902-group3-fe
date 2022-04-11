@@ -273,14 +273,14 @@ class ProfilePage extends React.Component {
                                             </Box>
                                         </TabPanel>
                                         <TabPanel>
-                                            {/* <Box className='container'>
+                                            <Box className='container'>
                                                 <div style={{ textAlign: "end", marginTop: "5%" }}>
                                                     <Button onClick={() => this.setState({ openModalAddAddress: !this.state.openModalAddAddress })} colorScheme='green' size='sm' style={{ borderRadius: 10, fontSize: "15px" }}>Tambah Alamat</Button>
                                                 </div>
                                                 <Box mt='20px'>
                                                     {this.printAddressList()}
                                                 </Box>
-                                            </Box>  */}
+                                            </Box> 
                                         </TabPanel>
                                         <TabPanel>
                                             <p>three!</p>
