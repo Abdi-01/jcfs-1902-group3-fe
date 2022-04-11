@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Button, Heading, Stack, Text } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Button, Heading, Stack, Text, Icon, Badge } from '@chakra-ui/react'
 import { Card, CardBody, CardImg, CardLink, CardSubtitle, CardText, CardTitle, FormGroup, FormText, Input, Label, Row } from 'reactstrap';
 import { connect } from 'react-redux';
 import { BiUser } from 'react-icons/bi';
@@ -12,6 +12,7 @@ import ModalChangePassword from '../Components/ModalChangePassword';
 import ModalChangePhone from '../Components/ModalChangePhone';
 import { getAddress, onLogin } from '../redux/actions';
 import ModalAddAddress from '../Components/ModalAddAddress';
+import { BsCheckCircle } from 'react-icons/bs';
 
 
 class ProfilePage extends React.Component {
@@ -30,7 +31,6 @@ class ProfilePage extends React.Component {
     componentDidMount() {
         this.props.getAddress()
     }
-
     onBtUbah = () => {
         let data = {
             password: this.inPassword.value
@@ -52,19 +52,15 @@ class ProfilePage extends React.Component {
     }
 
     onBtPilih = (idaddress) => {
-        let valueAddress = {
-            idaddress: idaddress
-        }
-        let token = localStorage.getItem("data");
-        axios.patch(`${API_URL}/users/chooseaddress`, valueAddress, {
+        let token = localStorage.getItem('data')
+        axios.patch(`${API_URL}/users/chooseaddress/${idaddress}`, { idstatus: 4 }, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
-        }).then(async (res) => {
-            await alert("Berhasil Pilih Alamat")
-            window.location.reload()
-            this.printAddressList();
+        }).then((res) => {
+            alert("Berhasil Pilih Alamat")
             this.props.getAddress();
+            this.printAddressList();
         }).catch((err) => {
             console.log(err)
         })
@@ -87,33 +83,38 @@ class ProfilePage extends React.Component {
 
     printAddressList = () => {
         return this.props.addressList.map((value, index) => {
-            // console.log("cek value address", value.idaddress)
-            // console.log("cek props address", this.props.idaddress)
             return (
                 <Box>
                     {
-                        value.idaddress === this.props.idaddress
+                        value.idstatus === 4
                             ?
-                            <Box style={{ borderRadius: 9, border: "10px solid", borderColor: "blue", backgroundColor: "#fde7b7" }}>
-                                <Box className='row'>
-                                    <Box className='col-10'>
-                                        <p>{value.alamat}</p>
+                            <Box my='10px' borderRadius='10px' boxShadow='md' p='3' border='2px solid #6b3c3b' >
+                                <Box display='flex'>
+                                    <Heading as='h4' size='sm' mr='10px'>{value.nama_penerima}</Heading>
+                                    <Badge variant='subtle' color='#6b3c3b'>utama</Badge>
+                                </Box>
+                                <Box my='5px'>
+                                    <Text fontWeight='semibold' >{value.no_telpon}</Text>
+                                </Box>
+                                <Box>
+                                    <Box display='flex' justifyContent='space-between'>
+                                        <Text>{value.alamat}</Text>
+                                        <Icon as={BsCheckCircle} boxSize='7' color='#6b3c3b' />
                                     </Box>
                                 </Box>
                             </Box>
                             :
-                            <Box style={{ borderRadius: 9, border: "1px solid" }}>
-                                <Box className='row'>
-                                    <Box className='col-10'>
-                                        <h4>{value.alamat}</h4>
-                                        {/* <Stack spacing={'4'}>
-                                        <Heading fontSize={'xl'}>{value.nama_penerima}</Heading>
+                            <Box my='10px' borderRadius='10px' boxShadow='md' p='3'>
+                                <Box>
+                                    <Heading as='h4' size='sm'>{value.nama_penerima}</Heading>
+                                </Box>
+                                <Box my='5px'>
+                                    <Text fontWeight='semibold' >{value.no_telpon}</Text>
+                                </Box>
+                                <Box>
+                                    <Box display='flex' justifyContent='space-between'>
                                         <Text>{value.alamat}</Text>
-                                        <Button onClick={() => this.onBtRemove(value.idaddress)} className='bt-blue' style={{ borderRadius: 10 }}>Hapus</Button>
-                                    </Stack> */}
-                                    </Box>
-                                    <Box className='col-2' style={{ display: "flex", justifyContent: "space-around" }}>
-                                        <Button onClick={() => this.onBtPilih(value.idaddress)} className='bt-orange' style={{ borderRadius: 10 }}>Pilih</Button>
+                                        <Button size='sm' colorScheme='blackAlpha' bgColor='#6b3c3b' onClick={() => this.onBtPilih(value.idaddress)}>Pilih</Button>
                                     </Box>
                                 </Box>
                             </Box>
@@ -125,7 +126,7 @@ class ProfilePage extends React.Component {
 
     render() {
         return (
-            <Box style={{ backgroundColor: "rgb(239, 236, 234)", height: "90vh" }}>
+            <Box style={{ backgroundColor: "rgb(239, 236, 234)" }}>
                 <ModalChangeNama
                     modalOpenNama={this.state.modalOpenNama}
                     btClose={() => this.setState({ modalOpenNama: !this.state.modalOpenNama })}
@@ -152,33 +153,22 @@ class ProfilePage extends React.Component {
                 />
                 <Box className='container' style={{}}>
                     <Box className='row' paddingTop={5} paddingBottom={5}>
-                        {/* <Box className='col-2'>
-                            <Box style={{}}>
-
-                            </Box>
-                        </Box> */}
                         <Box className='col-8' style={{ margin: "auto" }}>
                             <Box className='d-flex' paddingBottom={2}>
                                 <BiUser style={{ marginTop: 5, marginRight: 10 }} /><p style={{ fontSize: "16px", fontWeight: 600, color: "gray" }}>{this.props.username}</p>
                             </Box>
-                            <Box boxShadow={"sm"} style={{ height: '67vh', background: "white", border: "none", borderRadius: "9px" }}>
+                            <Box boxShadow={"sm"} style={{ background: "white", border: "none", borderRadius: "9px" }}>
                                 <Tabs>
                                     <TabList>
                                         <Tab style={{ fontSize: "14px", fontWeight: 800, color: "#6b3c3b" }}>Biodata Diri</Tab>
-                                        <Tab>Two</Tab>
+                                        <Tab style={{ fontSize: "14px", fontWeight: 800, color: "#6b3c3b" }}>Daftar Alamat</Tab>
                                         <Tab>Three</Tab>
                                     </TabList>
-
                                     <TabPanels>
                                         <TabPanel>
                                             <Box className='row'>
-                                                {/* <Box className='col-1'>
-                                                <Box style={{}}>
-
-                                                </Box>
-                                            </Box> */}
                                                 <Box className='col-5'>
-                                                    <Box boxShadow={'md'} style={{ height: '43vh', background: "white", border: "none", borderRadius: "9px", width: "15vw" }}>
+                                                    <Box boxShadow={'md'} style={{ background: "white", border: "none", borderRadius: "9px", width: "15vw" }}>
                                                         <Box>
                                                             <Card style={{ border: "none", marginTop: "13px" }}>
                                                                 <CardImg
@@ -188,7 +178,6 @@ class ProfilePage extends React.Component {
                                                                 />
                                                                 <CardBody>
                                                                     <FormGroup>
-                                                                        {/* <Uploader action="//jsonplaceholder.typicode.com/posts/" />                                                                                                                                     */}
                                                                         <Input
                                                                             id="exampleFile"
                                                                             name="file"
@@ -198,9 +187,6 @@ class ProfilePage extends React.Component {
                                                                             Besar file: maksimum 10.000.000 bytes (10 Megabytes). Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG
                                                                         </FormText>
                                                                     </FormGroup>
-                                                                    {/* <CardText className='text-muted' style={{ width: "90%", margin: "auto", fontSize: "12px" }}>
-                                                                    Besar file: maksimum 10.000.000 bytes (10 Megabytes). Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG
-                                                                </CardText> */}
                                                                 </CardBody>
                                                                 <Button onClick={() => this.setState({ modalOpenPassword: !this.state.modalOpenPassword })} boxShadow={'sm'} colorScheme='gray' variant='outline' style={{ fontSize: "12px" }}>
                                                                     Ubah Kata Sandi
@@ -209,11 +195,6 @@ class ProfilePage extends React.Component {
                                                         </Box>
                                                     </Box>
                                                 </Box>
-                                                {/* <Box className='col-3'>
-                                                <Box style={{}}>
-
-                                                </Box>
-                                            </Box> */}
                                                 <Box className='col-7'>
                                                     <Box style={{ height: '45vh', background: "white", border: "none", borderRadius: "9px" }}>
                                                         <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Ubah Biodata Diri</p>
@@ -244,54 +225,17 @@ class ProfilePage extends React.Component {
                                                         </Row>
                                                     </Box>
                                                 </Box>
-                                                {/* <Box className='col-1'>
-                                                <Box style={{}}>
-
-                                                </Box>
-                                            </Box> */}
                                             </Box>
                                         </TabPanel>
                                         <TabPanel>
                                             <Box className='container'>
                                                 <div style={{ textAlign: "end", marginTop: "5%" }}>
-                                                    <Button onClick={() => this.setState({ openModalAddAddress: !this.state.openModalAddAddress })} className='bt-orange' style={{ borderRadius: 10, fontSize: "20px" }}>Tambah Alamat</Button>
+                                                    <Button onClick={() => this.setState({ openModalAddAddress: !this.state.openModalAddAddress })} colorScheme='green' size='sm' style={{ borderRadius: 10, fontSize: "15px" }}>Tambah Alamat</Button>
                                                 </div>
-                                                <div>
+                                                <Box mt='20px'>
                                                     {this.printAddressList()}
-                                                </div>
+                                                </Box>
                                             </Box>
-                                            {/* <Box>                                                
-                                                <Box>
-                                                    <Box style={{ height: '45vh', background: "white", border: "none", borderRadius: "9px" }}>
-                                                        <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Ubah Biodata Diri</p>
-                                                        <Row style={{ paddingTop: "10px" }}>
-                                                            <Box className='row'>
-                                                                <span className='text-muted col-4' style={{ paddingRight: "50px", fontSize: "13px" }}>Nama</span>
-                                                                <span className='text-muted col-8' style={{ paddingRight: "20px", fontSize: "13px" }}>{this.props.nama} <a onClick={() => this.setState({ modalOpenNama: !this.state.modalOpenNama })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></span>
-                                                            </Box>
-                                                            <Box className='row' style={{ paddingTop: "10px" }}>
-                                                                <span className='text-muted col-4' style={{ paddingRight: "50px", fontSize: "13px" }}>Tanggal Lahir</span>
-                                                                <span className='text-muted col-8' style={{ paddingRight: "20px", fontSize: "13px" }}>{this.props.umur} <a onClick={() => this.setState({ modalOpenUmur: !this.state.modalOpenUmur })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></span>
-                                                            </Box>
-                                                            <Box className='row' style={{ paddingTop: "10px" }}>
-                                                                <span className='text-muted col-4' style={{ paddingRight: "50px", fontSize: "13px" }}>Jenis Kelamin</span>
-                                                                <span className='text-muted col-8' style={{ paddingRight: "20px", fontSize: "13px" }}>{this.props.gender} <a onClick={() => this.setState({ modalOpenGender: !this.state.modalOpenGender })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></span>
-                                                            </Box>
-                                                        </Row>
-                                                        <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Ubah Kontak</p>
-                                                        <Row style={{ paddingTop: "10px" }}>
-                                                            <Box className='row'>
-                                                                <span className='text-muted col-4' style={{ paddingRight: "50px", fontSize: "13px" }}>Email</span>
-                                                                <span className='text-muted col-8' style={{ paddingRight: "20px", fontSize: "13px" }}>{this.props.email} <a style={{ color: "#6b3c3b" }}>Ubah</a></span>
-                                                            </Box>
-                                                            <Box className='row' style={{ paddingTop: "10px" }}>
-                                                                <span className='text-muted col-4' style={{ paddingRight: "50px", fontSize: "13px" }}>Nomor HP</span>
-                                                                <span className='text-muted col-8' style={{ paddingRight: "20px", fontSize: "13px" }}>{this.props.no_telpon} <a onClick={() => this.setState({ modalOpenPhone: !this.state.modalOpenPhone })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></span>
-                                                            </Box>
-                                                        </Row>
-                                                    </Box>
-                                                </Box>                                                
-                                            </Box> */}
                                         </TabPanel>
                                         <TabPanel>
                                             <p>three!</p>
@@ -299,11 +243,6 @@ class ProfilePage extends React.Component {
                                     </TabPanels>
                                 </Tabs>
                             </Box>
-                        </Box>
-                    </Box>
-                    <Box className='col-2'>
-                        <Box style={{}}>
-
                         </Box>
                     </Box>
                 </Box>
