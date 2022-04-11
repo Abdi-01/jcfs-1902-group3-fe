@@ -86,3 +86,23 @@ export const deleteCartAction = (idcart) => {
         }
     }
 }
+
+export const getOngkirAction = (data) => {
+    return async (dispatch) => {
+        try {
+            let token = localStorage.getItem('data')
+            if (token) {
+                let res = await axios.post(`${API_URL}/transactions/ongkos`, data, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                if (res.data.success) {
+                    return { success: res.data.success, data: res.data.dataOngkir }
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
