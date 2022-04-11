@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Button, Heading, Stack, Text } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Button, Heading, Stack, Text, Icon, Badge } from '@chakra-ui/react'
 import { Card, CardBody, CardImg, CardLink, CardSubtitle, CardText, CardTitle, FormGroup, FormText, Input, Label, Row } from 'reactstrap';
 import { connect } from 'react-redux';
 import { BiUser } from 'react-icons/bi';
@@ -12,6 +12,8 @@ import ModalChangePassword from '../Components/ModalChangePassword';
 import ModalChangePhone from '../Components/ModalChangePhone';
 import { getAddress, onLogin } from '../redux/actions';
 import Swal from 'sweetalert2';
+import ModalAddAddress from '../Components/ModalAddAddress';
+import { BsCheckCircle } from 'react-icons/bs';
 
 class ProfilePage extends React.Component {
     constructor(props) {
@@ -61,7 +63,6 @@ class ProfilePage extends React.Component {
                 console.log(err)
             })
     }
-
     onBtUbah = () => {
         let data = {
             password: this.inPassword.value
@@ -82,19 +83,15 @@ class ProfilePage extends React.Component {
     }
 
     onBtPilih = (idaddress) => {
-        let valueAddress = {
-            idaddress: idaddress
-        }
-        let token = localStorage.getItem("data");
-        axios.patch(`${API_URL}/users/chooseaddress`, valueAddress, {
+        let token = localStorage.getItem('data')
+        axios.patch(`${API_URL}/users/chooseaddress/${idaddress}`, { idstatus: 4 }, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
-        }).then(async (res) => {
-            await alert("Berhasil Pilih Alamat")
-            window.location.reload()
-            this.printAddressList();
+        }).then((res) => {
+            alert("Berhasil Pilih Alamat")
             this.props.getAddress();
+            this.printAddressList();
         }).catch((err) => {
             console.log(err)
         })
@@ -115,43 +112,49 @@ class ProfilePage extends React.Component {
         })
     }
 
-    // printAddressList = () => {
-    //     return this.props.addressList.map((value, index) => {
-    //         // console.log("cek value address", value.idaddress)
-    //         // console.log("cek props address", this.props.idaddress)
-    //         return (
-    //             <Box>
-    //                 {
-    //                     value.idaddress === this.props.idaddress
-    //                         ?
-    //                         <Box style={{ borderRadius: 9, border: "10px solid", borderColor: "blue", backgroundColor: "#fde7b7" }}>
-    //                             <Box className='row'>
-    //                                 <Box className='col-10'>
-    //                                     <p>{value.alamat}</p>
-    //                                 </Box>
-    //                             </Box>
-    //                         </Box>
-    //                         :
-    //                         <Box style={{ borderRadius: 9, border: "1px solid" }}>
-    //                             <Box className='row'>
-    //                                 <Box className='col-10'>
-    //                                     <h4>{value.alamat}</h4>
-    //                                     {/* <Stack spacing={'4'}>
-    //                                     <Heading fontSize={'xl'}>{value.nama_penerima}</Heading>
-    //                                     <Text>{value.alamat}</Text>
-    //                                     <Button onClick={() => this.onBtRemove(value.idaddress)} className='bt-blue' style={{ borderRadius: 10 }}>Hapus</Button>
-    //                                 </Stack> */}
-    //                                 </Box>
-    //                                 <Box className='col-2' style={{ display: "flex", justifyContent: "space-around" }}>
-    //                                     <Button onClick={() => this.onBtPilih(value.idaddress)} className='bt-orange' style={{ borderRadius: 10 }}>Pilih</Button>
-    //                                 </Box>
-    //                             </Box>
-    //                         </Box>
-    //                 }
-    //             </Box>
-    //         )
-    //     })
-    // }
+
+    printAddressList = () => {
+        return this.props.addressList.map((value, index) => {
+            return (
+                <Box>
+                    {
+                        value.idstatus === 4
+                            ?
+                            <Box my='10px' borderRadius='10px' boxShadow='md' p='3' border='2px solid #6b3c3b' >
+                                <Box display='flex'>
+                                    <Heading as='h4' size='sm' mr='10px'>{value.nama_penerima}</Heading>
+                                    <Badge variant='subtle' color='#6b3c3b'>utama</Badge>
+                                </Box>
+                                <Box my='5px'>
+                                    <Text fontWeight='semibold' >{value.no_telpon}</Text>
+                                </Box>
+                                <Box>
+                                    <Box display='flex' justifyContent='space-between'>
+                                        <Text>{value.alamat}</Text>
+                                        <Icon as={BsCheckCircle} boxSize='7' color='#6b3c3b' />
+                                    </Box>
+                                </Box>
+                            </Box>
+                            :
+                            <Box my='10px' borderRadius='10px' boxShadow='md' p='3'>
+                                <Box>
+                                    <Heading as='h4' size='sm'>{value.nama_penerima}</Heading>
+                                </Box>
+                                <Box my='5px'>
+                                    <Text fontWeight='semibold' >{value.no_telpon}</Text>
+                                </Box>
+                                <Box>
+                                    <Box display='flex' justifyContent='space-between'>
+                                        <Text>{value.alamat}</Text>
+                                        <Button size='sm' colorScheme='blackAlpha' bgColor='#6b3c3b' onClick={() => this.onBtPilih(value.idaddress)}>Pilih</Button>
+                                    </Box>
+                                </Box>
+                            </Box>
+                    }
+                </Box>
+            )
+        })
+    }
 
     render() {
         return (
@@ -186,10 +189,9 @@ class ProfilePage extends React.Component {
                                 <Tabs>
                                     <TabList>
                                         <Tab style={{ fontSize: "14px", fontWeight: 800, color: "#6b3c3b" }}>Biodata Diri</Tab>
-                                        <Tab>Two</Tab>
+                                        <Tab style={{ fontSize: "14px", fontWeight: 800, color: "#6b3c3b" }}>Daftar Alamat</Tab>
                                         <Tab>Three</Tab>
                                     </TabList>
-
                                     <TabPanels>
                                         <TabPanel>
                                             <Box className='row'>
@@ -273,12 +275,12 @@ class ProfilePage extends React.Component {
                                         <TabPanel>
                                             {/* <Box className='container'>
                                                 <div style={{ textAlign: "end", marginTop: "5%" }}>
-                                                    <Button onClick={() => this.setState({ openModalAddAddress: !this.state.openModalAddAddress })} className='bt-orange' style={{ borderRadius: 10, fontSize: "20px" }}>Tambah Alamat</Button>
+                                                    <Button onClick={() => this.setState({ openModalAddAddress: !this.state.openModalAddAddress })} colorScheme='green' size='sm' style={{ borderRadius: 10, fontSize: "15px" }}>Tambah Alamat</Button>
                                                 </div>
-                                                <div>
+                                                <Box mt='20px'>
                                                     {this.printAddressList()}
-                                                </div>
-                                            </Box>                                             */}
+                                                </Box>
+                                            </Box>  */}
                                         </TabPanel>
                                         <TabPanel>
                                             <p>three!</p>

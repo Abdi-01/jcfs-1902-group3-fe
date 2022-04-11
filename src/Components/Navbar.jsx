@@ -14,6 +14,7 @@ const Navbar = () => {
     const [openUser, setOpenUser] = useState(false)
     const [openAdmin, setOpenAdmin] = useState(false)
     const { dataKategori, carts, username, idrole } = useSelector((state) => {
+
         return {
             dataKategori: state.kategoriReducer.listKategori,
             carts: state.transactionReducer.carts,
@@ -46,7 +47,6 @@ const Navbar = () => {
     }
     return (
         <>
-            {console.log("cek props", username)}
             <Box bg={'white'} height='10vh' boxShadow='md' position='sticky'>
                 <Box mx='90px' display='flex'>
                     <Center>

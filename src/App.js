@@ -6,7 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import MenuManagement from './Components/MenuManagement';
 import ManagementProduct from './Pages/ManagementProduct';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getCartAction, getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction, keepLoginAction } from './redux/actions';
 import LandingPage from './Pages/LandingPage';
 import LoginPage from './Pages/LoginPage';
@@ -21,10 +21,17 @@ import Footer from './Components/Footer';
 import DetailProduct from './Pages/DetailProduct';
 import CheckoutPage from './Pages/CheckoutPage';
 import VerifyPage from './Pages/Verify';
+import NotFoundPage from './Pages/NotFoundPage';
 
 function App() {
 
   const dispatch = useDispatch()
+
+  const { idrole } = useSelector((state) => {
+    return {                
+        idrole: state.userReducer.idrole
+    }
+})
 
   useEffect(() => {
     dispatch(keepLoginAction())
@@ -39,6 +46,19 @@ function App() {
     <>
       <Navbar />
       <Routes>
+        {
+          idrole == 3 ?
+          <>
+          <Route path='/product/checkout' element={<CheckoutPage/>} />
+          </>
+          :
+          idrole ==2 ?
+          <>
+          <Route path='/management/product' element={<ManagementProduct />} />          
+          </>          
+          :
+          <Route path="/*" element={<NotFoundPage />} />
+        }
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/resetpassword/:token" element={<ResetPasswordPage />} />
@@ -47,10 +67,9 @@ function App() {
         {/* <Route path="/verification/:token" element={<VerificationPage />} /> */}
         <Route path="/verification/:token" element={<VerifyPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path='/management/product' element={<ManagementProduct />} />
         <Route path='/product' element={<ProductPage />} />
         <Route path='/detail/product' element={<DetailProduct />} />
-        <Route path='/product/checkout' element={<CheckoutPage/>} />
+        <Route path="/*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
     </>
