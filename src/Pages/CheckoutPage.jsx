@@ -159,9 +159,9 @@ const CheckoutPage = () => {
             idwarehouse: selectedWarehouse.idwarehouse,
             idstatus: 6,
             invoice: `INV/${new Date().getTime()}`,
-            total_tagihan: Number((printSubtotal() + dataOngkir.costs[1].cost[0].value) + (printSubtotal() + dataOngkir.costs[1].cost[0].value) * 0.1),
+            total_tagihan: Number((printSubtotal() + dataOngkir.costs[1].cost[0].value) + (printSubtotal() * 0.1)),
             ongkir: Number(dataOngkir.costs[1].cost[0].value),
-            pajak: Number((printSubtotal() + dataOngkir.costs[1].cost[0].value) * 0.1),
+            pajak: Number(printSubtotal() * 0.1),
             added_date: date,
             detail: [...carts]
         }
@@ -247,18 +247,18 @@ const CheckoutPage = () => {
                                             <Text fontWeight='semibold' mb='10px'>Rp.{printSubtotal().toLocaleString()}</Text>
                                         </Box>
                                         <Box display='flex' justifyContent='space-between'>
-                                            <Text fontWeight='semibold' mb='10px'>Total Ongkos Kirim</Text>
-                                            <Text fontWeight='semibold' mb='10px'>Rp.{(dataOngkir.costs[1].cost[0].value).toLocaleString()}</Text>
+                                            <Text fontWeight='semibold' mb='10px'>Pajak 10%</Text>
+                                            <Text fontWeight='semibold' mb='10px'>Rp.{(printSubtotal() * 0.1).toLocaleString()}</Text>
                                         </Box>
                                         <Box display='flex' justifyContent='space-between'>
-                                            <Text fontWeight='semibold' mb='10px'>Pajak 10%</Text>
-                                            <Text fontWeight='semibold' mb='10px'>Rp.{((printSubtotal() + dataOngkir.costs[1].cost[0].value) * 0.1).toLocaleString()}</Text>
+                                            <Text fontWeight='semibold' mb='10px'>Total Ongkos Kirim</Text>
+                                            <Text fontWeight='semibold' mb='10px'>Rp.{(dataOngkir.costs[1].cost[0].value).toLocaleString()}</Text>
                                         </Box>
                                     </Box>
                                     <Box mt='15px'>
                                         <Box display='flex' justifyContent='space-between'>
                                             <Text fontWeight='bold' mb='10px'>Total Tagihan</Text>
-                                            <Text fontWeight='semibold' mb='10px'>Rp.{((printSubtotal() + dataOngkir.costs[1].cost[0].value) + (printSubtotal() + dataOngkir.costs[1].cost[0].value) * 0.1).toLocaleString()}</Text>
+                                            <Text fontWeight='semibold' mb='10px'>Rp.{((printSubtotal() + dataOngkir.costs[1].cost[0].value) + (printSubtotal() * 0.1)).toLocaleString()}</Text>
                                         </Box>
                                     </Box>
                                 </>
