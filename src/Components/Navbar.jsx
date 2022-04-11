@@ -48,7 +48,6 @@ const Navbar = () => {
     return (
         <>
             <Box bg={'white'} height='10vh' boxShadow='md' position='sticky'>
-
                 <Box mx='90px' display='flex'>
                     <Center>
                         <Box position='absolute'>

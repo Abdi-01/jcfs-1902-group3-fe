@@ -9,6 +9,7 @@ import productIcon from '../assets/product-development.png'
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { API_URL } from '../helper';
 import ModalForgotPassword from '../Components/ModalForgotPassword';
+import Swal from 'sweetalert2';
 
 class LandingPage extends React.Component {
     constructor(props) {
@@ -39,8 +40,7 @@ class LandingPage extends React.Component {
                                 <div style={{ paddingTop: "35px" }}>
                                     <Button colorScheme='teal' size={'lg'} variant='solid' style={{ borderRadius: "50%" }}>
                                         <img src={productIcon} style={{ blockSize: 20 }} />
-                                    </Button>                                    
-                                
+                                    </Button>                                                                    
                                     <Button colorScheme='white' variant='link' style={{ paddingLeft: 10 }}>
                                         Check Our Product
                                     </Button>
@@ -166,31 +166,64 @@ class LandingPage extends React.Component {
 
     btRegis = () => {
         if (this.username.value === "") {
-            alert("Username empty")
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Username Empty',
+                showConfirmButton: false,
+                timer: 1500
+            })
         } else if (this.email.value === "") {
-            alert("email empty")
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Email Empty',
+                showConfirmButton: false,
+                timer: 1500
+            })
         } else if (this.password.value === "") {
-            alert("password empty")
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Password Empty',
+                showConfirmButton: false,
+                timer: 1500
+            })
         } else {
             if (this.email.value.includes("@")) {
                 axios.post(`${API_URL}/users/register`, {
                     username: this.username.value,
                     email: this.email.value,
                     password: this.password.value,
-                }).then((response) => {
-                    alert("register success ✔")
-                }).catch((error) => {
-                    if (error.response) {
-                        // The request was made and the server responded with a status code
-                        // that falls out of the range of 2xx
+                })                
+                .then((response) => {                    
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'register success ✔',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })                    
+                })
+                .catch((error) => {
+                    if (error.response) {                        
                         console.log(error.response.data.message);
-                        alert(error.response.data.message);
-                        // console.log(error.response.status);
-                        // console.log(error.response.headers);
+                        // alert(error.response.data.message);   
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: (error.response.data.message),                            
+                          })                     
                     }
                 })
-            } else {
-                alert("email didnt contain @")
+            } else {                
+                Swal.fire({
+                    position: 'center',
+                    icon: 'info',
+                    title: 'email didnt contain @',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
             }
         }
     }
@@ -211,7 +244,14 @@ class LandingPage extends React.Component {
 
     btLogin = () => {
         if (this.emailLogin.value == "" || this.passwordLogin.value == "") {
-            alert(`Input your Username & Password❗`)
+            // alert(`Input your Username & Password❗`)
+            Swal.fire({
+                position: 'center',
+                icon: 'info',
+                title: 'Input your Username & Password❗',
+                showConfirmButton: false,
+                timer: 1500
+            })
         } else {
             this.props.onLogin(this.emailLogin.value, this.passwordLogin.value)
         }

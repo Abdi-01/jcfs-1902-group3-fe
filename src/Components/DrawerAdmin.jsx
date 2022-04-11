@@ -42,7 +42,7 @@ const DrawerAdmin = (props) => {
                 <DrawerContent>
                     <DrawerCloseButton />
                     <DrawerHeader style={{ padding: 40, textAlign: "center" }}>
-                        <img style={{ borderRadius: "50%" }} src={photo}></img>
+                        <img style={{ borderRadius: "50%" }} src={API_URL + photo}></img>
                         <h5 style={{ paddingTop: "20px" }}>{username}</h5>
                     </DrawerHeader>
 
