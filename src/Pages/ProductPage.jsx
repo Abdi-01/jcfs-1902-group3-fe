@@ -189,7 +189,7 @@ const ProductPage = () => {
                     </Box>
                 </Box>
                 <Box display='flex' justifyContent='end'>
-                    <Button size='sm' colorScheme='blackAlpha' onClick={() => btFilter(valueJenis, valueMaterial)}>Terapkan Filter</Button>
+                    <Button size='sm' colorScheme='blackAlpha' bgColor='#6b3c3b' onClick={() => btFilter(valueJenis, valueMaterial)}>Terapkan Filter</Button>
                 </Box>
             </Box>
             <hr></hr>

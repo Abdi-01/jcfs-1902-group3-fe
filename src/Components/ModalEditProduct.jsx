@@ -11,7 +11,7 @@ const ModalEditProduct = (props) => {
     const [btColor, setBtColor] = useState('yellow')
     const [btName, setBtName] = useState('Edit')
     const [editImage, seteditImage] = useState([])
-    const [data, setData] = useState({ idmaterial: null, idkategori: null, idjenis_product: null, nama: '', harga: 0, deskripsi: '' })
+    const [data, setData] = useState({ idmaterial: null, idkategori: null, idjenis_product: null, nama: '', harga: 0, deskripsi: '', berat: 0 })
     const [stockEdit, setStockEdit] = useState([])
     const { dataKategori, dataMaterial, dataJenisProduct } = useSelector((state) => {
         return {
@@ -20,7 +20,7 @@ const ModalEditProduct = (props) => {
             dataJenisProduct: state.jenisProductReducer.listJenisProduct
         }
     })
-    let { idproduct, nama, harga, stock, idkategori, idmaterial, idjenis_product, deskripsi, images } = props.detailProduct
+    let { idproduct, nama, harga, stock, idkategori, idmaterial, idjenis_product, deskripsi, images, berat } = props.detailProduct
     let dispatch = useDispatch()
 
     const printKategori = () => {
@@ -115,12 +115,14 @@ const ModalEditProduct = (props) => {
             harga: data.harga ? data.harga : harga,
             deskripsi: data.deskripsi ? data.deskripsi : deskripsi,
             stock: stockEdit.length > 0 ? stockEdit : stock,
+            berat: data.berat ? data.berat : berat,
             date: date
         }
         try {
             let res = await dispatch(updateProductAction(idproduct, temp))
             if (res.success) {
                 btKlikCancel()
+                setData({ idmaterial: null, idkategori: null, idjenis_product: null, nama: '', harga: 0, deskripsi: '', berat: 0 })
                 dispatch(getProductAction())
             }
         } catch (error) {
@@ -165,6 +167,12 @@ const ModalEditProduct = (props) => {
                             <FormControl mr='1vw'>
                                 <FormLabel>Stock</FormLabel>
                                 <NumberInput defaultValue={stock ? stock[0].qty : 1} min={1} disabled={enable} onChange={(event) => handleStock(event)}>
+                                    <NumberInputField />
+                                </NumberInput>
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>Berat(kg)</FormLabel>
+                                <NumberInput defaultValue={berat} disabled={enable} onChange={(event) => setData({ ...data, berat: event })} min={0}>
                                     <NumberInputField />
                                 </NumberInput>
                             </FormControl>

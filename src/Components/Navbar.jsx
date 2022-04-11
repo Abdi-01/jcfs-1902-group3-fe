@@ -14,6 +14,7 @@ const Navbar = () => {
     const [openUser, setOpenUser] = useState(false)
     const [openAdmin, setOpenAdmin] = useState(false)
     const { dataKategori, carts, username, idrole } = useSelector((state) => {
+
         return {
             dataKategori: state.kategoriReducer.listKategori,
             carts: state.transactionReducer.carts,
