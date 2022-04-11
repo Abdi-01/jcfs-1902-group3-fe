@@ -10,6 +10,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { API_URL } from '../helper';
 import ModalForgotPassword from '../Components/ModalForgotPassword';
 import Swal from 'sweetalert2';
+import { Link } from 'react-router-dom';
 
 class LandingPage extends React.Component {
     constructor(props) {
@@ -40,7 +41,7 @@ class LandingPage extends React.Component {
                                 <div style={{ paddingTop: "35px" }}>
                                     <Button colorScheme='teal' size={'lg'} variant='solid' style={{ borderRadius: "50%" }}>
                                         <img src={productIcon} style={{ blockSize: 20 }} />
-                                    </Button>                                                                    
+                                    </Button>
                                     <Button colorScheme='white' variant='link' style={{ paddingLeft: 10 }}>
                                         Check Our Product
                                     </Button>
@@ -64,17 +65,17 @@ class LandingPage extends React.Component {
                                                     <div style={{ textAlign: "center" }}>
                                                         <p style={{ fontWeight: 500, color: "#6b3c3b", fontSize: 27 }}>Register Account</p>
                                                         <div style={{}}>
-                                                            <FormGroup style={{ marginTop: 25, textAlign: "center", border: "none" }}>                                                                
+                                                            <FormGroup style={{ marginTop: 25, textAlign: "center", border: "none" }}>
                                                                 <Input type="text" id="textEmail" placeholder="Username"
                                                                     innerRef={(element) => this.username = element}
                                                                     style={{ width: 300, margin: "auto" }} />
                                                             </FormGroup>
-                                                            <FormGroup style={{ marginTop: 25 }}>                                                                
+                                                            <FormGroup style={{ marginTop: 25 }}>
                                                                 <Input type="text" id="textEmail" placeholder="Email"
                                                                     innerRef={(element) => this.email = element}
                                                                     style={{ width: 300, margin: "auto" }} />
                                                             </FormGroup>
-                                                            <FormGroup style={{ marginTop: 25 }}>                                                               
+                                                            <FormGroup style={{ marginTop: 25 }}>
                                                                 <InputGroup style={{ width: 300, margin: "auto" }}>
                                                                     <Input id="textEmail" placeholder="Password"
                                                                         innerRef={(element) => this.password = element} type={this.state.passType}
@@ -91,12 +92,12 @@ class LandingPage extends React.Component {
                                                 <TabPanel>
                                                     <div style={{ textAlign: "center" }}>
                                                         <p style={{ fontWeight: 500, color: "#6b3c3b", fontSize: 27 }}>LOGIN</p>
-                                                        <FormGroup style={{ marginTop: 25 }} >                                                            
+                                                        <FormGroup style={{ marginTop: 25 }} >
                                                             <Input type="text" id="textEmail" placeholder="Email"
                                                                 innerRef={(element) => this.emailLogin = element}
                                                                 style={{ width: 300, margin: "auto" }} />
                                                         </FormGroup>
-                                                        <FormGroup style={{ marginTop: 25 }} >                                                            
+                                                        <FormGroup style={{ marginTop: 25 }} >
                                                             <InputGroup style={{ width: 300, margin: "auto" }}>
                                                                 <Input id="textEmail" placeholder="Password"
                                                                     innerRef={(element) => this.passwordLogin = element} type={this.state.passType} />
@@ -120,33 +121,66 @@ class LandingPage extends React.Component {
                     </div>
                 </div >
             )
-        }else{
-            return(
-                <div>
-                <ModalForgotPassword
-                    modalOpenForgot={this.state.modalOpenForgot}
-                    btClose={() => this.setState({ modalOpenForgot: !this.state.modalOpenForgot })}
-                />
-                <div className='bg-image' style={{ height: "75vh", backgroundRepeat: "no-repeat", width: "100%", backgroundSize: "cover", backgroundPosition: "80% 40%", backgroundImage: "url('https://images.pexels.com/photos/5711874/pexels-photo-5711874.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260')" }}>
-                </div>                
-                <div className='bg-text' style={{ width: "80%" }}>
-                    {/* <div> */}
-                        <div style={{ textAlign:"center" }}>
-                            <h6 style={{ fontSize: "48px", fontWeight: 600, marginBottom: "50px" }}>We help startups launch their products with awesome website</h6>
-                            <p style={{ fontSize: "17px", paddingTop: "" }}>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                            <div style={{ paddingTop: "35px" }}>
-                                <Button colorScheme='teal' size={'lg'} variant='solid' style={{ borderRadius: "50%" }}>
-                                    <img src={productIcon} style={{ blockSize: 20 }} />
-                                </Button>                                
-                                <Button colorScheme='white' variant='link' style={{ paddingLeft: 10 }}>
-                                    Check Out Cart
-                                </Button>
+        } else {
+            if (this.props.idrole >= 2) {
+                return (
+                    <div>
+                        <ModalForgotPassword
+                            modalOpenForgot={this.state.modalOpenForgot}
+                            btClose={() => this.setState({ modalOpenForgot: !this.state.modalOpenForgot })}
+                        />
+                        <div className='bg-image' style={{ height: "75vh", backgroundRepeat: "no-repeat", width: "100%", backgroundSize: "cover", backgroundPosition: "80% 40%", backgroundImage: "url('https://images.pexels.com/photos/5711874/pexels-photo-5711874.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260')" }}>
+                        </div>
+                        <div className='bg-text' style={{ width: "80%" }}>
+                            <div style={{ textAlign: "center" }}>
+                                <h6 style={{ fontSize: "48px", fontWeight: 600, marginBottom: "50px" }}>We help startups launch their products with awesome website</h6>
+                                <p style={{ fontSize: "17px", paddingTop: "" }}>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                <div style={{ paddingTop: "35px" }}>
+                                    <Button colorScheme='teal' size={'lg'} variant='solid' style={{ borderRadius: "50%" }}>
+                                        <img src={productIcon} style={{ blockSize: 20 }} />
+                                    </Button>
+                                    <Button colorScheme='white' variant='link' style={{ paddingLeft: 10 }}>
+                                        Check Out Cart
+                                    </Button>
+                                </div>
                             </div>
                         </div>
-                    {/* </div> */}
-                </div>
-            </div >
-            )
+                    </div >
+                )
+            } else {
+                if (this.props.idrole == 1) {
+                    return (
+                        <div>
+                            <ModalForgotPassword
+                                modalOpenForgot={this.state.modalOpenForgot}
+                                btClose={() => this.setState({ modalOpenForgot: !this.state.modalOpenForgot })}
+                            />
+                            <div className='bg-image' style={{ height: "75vh", backgroundRepeat: "no-repeat", width: "100%", backgroundSize: "cover", backgroundPosition: "80% 40%", backgroundImage: "url('https://images.pexels.com/photos/5711874/pexels-photo-5711874.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260')" }}>
+                            </div>
+                            <div className='bg-text' style={{ width: "80%" }}>
+                                <div style={{ textAlign: "center" }}>
+                                    <h6 style={{ fontSize: "48px", fontWeight: 600, marginBottom: "50px" }}>Ini Super Admin</h6>
+                                    <p style={{ fontSize: "17px", paddingTop: "" }}>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                    <Box className='row' style={{ paddingTop: "35px", width: "50%", margin: "auto" }}>
+                                        <Box className='col-6'>
+                                            <Link to='/warehouse'>
+                                                <Button colorScheme='teal' size={'lg'} variant='solid'>
+                                                    Create Warehouse
+                                                </Button>
+                                            </Link>
+                                        </Box>
+                                        <Box className='col-6'>
+                                            <Button colorScheme='teal' size='lg' variant='solid' style={{ paddingLeft: 10 }}>
+                                                Add Admin Warehouse
+                                            </Button>
+                                        </Box>
+                                    </Box>
+                                </div>
+                            </div>
+                        </div >
+                    )
+                }
+            }
         }
     }
 
@@ -195,28 +229,28 @@ class LandingPage extends React.Component {
                     username: this.username.value,
                     email: this.email.value,
                     password: this.password.value,
-                })                
-                .then((response) => {                    
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'register success ✔',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })                    
                 })
-                .catch((error) => {
-                    if (error.response) {                        
-                        console.log(error.response.data.message);
-                        // alert(error.response.data.message);   
+                    .then((response) => {
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: (error.response.data.message),                            
-                          })                     
-                    }
-                })
-            } else {                
+                            position: 'center',
+                            icon: 'success',
+                            title: 'register success ✔',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    })
+                    .catch((error) => {
+                        if (error.response) {
+                            console.log(error.response.data.message);
+                            // alert(error.response.data.message);   
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: (error.response.data.message),
+                            })
+                        }
+                    })
+            } else {
                 Swal.fire({
                     position: 'center',
                     icon: 'info',
@@ -257,13 +291,13 @@ class LandingPage extends React.Component {
         }
     }
 
-    render() {        
-            return (
-                <div>
-                    {this.printLandingPage()}
-                </div >
-            );                                  
-        
+    render() {
+        return (
+            <div>
+                {this.printLandingPage()}
+            </div >
+        );
+
     }
 }
 const mapToProps = (state) => {
@@ -271,6 +305,7 @@ const mapToProps = (state) => {
         username: state.userReducer.username,
         email: state.userReducer.email,
         iduser: state.userReducer.iduser,
+        idrole: state.userReducer.idrole
     }
 }
 

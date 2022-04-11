@@ -147,3 +147,21 @@ export const getAddress = () => {
         }
     }
 }
+export const getWarehouse = () => {
+    return async (dispatch) => {
+        try {
+            let token = localStorage.getItem('data')
+            let res = await axios.get(`${API_URL}/admin/getwarehouse`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            dispatch({
+                type: "GET_WAREHOUSE",
+                payload: res.data.warehouse
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}

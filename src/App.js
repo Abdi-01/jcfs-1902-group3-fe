@@ -22,6 +22,7 @@ import DetailProduct from './Pages/DetailProduct';
 import CheckoutPage from './Pages/CheckoutPage';
 import VerifyPage from './Pages/Verify';
 import NotFoundPage from './Pages/NotFoundPage';
+import WarehousePage from './Pages/Warehouse';
 
 function App() {
 
@@ -63,12 +64,12 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/resetpassword/:token" element={<ResetPasswordPage />} />
         <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        {/* <Route path="/verification/:token" element={<VerificationPage />} /> */}
+        <Route path="/register" element={<RegisterPage />} />        
         <Route path="/verification/:token" element={<VerifyPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path='/product' element={<ProductPage />} />
         <Route path='/detail/product' element={<DetailProduct />} />
+        <Route path='/warehouse' element={<WarehousePage />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
