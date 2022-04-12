@@ -129,19 +129,32 @@ export const newPassword = (password) => {
     }
 }
 
-export const getAddress = () => {
+export const getAddress = (idstatus = null) => {
     return async (dispatch) => {
         try {
+            let res
             let token = localStorage.getItem('data')
-            let res = await axios.get(`${API_URL}/users/getaddress`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            dispatch({
-                type: "GET_ADDRESS",
-                payload: res.data.address
-            })
+            if (idstatus) {
+                res = await axios.get(`${API_URL}/users/getaddress?idstatus=${idstatus}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+            } else {
+                res = await axios.get(`${API_URL}/users/getaddress`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+            }
+            if(res.data.success){
+                dispatch({
+                    type: "GET_ADDRESS",
+                    payload: res.data.address
+                })
+
+                return {success: res.data.success, data: res.data.address}
+            }
         } catch (error) {
             console.log(error)
         }
@@ -159,6 +172,24 @@ export const getWarehouse = () => {
             dispatch({
                 type: "GET_WAREHOUSE",
                 payload: res.data.warehouse
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+export const getAdmin = () => {
+    return async (dispatch) => {
+        try {
+            let token = localStorage.getItem('data')
+            let res = await axios.get(`${API_URL}/admin/getadmin`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            dispatch({
+                type: "GET_ADMIN",
+                payload: res.data.getAdmin
             })
         } catch (error) {
             console.log(error)

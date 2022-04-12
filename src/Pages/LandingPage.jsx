@@ -10,7 +10,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { API_URL } from '../helper';
 import ModalForgotPassword from '../Components/ModalForgotPassword';
 import Swal from 'sweetalert2';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 class LandingPage extends React.Component {
     constructor(props) {
@@ -20,7 +20,7 @@ class LandingPage extends React.Component {
         passShow: <AiOutlineEyeInvisible />,
         passType: "password",
         dataUser: [],
-        modalOpenPassword: false
+        modalOpenPassword: false,
     }
 
     printLandingPage = () => {
@@ -66,18 +66,18 @@ class LandingPage extends React.Component {
                                                         <p style={{ fontWeight: 500, color: "#6b3c3b", fontSize: 27 }}>Register Account</p>
                                                         <div style={{}}>
                                                             <FormGroup style={{ marginTop: 25, textAlign: "center", border: "none" }}>
-                                                                <Input type="text" id="textEmail" placeholder="Username"
+                                                                <Input type="text" id="textEmail" value={this.state.username} defaultValue={this.state.username} placeholder='Username'
                                                                     innerRef={(element) => this.username = element}
                                                                     style={{ width: 300, margin: "auto" }} />
                                                             </FormGroup>
                                                             <FormGroup style={{ marginTop: 25 }}>
-                                                                <Input type="text" id="textEmail" placeholder="Email"
+                                                                <Input type="text" id="textEmail" value={this.state.email} defaultValue={this.state.email} placeholder='Email'
                                                                     innerRef={(element) => this.email = element}
                                                                     style={{ width: 300, margin: "auto" }} />
                                                             </FormGroup>
                                                             <FormGroup style={{ marginTop: 25 }}>
                                                                 <InputGroup style={{ width: 300, margin: "auto" }}>
-                                                                    <Input id="textEmail" placeholder="Password"
+                                                                    <Input id="textEmail" value={this.state.password} defaultValue={this.state.password} placeholder='Password'
                                                                         innerRef={(element) => this.password = element} type={this.state.passType}
                                                                     />
                                                                     <InputGroupText style={{ cursor: "pointer" }} onClick={this.showPass}>
@@ -170,9 +170,11 @@ class LandingPage extends React.Component {
                                             </Link>
                                         </Box>
                                         <Box className='col-6'>
-                                            <Button colorScheme='teal' size='lg' variant='solid' style={{ paddingLeft: 10 }}>
-                                                Add Admin Warehouse
-                                            </Button>
+                                            <Link to='/addadmin'>
+                                                <Button colorScheme='teal' size='lg' variant='solid' style={{ paddingLeft: 10 }}>
+                                                    Add Admin Warehouse
+                                                </Button>
+                                            </Link>
                                         </Box>
                                     </Box>
                                 </div>
@@ -231,6 +233,7 @@ class LandingPage extends React.Component {
                     password: this.password.value,
                 })
                     .then((response) => {
+                        console.log("data regis", response.dataRegis)
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
@@ -238,11 +241,15 @@ class LandingPage extends React.Component {
                             showConfirmButton: false,
                             timer: 1500
                         })
+                        this.setState({
+                            username: "",
+                            email: "",
+                            password: ""
+                        })
                     })
                     .catch((error) => {
                         if (error.response) {
                             console.log(error.response.data.message);
-                            // alert(error.response.data.message);   
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
@@ -261,10 +268,6 @@ class LandingPage extends React.Component {
             }
         }
     }
-
-    // componentDidMount() {
-    //     this.getData()
-    // }
 
     getData = () => {
         axios.get(`${API_URL}/users/`)
