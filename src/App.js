@@ -23,6 +23,7 @@ import CheckoutPage from './Pages/CheckoutPage';
 import VerifyPage from './Pages/Verify';
 import NotFoundPage from './Pages/NotFoundPage';
 import WarehousePage from './Pages/Warehouse';
+import MenungguPembayaranPage from './Pages/MenungguPembayaranPage';
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
           idrole == 3 ?
           <>
           <Route path='/product/checkout' element={<CheckoutPage/>} />
+          <Route path='/payment' element={<MenungguPembayaranPage/>} />
           </>
           :
           idrole ==2 ?

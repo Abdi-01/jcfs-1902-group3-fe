@@ -106,3 +106,50 @@ export const getOngkirAction = (data) => {
         }
     }
 }
+export const getTransactionAction = (idstatus = null) => {
+    return async (dispatch) => {
+        try {
+            let token = localStorage.getItem('data')
+            let res
+            if (token) {
+                if (idstatus) {
+                    res = await axios.get(`${API_URL}/transactions?idstatus=${idstatus}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                } else {
+                    res = await axios.get(`${API_URL}/transactions`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                }
+                dispatch({
+                    type: 'GET DATA TRANSAKSI',
+                    payload: res.data.dataTransaksi
+                })
+                return { success: res.data.success, data: res.data.dataTransaksi }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+export const uploadReceiptaAction = (idtransaksi, data) => {
+    return async (dispatch) => {
+        try {
+            let token = localStorage.getItem('data')
+            if (token) {
+                let res = await axios.patch(`${API_URL}/transactions/${idtransaksi}`, data, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                return { success: res.data.success }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
