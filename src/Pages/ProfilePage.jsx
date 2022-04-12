@@ -11,9 +11,9 @@ import axios from 'axios';
 import ModalChangePassword from '../Components/ModalChangePassword';
 import ModalChangePhone from '../Components/ModalChangePhone';
 import { getAddress, onLogin } from '../redux/actions';
+import Swal from 'sweetalert2';
 import ModalAddAddress from '../Components/ModalAddAddress';
 import { BsCheckCircle } from 'react-icons/bs';
-
 
 class ProfilePage extends React.Component {
     constructor(props) {
@@ -26,16 +26,51 @@ class ProfilePage extends React.Component {
         modalOpenPassword: false,
         modalOpenPhone: false,
         openModalAddAddress: false,
+        photo: [""]
     }
 
     componentDidMount() {
         this.props.getAddress()
     }
+
+    handlePhoto = (e) => {
+        let temp = [...this.state.photo]
+        temp[0] = { name: e.target.files[0].name, file: e.target.files[0] }
+        this.setState({
+            photo: temp
+        })
+    }
+
+    onBtSimpan = () => {
+        let token = localStorage.getItem("data");
+        let data = new FormData()
+        data.append('photo', this.state.photo[0].file)
+        console.log("cek data photo", data)
+        axios.patch(`${API_URL}/users/updatephoto`, data, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(res => {
+                console.log("cek res.data", res.data)
+                return Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Update Photo Berhasil',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }).then(result => {                
+                window.location.reload()
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
     onBtUbah = () => {
         let data = {
             password: this.inPassword.value
         }
-
         axios.patch(API_URL + `/users/changepassword`, data, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('data')}`
@@ -80,6 +115,7 @@ class ProfilePage extends React.Component {
             console.log(err)
         })
     }
+
 
     printAddressList = () => {
         return this.props.addressList.map((value, index) => {
@@ -147,9 +183,9 @@ class ProfilePage extends React.Component {
                     modalOpenPhone={this.state.modalOpenPhone}
                     btClose={() => this.setState({ modalOpenPhone: !this.state.modalOpenPhone })}
                 />
-                <ModalAddAddress
+                <ModalAddAddress 
                     openModalAddAddress={this.state.openModalAddAddress}
-                    btClose={() => this.setState({ openModalAddAddress: !this.state.openModalAddAddress })}
+                    btClose={() => this.setState({openModalAddAddress: !this.state.openModalAddAddress})}
                 />
                 <Box className='container' style={{}}>
                     <Box className='row' paddingTop={5} paddingBottom={5}>
@@ -173,7 +209,7 @@ class ProfilePage extends React.Component {
                                                             <Card style={{ border: "none", marginTop: "13px" }}>
                                                                 <CardImg
                                                                     alt="Profile Image"
-                                                                    src={this.props.photo}
+                                                                    src={API_URL + this.props.photo}
                                                                     style={{ margin: "auto", paddingLeft: 13, paddingRight: 13, borderRadius: "20px" }}
                                                                 />
                                                                 <CardBody>
@@ -182,7 +218,24 @@ class ProfilePage extends React.Component {
                                                                             id="exampleFile"
                                                                             name="file"
                                                                             type="file"
+                                                                            onChange={(e) => this.handlePhoto(e)} className='input-radius'
                                                                         />
+                                                                        {
+                                                                            this.state.photo[0] ?
+                                                                                <img src={URL.createObjectURL(this.state.photo[0].file)} alt='...' />
+                                                                                :
+                                                                                <img src={API_URL + this.state.photo[0]} alt='...' />
+                                                                        }
+                                                                        <Box className='col-12' style={{ textAlign: "center" }}>
+                                                                            <Button
+                                                                                colorScheme={'blackAlpha'}
+                                                                                variant='outline'
+                                                                                style={{ width: "75%", color: "#6b3c3b" }}
+                                                                                onClick={this.onBtSimpan}
+                                                                            >
+                                                                                Simpan
+                                                                            </Button>
+                                                                        </Box>
                                                                         <FormText className='text-muted' style={{ width: "90%", margin: "auto", fontSize: "12px" }}>
                                                                             Besar file: maksimum 10.000.000 bytes (10 Megabytes). Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG
                                                                         </FormText>
@@ -196,7 +249,7 @@ class ProfilePage extends React.Component {
                                                     </Box>
                                                 </Box>
                                                 <Box className='col-7'>
-                                                    <Box style={{ height: '45vh', background: "white", border: "none", borderRadius: "9px" }}>
+                                                    <Box style={{ background: "white", border: "none", borderRadius: "9px" }}>
                                                         <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Ubah Biodata Diri</p>
                                                         <Row style={{ paddingTop: "10px" }}>
                                                             <Box className='row'>
@@ -235,7 +288,7 @@ class ProfilePage extends React.Component {
                                                 <Box mt='20px'>
                                                     {this.printAddressList()}
                                                 </Box>
-                                            </Box>
+                                            </Box> 
                                         </TabPanel>
                                         <TabPanel>
                                             <p>three!</p>

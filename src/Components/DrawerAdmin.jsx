@@ -1,5 +1,4 @@
 import {
-    Box,
     Drawer,
     DrawerBody,
     DrawerFooter,
@@ -9,6 +8,7 @@ import {
     DrawerCloseButton,
     Button,
     useDisclosure,
+    Stack,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,8 +17,8 @@ import { Input, Label } from 'reactstrap'
 import { API_URL } from '../helper'
 import { logOutAction } from '../redux/actions'
 
-
-const DrawerUser = (props) => {
+// Management Product, Transaksi, Report
+const DrawerAdmin = (props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const btnRef = React.useRef()
     const [users, setUsers] = useState()
@@ -33,9 +33,9 @@ const DrawerUser = (props) => {
     return (
         <>
             <Drawer
-                isOpen={props.openUser}
+                isOpen={props.openAdmin}
                 placement='right'
-                onClose={props.closeUser}
+                onClose={props.closeAdmin}
                 finalFocusRef={btnRef}
             >
                 <DrawerOverlay />
@@ -46,15 +46,21 @@ const DrawerUser = (props) => {
                         <h5 style={{ paddingTop: "20px" }}>{username}</h5>
                     </DrawerHeader>
 
-                    <DrawerBody style={{ textAlign: "center" }}>
-                        <Box>
-                            <Link to='/profile'>
-                                <Button colorScheme={'blackAlpha'} variant='outline' style={{width:"200px"}} color='#6b3c3b' fontWeight={'600'} fontSize={'18px'}>Profile</Button>
+                    <DrawerBody style={{ margin:"auto" }}>
+                        <Stack spacing={8}>
+                            <Link to='/management/product'>
+                                <Button colorScheme={'blackAlpha'} variant='outline' style={{ width: "200px" }} color='#6b3c3b' fontWeight={'600'} fontSize={'18px'}>Management Product</Button>
                             </Link>
-                        </Box>
+                            {/* <Link> */}
+                            <Button colorScheme={'blackAlpha'} variant='outline' style={{ width: "200px" }} color='#6b3c3b' fontWeight={'600'} fontSize={'18px'}>Transaction</Button>
+                            {/* </Link> */}
+                            {/* <Link> */}
+                            <Button colorScheme={'blackAlpha'} variant='outline' style={{ width: "200px" }} color='#6b3c3b' fontWeight={'600'} fontSize={'18px'}>Report</Button>
+                            {/* </Link> */}
+                        </Stack>
                     </DrawerBody>
 
-                    <DrawerFooter style={{margin:"auto"}}>
+                    <DrawerFooter style={{margin:'auto'}}>
                         <Link to='/'>
                             <Button
                                 variant='solid'
@@ -75,4 +81,4 @@ const DrawerUser = (props) => {
     )
 }
 
-export default DrawerUser
+export default DrawerAdmin

@@ -38,21 +38,11 @@
   }
 }
 
-.bg-image {
-  /* Add the blur effect */
+.bg-image {  
   filter: brightness(70%);
-  /* -webkit-filter: blur(2px); */
-
-  /* Full height */
-  /* height: 100%; */
-  /* width: 100%; */
-
-  /* Center and scale the image nicely */
-  /* background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover; */
-  /* opacity:0.8; */
-  /* background-color: black;   */
+}
+.bg-image-verify {
+  filter: brightness(50%)
 }
 
 .bg-text {
@@ -62,7 +52,7 @@
   font-weight: bold;
   border: none;
   position: absolute;
-  top: 50%;
+  top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;

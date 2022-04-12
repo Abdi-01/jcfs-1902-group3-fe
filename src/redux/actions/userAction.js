@@ -28,12 +28,14 @@ export const verifyAction = () => {
     return async (dispatch) => {
         try {
             let token = window.location.pathname.split('/')[2]
+            console.log("token", token)
             if (token) {
                 let res = await axios.get(`${API_URL}/users/verify`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 })
+                console.log("asdasdsad",res.data)
                 if (res.data.success) {
                     localStorage.setItem("data", res.data.dataVerify.token)
                     // dispatch : meneruskan data ke reducer
