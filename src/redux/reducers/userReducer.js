@@ -1,16 +1,19 @@
 const INITIAL_STATE = {
     iduser: null,
+    idaddress: "",
     username: "",
     email: "",
     idrole: "",
-    status: "",
+    idstatus: "",
     password: "",
-    warehouse: "",
+    idwarehouse: "",
     gender: "",
     umur: "",
     no_telpon: "",
     photo: "",
-    nama:""
+    nama: "",
+    addressList: [],
+    warehouseList: []    
 }
 
 // Func userReducer : utk mereturn data dari action.payload agar dapat disimpan oleh STATE REDUCER
@@ -22,20 +25,31 @@ export const userReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 iduser: action.payload.iduser,
+                idaddress: action.payload.idaddress,
                 username: action.payload.username,
                 email: action.payload.email,
                 idrole: action.payload.idrole,
-                status: action.payload.status,
+                idstatus: action.payload.idstatus,
                 password: action.payload.password,
-                warehouse: action.payload.warehouse,
+                idwarehouse: action.payload.idwarehouse,
                 gender: action.payload.gender,
                 umur: action.payload.umur,
                 no_telpon: action.payload.no_telpon,
                 photo: action.payload.photo,
                 nama: action.payload.nama
             }
-            case "UPDATE_CART_USER":
-                return{...state,cart:action.payload}
+        case "UPDATE_CART_USER":
+            return { ...state, cart: action.payload }
+        case "GET_ADDRESS":
+            console.log("GET_ADDRESS REDUCER", action.payload)
+            return {
+                ...state, addressList: action.payload
+            }
+        case "GET_WAREHOUSE":
+            console.log("GET_WAREHOUSE REDUCER", action.payload)
+            return {
+                ...state, warehouseList: action.payload
+            }
         case "LOGOUT":
             return INITIAL_STATE
         default:

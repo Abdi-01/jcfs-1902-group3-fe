@@ -83,7 +83,7 @@ const ProductPage = () => {
             return product.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
                 return (
                     <>
-                        <Link to={`/detail/product?idproduct=${item.idproduct}`}  >
+                        <Link to={`/detail/product?idproduct=${item.idproduct}`} state={item}  >
                             <Box maxW={'275px'} mt='80px' cursor='pointer' color='#6B3C3B' >
                                 <Box display='flex'>
                                     <Box position='absolute'>
@@ -189,7 +189,7 @@ const ProductPage = () => {
                     </Box>
                 </Box>
                 <Box display='flex' justifyContent='end'>
-                    <Button size='sm' colorScheme='blackAlpha' onClick={() => btFilter(valueJenis, valueMaterial)}>Terapkan Filter</Button>
+                    <Button size='sm' colorScheme='blackAlpha' bgColor='#6b3c3b' onClick={() => btFilter(valueJenis, valueMaterial)}>Terapkan Filter</Button>
                 </Box>
             </Box>
             <hr></hr>

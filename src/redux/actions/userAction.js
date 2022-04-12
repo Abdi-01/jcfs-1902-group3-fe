@@ -28,12 +28,14 @@ export const verifyAction = () => {
     return async (dispatch) => {
         try {
             let token = window.location.pathname.split('/')[2]
+            console.log("token", token)
             if (token) {
                 let res = await axios.get(`${API_URL}/users/verify`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 })
+                console.log("asdasdsad",res.data)
                 if (res.data.success) {
                     localStorage.setItem("data", res.data.dataVerify.token)
                     // dispatch : meneruskan data ke reducer
@@ -121,6 +123,56 @@ export const newPassword = (password) => {
                 })
                 return { success: res.data.success }
             }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+
+export const getAddress = (idstatus = null) => {
+    return async (dispatch) => {
+        try {
+            let res
+            let token = localStorage.getItem('data')
+            if (idstatus) {
+                res = await axios.get(`${API_URL}/users/getaddress?idstatus=${idstatus}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+            } else {
+                res = await axios.get(`${API_URL}/users/getaddress`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+            }
+            if(res.data.success){
+                dispatch({
+                    type: "GET_ADDRESS",
+                    payload: res.data.address
+                })
+
+                return {success: res.data.success, data: res.data.address}
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+export const getWarehouse = () => {
+    return async (dispatch) => {
+        try {
+            let token = localStorage.getItem('data')
+            let res = await axios.get(`${API_URL}/admin/getwarehouse`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            dispatch({
+                type: "GET_WAREHOUSE",
+                payload: res.data.warehouse
+            })
         } catch (error) {
             console.log(error)
         }

@@ -48,12 +48,9 @@ class ResetPasswordPage extends React.Component {
             return <Navigate to="/" />
         }
         return (
-            <Box style={{ backgroundColor: "rgb(239, 236, 234)", height: "90vh" }}>
-                <Box className='container' style={{ padding: 150, margin:"auto" }}>
-                    <Box className='col-6'>
-                        
-                    </Box>
-                    <Box className='col-8' boxShadow={'dark-lg'} style={{ height: '40vh', background: "white", border: "none", borderRadius: "9px", width: "30vw", margin:"auto", padding:50 }}>
+            <Box style={{ backgroundColor: "rgb(239, 236, 234)" }}>
+                <Box className='container' style={{ padding: 100, margin:"auto" }}>                    
+                    <Box className='col-8' boxShadow={'dark-lg'} style={{ background: "white", border: "none", borderRadius: "9px", margin:"auto", padding:70 }}>
                     <div style={{ textAlign: "center" }}>
                         <p style={{ fontSize: "18px", fontWeight: 800, color: "#6b3c3b" }}>Masukan Password Baru Anda</p>
                     </div>
@@ -76,10 +73,7 @@ class ResetPasswordPage extends React.Component {
                             <Button colorScheme='teal' variant='solid' style={{ width: "100%", borderRadius: 20, fontSize: "20px" }} onClick={this.newPasswordFunc}>Submit</Button>
                         </div>
                     </Form>
-                    </Box>
-                    {/* <Box className='col-3'>
-
-                    </Box> */}
+                    </Box>                    
                 </Box>
             </Box>
         );
