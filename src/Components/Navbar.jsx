@@ -79,7 +79,7 @@ const Navbar = () => {
                                             <DrawerUser openUser={openUser} closeUser={() => setOpenUser(!openUser)} />
                                         </Box>
                                         :
-                                        idrole == 2 ?
+                                        idrole <= 2 ?
                                             <Box>
                                                 <Icon as={BsPerson} boxSize='20px' cursor='pointer' onClick={() => setOpenAdmin(!openAdmin)} />
                                                 <DrawerAdmin openAdmin={openAdmin} closeAdmin={() => setOpenAdmin(!openAdmin)} />

@@ -6,13 +6,14 @@ const INITIAL_STATE = {
     idrole: "",
     idstatus: "",
     password: "",
-    warehouse: "",
+    idwarehouse: "",
     gender: "",
     umur: "",
     no_telpon: "",
     photo: "",
     nama: "",
-    addressList: []    
+    addressList: [],
+    warehouseList: []    
 }
 
 // Func userReducer : utk mereturn data dari action.payload agar dapat disimpan oleh STATE REDUCER
@@ -43,6 +44,11 @@ export const userReducer = (state = INITIAL_STATE, action) => {
             console.log("GET_ADDRESS REDUCER", action.payload)
             return {
                 ...state, addressList: action.payload
+            }
+        case "GET_WAREHOUSE":
+            console.log("GET_WAREHOUSE REDUCER", action.payload)
+            return {
+                ...state, warehouseList: action.payload
             }
         case "LOGOUT":
             return INITIAL_STATE
