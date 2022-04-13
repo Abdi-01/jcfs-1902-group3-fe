@@ -53,18 +53,18 @@ class ModalAddAdmin extends React.Component {
             })
     }
 
-    getData = async () => {
-        try {
-            let res = await axios.get(`${API_URL}/admin/getadmin`)
-            if (res.data.success) {
-                this.setState({
-                    nama: res.data.getAdmin
-                })
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    // getData = async () => {
+    //     try {
+    //         let res = await axios.get(`${API_URL}/admin/getadmin`)
+    //         if (res.data.success) {
+    //             this.setState({
+    //                 nama: res.data.getAdmin
+    //             })
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
     printWarehouse = () => {
         if (this.props.warehouseList.length > 0) {
             return this.props.warehouseList.map((item, index) => {
@@ -74,37 +74,19 @@ class ModalAddAdmin extends React.Component {
             })
         }
     }
-    // handleKota = async (event) => {
-    //     let res = await axios.get(`${API_URL}/alamat/kota/${event.target.value}`)
-    //     if (res.data.success) {
-    //         this.setState({
-    //             kota: res.data.dataKota
-    //         })
-    //     }
-    //     this.setState({
-    //         idprovinsi: event.target.value
-    //     })
-    // }
-    // printKota = () => {
-    //     if (this.state.kota.length > 0) {
-    //         return this.state.kota.map((item, index) => {
-    //             return (
-    //                 <option value={item.city_id}>{item.city_name}</option>
-    //             )
-    //         })
-    //     }
-    // }
+
     handleInput = (event, nameProp) => {
         this.setState({
             [nameProp]: event.target.value
         })
     }
     componentDidMount() {
-        this.getData()
+        // this.getData()
+        this.props.getWarehouse()
         console.log("cek warehouselist cdm", this.props.warehouseList)
     }
-    
-    
+
+
     render() {
         console.log("cek warehouselist", this.props.warehouseList)
         return (
@@ -120,7 +102,7 @@ class ModalAddAdmin extends React.Component {
                         Add Admin
                     </ModalHeader>
                     <ModalBody>
-                    <InputGroup className='d-flex row' style={{ justifyContent: "space-between" }}>
+                        <InputGroup className='d-flex row' style={{ justifyContent: "space-between" }}>
                             <Box className='col-6'>
                                 <FormGroup style={{ width: "90%" }}>
                                     <Label>Username</Label>
@@ -130,10 +112,10 @@ class ModalAddAdmin extends React.Component {
                             <Box className='col-6'>
                                 <FormGroup className='col-6' style={{ width: "90%" }}>
                                     <Label>No Handphone</Label>
-                                    <Input type='text' placeholder='No Handphone' onChange={(event) => this.handleInput(event, 'password')} />
+                                    <Input type='text' placeholder='No Handphone' onChange={(event) => this.handleInput(event, 'no_telpon')} />
                                 </FormGroup>
                             </Box>
-                        </InputGroup>                        
+                        </InputGroup>
                         <InputGroup className='d-flex row' style={{ justifyContent: "space-between" }}>
                             <Box className='col-6'>
                                 <FormGroup style={{ width: "90%" }}>
@@ -152,13 +134,13 @@ class ModalAddAdmin extends React.Component {
                             <FormGroup style={{ width: '90%' }}>
                                 <Label>Warehouse</Label>
                                 <Input type='select' placeholder='Warehouse' onChange={(event) => this.handleInput(event, 'idwarehouse')}>
-                                    <option value='idwarehouse' selected>Pilih Warehouse</option>
+                                    <option value={null} selected>Pilih Warehouse</option>
                                     {this.printWarehouse()}
                                 </Input>
                             </FormGroup>
                         </InputGroup>
                         <div style={{ float: "right", marginTop: 20 }}>
-                            <Button colorScheme={'teal'} onClick={this.btSimpan} style={{ borderRadius: 10 }} className='bt-orange'>
+                            <Button colorScheme={'teal'} onClick={this.btSimpan} style={{ borderRadius: 10 }}>
                                 Simpan
                             </Button>
                         </div>

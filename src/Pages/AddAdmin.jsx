@@ -2,7 +2,7 @@ import { Box, Button, Container } from '@chakra-ui/react';
 import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Card, CardBody, CardSubtitle, CardText, CardTitle } from 'reactstrap';
+import { ButtonGroup, Card, CardBody, CardSubtitle, CardText, CardTitle, Input } from 'reactstrap';
 import ModalAddAdmin from '../Components/ModalAddAdmin';
 import { API_URL } from '../helper';
 import { getAdmin } from '../redux/actions';
@@ -13,41 +13,52 @@ class AddAdminPage extends React.Component {
     }
 
     state = {
-        // getNamaWarehouse: [],
-        ModalAddAdmin: false
+        ModalAddAdmin: false,
+        page: 1,
+        limit: 4
     }
-
-    // getNamaWarehouse = () => {
-    //     axios.get(`${API_URL}/admin/getnamawarehouse/${this.props.adminList.idwarehouse}`)
-    //         .then((response) => {
-    //             console.log("GET NAMA WAREHOUSE", response.getNamaWarehouse)
-    //             this.setState({ getNamaWarehouse: response.getNamaWarehouse })
-    //         }).catch((error) => {
-    //             console.log(error)
-    //         })
-    // }
 
     componentDidMount() {
         this.props.getAdmin()
     }
 
+    printBtPagination = () => {
+        let btn = []
+        for (let i = 0; i < Math.ceil(this.props.adminList.length / 9); i++) {
+            btn.push(<Button outline color="primary"
+                disabled={this.state.page == i + 1 ? true : false}
+                onClick={() => this.setState({ page: i + 1 })}>
+                {i + 1}
+            </Button>)
+        }
+        return btn;
+    }
+
+    printPagination = () => {
+        return (
+            <Box className='my-5 d-flex justify-content-center'>
+                <ButtonGroup>
+                    {
+                        this.printBtPagination()
+                    }
+                </ButtonGroup>
+            </Box>
+        )
+    }
+
     printAdminList = () => {
-        return this.props.adminList.map((value, index) => {
+        let { page } = this.state
+        return this.props.adminList.slice(page > 1 ? (page - 1) * 9 : page - 1, page * 9).map((value, index) => {
             return (
-                <Box className='col-6' style={{ paddingTop: "1%", paddingBottom: "1%" }}>
+                <Box className='col-4' style={{ paddingTop: "1%", paddingBottom: "1%" }}>
                     <Card
                         style={{ borderColor: "#6b3c3b", borderRadius: "9px" }}
                     >
                         <CardBody>
-                            <Box className='row'>
-                                <CardTitle className='col-9'>
+                            <Box>
+                                <CardTitle>
                                     <Box style={{ fontWeight: 600 }}>
                                         {value.username}
-                                    </Box>
-                                </CardTitle>
-                                <CardTitle className='col-3'>
-                                    <Box style={{ fontWeight: 600 }}>
-
                                     </Box>
                                 </CardTitle>
                             </Box>
@@ -57,10 +68,10 @@ class AddAdminPage extends React.Component {
                                 >
                                     <p>No Handphone : {value.no_telpon}</p>
                                     <p>Email : {value.email}</p>
-                                    <p>Warehouse : {value.nama}</p>
+                                    <p>{value.nama}</p>
                                 </CardSubtitle>
                             </Box>
-                            <Box className='row' style={{ width: "40%", paddingTop: "3%" }}>
+                            <Box className='row' style={{ width: "50%", paddingTop: "3%" }}>
                                 <Box className='col-6'>
                                     <Button
                                         colorScheme={'blackAlpha'}
@@ -70,7 +81,7 @@ class AddAdminPage extends React.Component {
                                         Edit Admin
                                     </Button>
                                 </Box>
-                                <Box className='col-6' style={{ paddingLeft: "30%" }}>
+                                <Box className='col-6' style={{ paddingLeft: "40%" }}>
                                     <Button
                                         colorScheme={'teal'}
                                     >
@@ -93,7 +104,7 @@ class AddAdminPage extends React.Component {
                     ModalAddAdmin={this.state.ModalAddAdmin}
                     btClose={() => this.setState({ ModalAddAdmin: !this.state.ModalAddAdmin })}
                 />
-                <Box style={{ padding: '8%' }}>
+                <Box style={{ padding: '3%' }}>
                     <Box style={{ textAlign: "right" }}>
                         <Button
                             colorScheme={'blackAlpha'}
@@ -106,6 +117,13 @@ class AddAdminPage extends React.Component {
                     </Box>
                     <Box className='row'>
                         {this.printAdminList()}
+                    </Box>
+                    <Box className='my-5 d-flex justify-content-center'>
+                        <ButtonGroup>
+                            {
+                                this.printBtPagination()
+                            }
+                        </ButtonGroup>
                     </Box>
                 </Box>
             </Box>
