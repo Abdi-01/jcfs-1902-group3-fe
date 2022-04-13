@@ -7,30 +7,28 @@ import Swal from 'sweetalert2';
 import { API_URL } from '../helper';
 import { getAdmin, getWarehouse } from '../redux/actions/userAction';
 
-class ModalAddAdmin extends React.Component {
+class ModalUpdateAdmin extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            password: "",
-            email: "",
-            username: "",
+            email: '',
+            username: '',
             idwarehouse: "",
-            no_telpon: "",
-            nama: ""
+            no_telpon: '',
+            nama: ''
         }
     }
-    
-    btSimpan = async () => {
-        const { password, email, username, idwarehouse, no_telpon } = this.state
+
+    btSimpan = async ({ iduser }) => {
+        const { email, username, idwarehouse, no_telpon } = this.state
         let data = {
-            password,
             email,
             username,
             idwarehouse,
             no_telpon
         }
         let token = localStorage.getItem('data')
-        let res = await axios.post(`${API_URL}/admin/addadmin`, data, {
+        let res = await axios.patch(`${API_URL}/admin/updateadmin/${this.props.dataEdit.iduser}`, data, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -40,7 +38,7 @@ class ModalAddAdmin extends React.Component {
                 return Swal.fire({
                     position: 'center',
                     icon: 'success',
-                    title: 'Berhasil Tambah Admin',
+                    title: 'Berhasil Update Admin',
                     showConfirmButton: false,
                     timer: 1500
                 })
@@ -68,7 +66,7 @@ class ModalAddAdmin extends React.Component {
             [nameProp]: event.target.value
         })
     }
-    componentDidMount() {        
+    componentDidMount() {
         this.props.getWarehouse()
         console.log("cek warehouselist cdm", this.props.warehouseList)
     }
@@ -76,12 +74,15 @@ class ModalAddAdmin extends React.Component {
 
     render() {
         console.log("cek warehouselist", this.props.warehouseList)
+        console.log("cek adminList", this.props.adminList)
+        console.log("cek dataEdit", this.props.dataEdit)
+        let {username, no_telpon, email, idwarehouse, nama} = this.props.dataEdit
         return (
             <div>
                 <Modal
                     centered
                     style={{}}
-                    isOpen={this.props.ModalAddAdmin}
+                    isOpen={this.props.ModalUpdateAdmin}
                     toggle={this.props.btClose}
                     size='md'
                 >
@@ -93,13 +94,13 @@ class ModalAddAdmin extends React.Component {
                             <Box className='col-6'>
                                 <FormGroup style={{ width: "90%" }}>
                                     <Label>Username</Label>
-                                    <Input type='text' placeholder='Username' onChange={(event) => this.handleInput(event, 'username')} />
+                                    <Input type='text' defaultValue={username} onChange={(event) => this.handleInput(event, 'username')} />
                                 </FormGroup>
                             </Box>
                             <Box className='col-6'>
                                 <FormGroup className='col-6' style={{ width: "90%" }}>
                                     <Label>No Handphone</Label>
-                                    <Input type='text' placeholder='No Handphone' onChange={(event) => this.handleInput(event, 'no_telpon')} />
+                                    <Input type='text' defaultValue={no_telpon} onChange={(event) => this.handleInput(event, 'no_telpon')} />
                                 </FormGroup>
                             </Box>
                         </InputGroup>
@@ -107,21 +108,15 @@ class ModalAddAdmin extends React.Component {
                             <Box className='col-6'>
                                 <FormGroup style={{ width: "90%" }}>
                                     <Label>Email</Label>
-                                    <Input type='text' placeholder='Email' onChange={(event) => this.handleInput(event, 'email')} />
-                                </FormGroup>
-                            </Box>
-                            <Box className='col-6'>
-                                <FormGroup className='col-6' style={{ width: "90%" }}>
-                                    <Label>Password</Label>
-                                    <Input type='password' placeholder='Password' onChange={(event) => this.handleInput(event, 'password')} />
+                                    <Input type='text' defaultValue={email} onChange={(event) => this.handleInput(event, 'email')} />
                                 </FormGroup>
                             </Box>
                         </InputGroup>
                         <InputGroup className='d-flex '>
                             <FormGroup style={{ width: '90%' }}>
                                 <Label>Warehouse</Label>
-                                <Input type='select' placeholder='Warehouse' onChange={(event) => this.handleInput(event, 'idwarehouse')}>
-                                    <option value={null} selected>Pilih Warehouse</option>
+                                <Input type='select' defaultValue={idwarehouse} onChange={(event) => this.handleInput(event, 'idwarehouse')}>
+                                    <option value={this.props.dataEdit.idwarehouse} selected>Pilih Warehouse</option>
                                     {this.printWarehouse()}
                                 </Input>
                             </FormGroup>
@@ -143,8 +138,11 @@ const mapToProps = (state) => {
         iduser: state.userReducer.iduser,
         adminList: state.userReducer.adminList,
         idwarehouse: state.userReducer.idwarehouse,
-        warehouseList: state.userReducer.warehouseList
+        warehouseList: state.userReducer.warehouseList,        
+        email: state.userReducer.email,        
+        username: state.userReducer.username,        
+        no_telpon: state.userReducer.no_telpon,        
     }
 }
 
-export default connect(mapToProps, { getAdmin, getWarehouse })(ModalAddAdmin);
+export default connect(mapToProps, { getAdmin, getWarehouse })(ModalUpdateAdmin);
