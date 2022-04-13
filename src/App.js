@@ -23,16 +23,17 @@ import CheckoutPage from './Pages/CheckoutPage';
 import VerifyPage from './Pages/Verify';
 import NotFoundPage from './Pages/NotFoundPage';
 import WarehousePage from './Pages/Warehouse';
+import AddAdminPage from './Pages/AddAdmin';
 
 function App() {
 
   const dispatch = useDispatch()
 
   const { idrole } = useSelector((state) => {
-    return {                
-        idrole: state.userReducer.idrole
+    return {
+      idrole: state.userReducer.idrole
     }
-})
+  })
 
   useEffect(() => {
     dispatch(keepLoginAction())
@@ -42,7 +43,7 @@ function App() {
     dispatch(getProductAction())
     dispatch(getCartAction())
     dispatch(getWarehouseAction())
-  },[])
+  }, [])
 
   return (
     <>
@@ -50,27 +51,32 @@ function App() {
       <Routes>
         {
           idrole == 3 ?
-          <>
-          <Route path='/product/checkout' element={<CheckoutPage/>} />
-          </>
+            <>
+              <Route path='/product/checkout' element={<CheckoutPage />} />
+            </>
+            :
+            idrole == 2 ?
+              <>
+                <Route path='/management/product' element={<ManagementProduct />} />
+              </>
+              :
+              idrole == 1?
+              <>
+                <Route path='/warehouse' element={<WarehousePage />} />
+                <Route path='/addadmin' element={<AddAdminPage />} />
+              </>
           :
-          idrole ==2 ?
-          <>
-          <Route path='/management/product' element={<ManagementProduct />} />          
-          </>          
-          :
-          <Route path="/*" element={<NotFoundPage />} />
+        <Route path="/*" element={<NotFoundPage />} />
         }
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/resetpassword/:token" element={<ResetPasswordPage />} />
         <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
-        <Route path="/register" element={<RegisterPage />} />        
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/verification/:token" element={<VerifyPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path='/product' element={<ProductPage />} />
         <Route path='/detail/product' element={<DetailProduct />} />
-        <Route path='/warehouse' element={<WarehousePage />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
       <Footer />

@@ -178,3 +178,21 @@ export const getWarehouse = () => {
         }
     }
 }
+export const getAdmin = () => {
+    return async (dispatch) => {
+        try {
+            let token = localStorage.getItem('data')
+            let res = await axios.get(`${API_URL}/admin/getadmin`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            dispatch({
+                type: "GET_ADMIN",
+                payload: res.data.getAdmin
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
