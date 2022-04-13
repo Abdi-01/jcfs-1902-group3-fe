@@ -1,18 +1,25 @@
-import { Box, Center, Heading, Image, Text, InputGroup, InputLeftElement, InputRightElement, Input, Icon, Button } from '@chakra-ui/react'
-import React from 'react'
+import { Box, Center, Heading, Image, Text, InputGroup, InputLeftElement, InputRightElement, Input, Icon, Button, Select } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { API_URL } from '../helper'
 import { AiOutlineMinus, AiOutlinePlus, AiOutlineDelete } from 'react-icons/ai'
-import { deleteCartAction, updateQtyCartAction } from '../redux/actions'
+import { deleteCartAction, getAddress, getCartAction, getOngkirAction, updateQtyCartAction } from '../redux/actions'
+import ModalSetAlamat from '../Components/ModalSetAlamat'
+import axios from 'axios'
 
 const CheckoutPage = () => {
+
+    const [openModalAlamat, setOpenModalAlamat] = useState(false)
+    const [selectedWarehouse, setSelectedWarehouse] = useState(null)
+    const [dataOngkir, setDataOngkir] = useState({})
     let dispatch = useDispatch()
-    const { carts } = useSelector((state) => {
+    const { carts, defaultAlamat, warehouse } = useSelector((state) => {
         return {
-            carts: state.transactionReducer.carts
+            carts: state.transactionReducer.carts,
+            defaultAlamat: state.userReducer.addressList,
+            warehouse: state.warehouseReducer.listWarehouse
         }
     })
-
     const btIncrement = (index, idcart) => {
         let temp = [...carts]
         if (temp[index].qty < temp[index].stocks[0].qty) {
@@ -20,17 +27,25 @@ const CheckoutPage = () => {
         }
         dispatch(updateQtyCartAction(idcart, { qty: temp[index].qty }))
     }
-    const btDecrement = (index, idcart) => {
+    const btDecrement = async (index, idcart) => {
         let temp = [...carts]
         if (temp[index].qty > 1) {
             temp[index].qty -= 1
         } else {
-            dispatch(deleteCartAction(idcart))
+            let res = await dispatch(deleteCartAction(idcart))
+            if (res.success) {
+                setSelectedWarehouse(null)
+                setDataOngkir({})
+            }
         }
         dispatch(updateQtyCartAction(idcart, { qty: temp[index].qty }))
     }
-    const btDeleteCart = (idcart) => {
-        dispatch(deleteCartAction(idcart))
+    const btDeleteCart = async (idcart) => {
+        let res = await dispatch(deleteCartAction(idcart))
+        if (res.success) {
+            setSelectedWarehouse(null)
+            setDataOngkir({})
+        }
     }
     const printSubtotal = () => {
         let total = 0
@@ -91,7 +106,82 @@ const CheckoutPage = () => {
             )
         }
     }
-
+    const printDefaultAlamat = () => {
+        if (defaultAlamat.length > 0) {
+            return defaultAlamat.map((item, index) => {
+                if (item.idstatus === 4) {
+                    return (
+                        <>
+                            <Box mt='20px' borderBottom='2px solid #F3F4F5'>
+                                <Text fontWeight='semibold' mb='5px'>{item.nama_penerima}</Text>
+                                <Text my='5px'>{item.no_telpon}</Text>
+                                <Text mb='10px' fontSize='13px'>{item.alamat}</Text>
+                            </Box>
+                        </>
+                    )
+                }
+            })
+        }
+    }
+    const printSelectWarehouse = () => {
+        if (warehouse.length > 0) {
+            return warehouse.map((item, index) => {
+                return (
+                    <option value={item.idwarehouse} onClick={() => setSelectedWarehouse(item)}>{item.nama}</option>
+                )
+            })
+        }
+    }
+    const selectKurir = async (event) => {
+        let temp
+        let alamat = defaultAlamat.filter(item => item.idstatus === 4)
+        if (alamat && event.target.value) {
+            temp = {
+                asal: alamat[0].idkota,
+                tujuan: selectedWarehouse.idkota,
+                berat: carts[0].products[0].berat * 1000,
+                kurir: event.target.value
+            }
+            try {
+                let res = await dispatch(getOngkirAction(temp))
+                if (res.success) {
+                    setDataOngkir(res.data)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+    const btCheckout = async () => {
+        let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        let token = localStorage.getItem('data')
+        let data = {
+            idwarehouse: selectedWarehouse.idwarehouse,
+            idstatus: 6,
+            invoice: `INV/${new Date().getTime()}`,
+            total_tagihan: Number((printSubtotal() + dataOngkir.costs[1].cost[0].value) + (printSubtotal() * 0.1)),
+            ongkir: Number(dataOngkir.costs[1].cost[0].value),
+            pajak: Number(printSubtotal() * 0.1),
+            added_date: date,
+            detail: [...carts]
+        }
+        try {
+            if (token) {
+                let res = await axios.post(`${API_URL}/transactions/checkout`, data, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                if (res.data.success) {
+                    dispatch(getCartAction())
+                    setSelectedWarehouse(null)
+                    setDataOngkir({})
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <>
             {console.log('isi cart', carts)}
@@ -108,52 +198,80 @@ const CheckoutPage = () => {
                             <Box borderBottom='2px solid #F3F4F5'>
                                 <Text fontWeight='bold' mb='10px'>Alamat Pengiriman</Text>
                             </Box>
-                            <Box mt='20px' borderBottom='2px solid #F3F4F5'>
-                                <Text fontWeight='semibold' mb='5px'>Alif Junjunan</Text>
-                                <Text my='5px'>628882220001</Text>
-                                <Text mb='10px' fontSize='13px'>Jl. Ki Buyut Roda Gang Pelita 1 No.25 RT.02 RW.03
-                                    Ciledug, Kab. Cirebon, 45188</Text>
-                            </Box>
+                            {printDefaultAlamat()}
                             <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Button colorScheme='gray' mb='15px'>Pilih Alamat Lain</Button>
+                                <Button colorScheme='gray' mb='15px' onClick={() => setOpenModalAlamat(!openModalAlamat)}>Pilih Alamat Lain</Button>
+                                <ModalSetAlamat openModal={openModalAlamat} closeModal={() => setOpenModalAlamat(!openModalAlamat)} />
                             </Box>
                             <Box mt='30px' borderBottom='2px solid #F3F4F5'>
                                 <Text fontWeight='bold' mb='10px'>Alamat Toko</Text>
                             </Box>
+                            {selectedWarehouse &&
+                                <Box mt='20px' borderBottom='2px solid #F3F4F5'>
+                                    <Text fontWeight='semibold' mb='5px'>{selectedWarehouse.nama}</Text>
+                                    <Text my='5px'>{selectedWarehouse.provinsi} - {selectedWarehouse.kota}</Text>
+                                    <Text mb='10px' fontSize='13px'>{selectedWarehouse.alamat}</Text>
+                                </Box>
+                            }
+                            <Box mt='20px' borderBottom='5px solid #F3F4F5'>
+                                <Select mb='10px' fontWeight='semibold' placeholder='pilih warehouse'>
+                                    {printSelectWarehouse()}
+                                </Select>
+                            </Box>
                             <Box mt='20px' borderBottom='2px solid #F3F4F5'>
-                                <Text fontWeight='semibold' mb='5px'>Warehouse Cirebon</Text>
-                                <Text my='5px'>628882220001</Text>
-                                <Text mb='10px' fontSize='13px'>Jl. Ki Buyut Roda Gang Pelita 1 No.25 RT.02 RW.03
-                                    Ciledug, Kab. Cirebon, 45188</Text>
+                                <Text fontWeight='bold' mb='10px'>Kurir Pilihan</Text>
                             </Box>
+                            {
+                                dataOngkir.costs &&
+                                <Box mt='10px' borderBottom='2px solid #F3F4F5'>
+                                    <Text>{dataOngkir.name}</Text>
+                                    <Text fontSize='13px'>{dataOngkir.costs[1].service} {dataOngkir.costs[1].description} (Rp.{(dataOngkir.costs[1].cost[0].value).toLocaleString()})</Text>
+                                    <Text mb='10px' fontSize='12px'>Estimasi {dataOngkir.costs[1].cost[0].etd} hari</Text>
+                                </Box>
+                            }
                             <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Button colorScheme='gray' mb='15px'>Pilih Toko Lain</Button>
-                            </Box>
-                            <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Button colorScheme='gray' mb='15px'>Pilih Pengiriman</Button>
+                                <Select mb='10px' fontWeight='semibold' placeholder='pilih pengiriman' onClick={(event) => selectKurir(event)}>
+                                    <option value='jne'>JNE</option>
+                                    <option value='tiki'>TIKI</option>
+                                </Select>
                             </Box>
                             <Box mt='25px' borderBottom='2px solid #F3F4F5'>
                                 <Text fontWeight='bold' mb='10px'>Ringkasan Belanja</Text>
                             </Box>
-                            <Box mt='20px' borderBottom='2px solid #F3F4F5'>
-                                <Box display='flex' justifyContent='space-between'>
-                                    <Text fontWeight='semibold' mb='10px'>Sub Total</Text>
-                                    <Text fontWeight='semibold' mb='10px'>Rp.{printSubtotal().toLocaleString()}</Text>
-                                </Box>
-                                <Box display='flex' justifyContent='space-between'>
-                                    <Text fontWeight='semibold' mb='10px'>Total Ongkos Kirim</Text>
-                                    <Text fontWeight='semibold' mb='10px'>Rp.500.000</Text>
-                                </Box>
-                            </Box>
-                            <Box mt='15px'>
-                                <Box display='flex' justifyContent='space-between'>
-                                    <Text fontWeight='bold' mb='10px'>Total Tagihan</Text>
-                                    <Text fontWeight='semibold' mb='10px'>Rp.100.500.000</Text>
-                                </Box>
-                            </Box>
+                            {
+                                dataOngkir.costs &&
+                                <>
+                                    <Box mt='20px' borderBottom='2px solid #F3F4F5'>
+                                        <Box display='flex' justifyContent='space-between'>
+                                            <Text fontWeight='semibold' mb='10px'>Sub Total</Text>
+                                            <Text fontWeight='semibold' mb='10px'>Rp.{printSubtotal().toLocaleString()}</Text>
+                                        </Box>
+                                        <Box display='flex' justifyContent='space-between'>
+                                            <Text fontWeight='semibold' mb='10px'>Pajak 10%</Text>
+                                            <Text fontWeight='semibold' mb='10px'>Rp.{(printSubtotal() * 0.1).toLocaleString()}</Text>
+                                        </Box>
+                                        <Box display='flex' justifyContent='space-between'>
+                                            <Text fontWeight='semibold' mb='10px'>Total Ongkos Kirim</Text>
+                                            <Text fontWeight='semibold' mb='10px'>Rp.{(dataOngkir.costs[1].cost[0].value).toLocaleString()}</Text>
+                                        </Box>
+                                    </Box>
+                                    <Box mt='15px'>
+                                        <Box display='flex' justifyContent='space-between'>
+                                            <Text fontWeight='bold' mb='10px'>Total Tagihan</Text>
+                                            <Text fontWeight='semibold' mb='10px'>Rp.{((printSubtotal() + dataOngkir.costs[1].cost[0].value) + (printSubtotal() * 0.1)).toLocaleString()}</Text>
+                                        </Box>
+                                    </Box>
+                                </>
+                            }
                             <Box mt='15px'>
                                 <Center>
-                                    <Button colorScheme='blackAlpha' bgColor='#6B3C3B' w='100%'>Checkout</Button>
+                                    {
+                                        carts.length > 0
+                                            ?
+                                            <Button colorScheme='blackAlpha' bgColor='#6B3C3B' w='100%' onClick={btCheckout}>Checkout</Button>
+                                            :
+                                            <Button colorScheme='blackAlpha' bgColor='#6B3C3B' w='100%' disabled='true'>Checkout</Button>
+                                    }
                                 </Center>
                             </Box>
                         </Box>

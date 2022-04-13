@@ -248,6 +248,7 @@ class LandingPage extends React.Component {
                         })
                     })
                     .catch((error) => {
+                        console.log(error)
                         if (error.response) {
                             console.log(error.response.data.message);
                             Swal.fire({

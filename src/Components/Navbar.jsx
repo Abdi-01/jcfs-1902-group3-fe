@@ -66,7 +66,10 @@ const Navbar = () => {
                             <Box display='flex'>
                                 <Box mr='20px'>
                                     <Icon as={BsCart3} boxSize='22px' position='relative' left='8px' cursor='pointer' onClick={() => setOpenCart(!openCart)} />
-                                    <Badge position='absolute' borderRadius='full' color='white' w='19px' h='19px' bgColor='#6B3C3B'><Center>{setTotalCart()}</Center></Badge>
+                                    {
+                                        carts.length > 0 && <Badge position='absolute' borderRadius='full' color='white' w='19px' h='19px' bgColor='#6B3C3B'><Center>{setTotalCart()}</Center></Badge>
+
+                                    }
                                     <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)} />
                                 </Box>
                                 {
@@ -83,7 +86,7 @@ const Navbar = () => {
                                             </Box>
                                             :
                                             <Box>
-                                                <Icon as={BsPerson} boxSize='20px' cursor='pointer'/>                                                
+                                                <Icon as={BsPerson} boxSize='20px' cursor='pointer' />
                                             </Box>
                                 }
                             </Box>

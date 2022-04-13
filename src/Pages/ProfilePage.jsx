@@ -29,6 +29,10 @@ class ProfilePage extends React.Component {
         photo: [""]
     }
 
+    componentDidMount() {
+        this.props.getAddress()
+    }
+
     handlePhoto = (e) => {
         let temp = [...this.state.photo]
         temp[0] = { name: e.target.files[0].name, file: e.target.files[0] }
@@ -179,6 +183,10 @@ class ProfilePage extends React.Component {
                     modalOpenPhone={this.state.modalOpenPhone}
                     btClose={() => this.setState({ modalOpenPhone: !this.state.modalOpenPhone })}
                 />
+                <ModalAddAddress 
+                    openModalAddAddress={this.state.openModalAddAddress}
+                    btClose={() => this.setState({openModalAddAddress: !this.state.openModalAddAddress})}
+                />
                 <Box className='container' style={{}}>
                     <Box className='row' paddingTop={5} paddingBottom={5}>
                         <Box className='col-8' style={{ margin: "auto" }}>
@@ -273,14 +281,14 @@ class ProfilePage extends React.Component {
                                             </Box>
                                         </TabPanel>
                                         <TabPanel>
-                                            {/* <Box className='container'>
+                                            <Box className='container'>
                                                 <div style={{ textAlign: "end", marginTop: "5%" }}>
                                                     <Button onClick={() => this.setState({ openModalAddAddress: !this.state.openModalAddAddress })} colorScheme='green' size='sm' style={{ borderRadius: 10, fontSize: "15px" }}>Tambah Alamat</Button>
                                                 </div>
                                                 <Box mt='20px'>
                                                     {this.printAddressList()}
                                                 </Box>
-                                            </Box>  */}
+                                            </Box> 
                                         </TabPanel>
                                         <TabPanel>
                                             <p>three!</p>
