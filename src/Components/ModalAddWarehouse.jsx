@@ -1,7 +1,8 @@
+import { Box, Button } from '@chakra-ui/react';
 import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { FormGroup, Input, InputGroup, Label, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import Swal from 'sweetalert2';
 import { API_URL } from '../helper';
 import { getWarehouse } from '../redux/actions/userAction';
@@ -13,23 +14,27 @@ class ModalAddWarehouse extends React.Component {
             provinsi: [],
             kota: [],
             nama: '',
-            alamat: '',            
+            alamat: '',
             idprovinsi: null,
             idkota: null,
             kecamatan: '',
-            kode_pos: null
+            kode_pos: null,
+            latitude: '',
+            longitude: ''
         }
     }
     // nama_penerima, alamat, no_telpon, provinsi, kota, kecamatan, kode_pos
-    btSimpan = async() => {
-        const {nama, alamat, kecamatan, kode_pos, idprovinsi, idkota} = this.state
+    btSimpan = async () => {
+        const { nama, alamat, kecamatan, kode_pos, idprovinsi, idkota, latitude, longitude } = this.state
         let data = {
             idprovinsi,
             idkota,
             nama,
-            alamat,            
+            alamat,
             kecamatan,
-            kode_pos
+            kode_pos,
+            latitude,
+            longitude
         }
         let token = localStorage.getItem('data')
         let res = await axios.post(`${API_URL}/admin/addwarehouse`, data, {
@@ -37,7 +42,6 @@ class ModalAddWarehouse extends React.Component {
                 'Authorization': `Bearer ${token}`
             }
         })
-        // if(res.data.success){
             .then(res => {
                 console.log("cek res.data", res.data)
                 return Swal.fire({
@@ -47,19 +51,13 @@ class ModalAddWarehouse extends React.Component {
                     showConfirmButton: false,
                     timer: 1500
                 })
-            }).then(result => {                
+            }).then(result => {
                 this.props.btClose()
                 this.props.getWarehouse()
             })
             .catch((err) => {
                 console.log(err)
             })
-        // }
-        // if(res.data.success){
-        //     alert("Berhasil Tambah Warehouse")
-        //     this.props.btClose();
-        //     this.props.getWarehouse();
-        // }
     }
     getData = async () => {
         try {
@@ -82,16 +80,16 @@ class ModalAddWarehouse extends React.Component {
             })
         }
     }
-    handleKota = async(event) => {
+    handleKota = async (event) => {
         let res = await axios.get(`${API_URL}/alamat/kota/${event.target.value}`)
-        if(res.data.success){
+        if (res.data.success) {
             this.setState({
                 kota: res.data.dataKota
             })
         }
         this.setState({
             idprovinsi: event.target.value
-          })
+        })
     }
     printKota = () => {
         if (this.state.kota.length > 0) {
@@ -102,7 +100,7 @@ class ModalAddWarehouse extends React.Component {
             })
         }
     }
-    handleInput = (event,nameProp) => {
+    handleInput = (event, nameProp) => {
         this.setState({
             [nameProp]: event.target.value
         })
@@ -117,7 +115,7 @@ class ModalAddWarehouse extends React.Component {
         return (
             <div>
                 <Modal
-                centered
+                    centered
                     style={{}}
                     isOpen={this.props.ModalAddWarehouse}
                     toggle={this.props.btClose}
@@ -130,7 +128,7 @@ class ModalAddWarehouse extends React.Component {
                         {/* <Input type='textarea' innerRef={(element) => this.inNama_Penerima = element} /> */}
                         <FormGroup>
                             <Label>Nama</Label>
-                            <Input placeholder='nama' onChange={(event) => this.handleInput(event, 'nama')}/>
+                            <Input placeholder='nama' onChange={(event) => this.handleInput(event, 'nama')} />
                         </FormGroup>
                         <InputGroup className='d-flex justify-content-between '>
                             <FormGroup style={{ width: '400px' }}>
@@ -148,26 +146,42 @@ class ModalAddWarehouse extends React.Component {
                                 </Input>
                             </FormGroup>
                         </InputGroup>
-                        <InputGroup className='d-flex justify-content-between'>
-                            <FormGroup>
-                                <Label>Kecamatan</Label>
-                                <Input type='text' placeholder='kecamatan' onChange={(event) => this.handleInput(event, 'kecamatan')} />
-                            </FormGroup>
-                            <FormGroup >
-                                <Label>Kode Pos</Label>
-                                <Input type='number' placeholder='kode pos' onChange={(event) => this.handleInput(event, 'kode_pos')} />
-                            </FormGroup>
-                            {/* <FormGroup>
-                                <Label>No Telepon</Label>
-                                <Input type='number' placeholder='no telepon' onChange={(event) => this.handleInput(event, 'no_telpon')} />
-                            </FormGroup> */}
+                        <InputGroup className='d-flex justify-content-between' style={{ justifyContent: "space-between" }}>
+                            <Box className='col-3'>
+                                <FormGroup style={{width:"90%"}}>
+                                    <Label>Kecamatan</Label>
+                                    <Input type='text' placeholder='kecamatan' onChange={(event) => this.handleInput(event, 'kecamatan')} />
+                                </FormGroup>
+                            </Box>
+                            <Box className='col-3'>
+                                <FormGroup style={{width:"90%"}}>
+                                    <Label>Kode Pos</Label>
+                                    <Input type='number' placeholder='kode pos' onChange={(event) => this.handleInput(event, 'kode_pos')} />
+                                </FormGroup>
+                            </Box>
+                            <Box className='col-3'>
+                                <FormGroup style={{width:"90%"}}>
+                                    <Label>Latitude</Label>
+                                    <Input type='text' placeholder='latitude' onChange={(event) => this.handleInput(event, 'latitude')} />
+                                </FormGroup>
+                            </Box>
+                            <Box className='col-3'>
+                                <FormGroup style={{width:"90%"}}>
+                                    <Label>Longitude</Label>
+                                    <Input type='text' placeholder='longitude' onChange={(event) => this.handleInput(event, 'longitude')} />
+                                </FormGroup>
+                            </Box>
                         </InputGroup>
                         <FormGroup>
                             <Label>Alamat Lengkap</Label>
                             <Input type='textarea' placeholder='alamat lengkap' onChange={(event) => this.handleInput(event, 'alamat')} />
                         </FormGroup>
                         <div style={{ float: "right", marginTop: 20 }}>
-                            <Button onClick={this.btSimpan} style={{ borderRadius: 10 }} className='bt-orange'>
+                            <Button 
+                            colorScheme={'teal'}                            
+                            style={{ borderRadius: 10 }} 
+                            onClick={this.btSimpan} 
+                            >
                                 Simpan
                             </Button>
                         </div>

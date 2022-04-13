@@ -3,28 +3,38 @@ import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Card, CardBody, CardSubtitle, CardText, CardTitle } from 'reactstrap';
-import ModalAddWarehouse from '../Components/ModalAddWarehouse';
+import ModalAddAdmin from '../Components/ModalAddAdmin';
 import { API_URL } from '../helper';
-import { getWarehouse } from '../redux/actions';
+import { getAdmin } from '../redux/actions';
 
-class WarehousePage extends React.Component {
+class AddAdminPage extends React.Component {
     constructor(props) {
         super(props);
     }
 
     state = {
-        ModalAddWarehouse: false,
+        // getNamaWarehouse: [],
+        ModalAddAdmin: false
     }
+
+    // getNamaWarehouse = () => {
+    //     axios.get(`${API_URL}/admin/getnamawarehouse/${this.props.adminList.idwarehouse}`)
+    //         .then((response) => {
+    //             console.log("GET NAMA WAREHOUSE", response.getNamaWarehouse)
+    //             this.setState({ getNamaWarehouse: response.getNamaWarehouse })
+    //         }).catch((error) => {
+    //             console.log(error)
+    //         })
+    // }
 
     componentDidMount() {
-        console.log("cek get warehouse", this.props.warehouseList)
-        this.props.getWarehouse()
+        this.props.getAdmin()
     }
 
-    printWarehouseList = () => {
-        return this.props.warehouseList.map((value, index) => {
+    printAdminList = () => {
+        return this.props.adminList.map((value, index) => {
             return (
-                <Box style={{ paddingTop: "10px", paddingBottom: "10px" }}>
+                <Box className='col-6' style={{ paddingTop: "1%", paddingBottom: "1%" }}>
                     <Card
                         style={{ borderColor: "#6b3c3b", borderRadius: "9px" }}
                     >
@@ -32,12 +42,12 @@ class WarehousePage extends React.Component {
                             <Box className='row'>
                                 <CardTitle className='col-9'>
                                     <Box style={{ fontWeight: 600 }}>
-                                        {value.provinsi}
+                                        {value.username}
                                     </Box>
                                 </CardTitle>
                                 <CardTitle className='col-3'>
                                     <Box style={{ fontWeight: 600 }}>
-                                        {value.nama}
+
                                     </Box>
                                 </CardTitle>
                             </Box>
@@ -45,33 +55,26 @@ class WarehousePage extends React.Component {
                                 <CardSubtitle
                                     className="mb-2 text-muted"
                                 >
-                                    {value.kota}
-                                </CardSubtitle>                                
+                                    <p>No Handphone : {value.no_telpon}</p>
+                                    <p>Email : {value.email}</p>
+                                    <p>Warehouse : {value.nama}</p>
+                                </CardSubtitle>
                             </Box>
-                            <Box className='row' style={{ paddingTop: "10px" }}>
-                                <CardText className='col-9' style={{alignSelf:"center"}}>
-                                    {value.alamat}
-                                </CardText>
-                                <CardText className='text-muted col-3'>
-                                <p>Latitude: {value.latitude}</p>
-                                    <p>Longitude: {value.longitude}</p>
-                                </CardText>
-                            </Box>
-                            <Box className='row' style={{ width: "40%", paddingTop: "20px" }}>
+                            <Box className='row' style={{ width: "40%", paddingTop: "3%" }}>
                                 <Box className='col-6'>
                                     <Button
                                         colorScheme={'blackAlpha'}
                                         color='#6b3c3b'
                                         variant='outline'
                                     >
-                                        Edit Warehouse
+                                        Edit Admin
                                     </Button>
                                 </Box>
-                                <Box className='col-6'>
+                                <Box className='col-6' style={{ paddingLeft: "30%" }}>
                                     <Button
                                         colorScheme={'teal'}
                                     >
-                                        Delete Warehouse
+                                        Delete Admin
                                     </Button>
                                 </Box>
                             </Box>
@@ -83,26 +86,26 @@ class WarehousePage extends React.Component {
     }
 
     render() {
-        console.log("cetak warehouselist", this.props.warehouseList)
+        console.log("cetak adminList", this.props.adminList)
         return (
             <Box className='container'>
-                <ModalAddWarehouse
-                    ModalAddWarehouse={this.state.ModalAddWarehouse}
-                    btClose={() => this.setState({ ModalAddWarehouse: !this.state.ModalAddWarehouse })}
+                <ModalAddAdmin
+                    ModalAddAdmin={this.state.ModalAddAdmin}
+                    btClose={() => this.setState({ ModalAddAdmin: !this.state.ModalAddAdmin })}
                 />
-                <Box style={{ padding: '50px' }}>
+                <Box style={{ padding: '8%' }}>
                     <Box style={{ textAlign: "right" }}>
                         <Button
                             colorScheme={'blackAlpha'}
                             color='#6b3c3b'
                             variant={'outline'}
-                            onClick={() => this.setState({ ModalAddWarehouse: !this.state.ModalAddWarehouse })}
+                            onClick={() => this.setState({ ModalAddAdmin: !this.state.ModalAddAdmin })}
                         >
-                            Add Warehouse
+                            Add Admin
                         </Button>
                     </Box>
-                    <Box>
-                        {this.printWarehouseList()}
+                    <Box className='row'>
+                        {this.printAdminList()}
                     </Box>
                 </Box>
             </Box>
@@ -112,10 +115,8 @@ class WarehousePage extends React.Component {
 
 const mapToProps = (state) => {
     return {
-        warehouseList: state.userReducer.warehouseList,
-        idwarehouse: state.userReducer.idwarehouse,
-        iduser: state.userReducer.iduser
+        adminList: state.userReducer.adminList,
     }
 }
 
-export default connect(mapToProps, { getWarehouse })(WarehousePage);
+export default connect(mapToProps, { getAdmin })(AddAdminPage);

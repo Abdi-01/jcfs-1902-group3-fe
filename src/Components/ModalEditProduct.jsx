@@ -4,6 +4,7 @@ import { FiPlusCircle, FiEdit, FiSave } from 'react-icons/fi'
 import { FaEdit } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { addProductAction, getJenisProductAction, getProductAction, updateImgProductAction, updateProductAction } from '../redux/actions'
+import { API_URL } from '../helper'
 
 const ModalEditProduct = (props) => {
 
@@ -56,7 +57,7 @@ const ModalEditProduct = (props) => {
             return images.map((item, index) => {
                 return (
                     <>
-                        <Image boxSize='108px' src={editImage[index] ? URL.createObjectURL(editImage[index].file) : `http://localhost:2000/${item.url}`} my='10px' borderRadius='5px' boxShadow='md' />
+                        <Image boxSize='108px' src={editImage[index] ? URL.createObjectURL(editImage[index].file) : `${API_URL}/${item.url}`} my='10px' borderRadius='5px' boxShadow='md' />
                         <label>
                             <Icon as={FiEdit} borderRadius='5px' bg='#fed330' boxSize='16.5px' position='relative' right='40px' top='95px' cursor={enable ? '' : 'pointer'} />
                             <Input type="file" onChange={(event) => handleEditImage(event, index)} display='none' disabled={enable} />

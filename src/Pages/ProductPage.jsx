@@ -6,6 +6,7 @@ import { Link, useLocation } from 'react-router-dom'
 import semuaProduct from '../assets/semua produk.png'
 import { transform } from 'framer-motion'
 import { Pagination } from '@mantine/core'
+import { API_URL } from '../helper'
 
 const ProductPage = () => {
 
@@ -48,7 +49,7 @@ const ProductPage = () => {
                     <Box onClick={() => setValueMaterial(item.material)} >
                         <input type='radio' className='checkMaterial' name='material' id={item.material} />
                         <label for={item.material} >
-                            <Center><Image src={`http://localhost:2000/${item.url}`} alt='images' boxSize={'60px'}  /></Center>
+                            <Center><Image src={`${API_URL}/${item.url}`} alt='images' boxSize={'60px'}  /></Center>
                             <Text marginTop={'2vh'} >
                                 {item.material}
                             </Text>
@@ -67,7 +68,7 @@ const ProductPage = () => {
                         <input type='radio' className='checkJenisProduct' name='jenis product' id={item.jenis_product} />
                         <label htmlFor={item.jenis_product}>
                             <Center>
-                                <Image src={`http://localhost:2000/${item.url}`} alt='images' boxSize='30px' />
+                                <Image src={`${API_URL}/${item.url}`} alt='images' boxSize='30px' />
                             </Center>
                             <Text marginTop={'2vh'} fontSize='12px' fontWeight='medium'  >
                                 {item.jenis_product}
@@ -87,14 +88,14 @@ const ProductPage = () => {
                             <Box maxW={'275px'} mt='80px' cursor='pointer' color='#6B3C3B' >
                                 <Box display='flex'>
                                     <Box position='absolute'>
-                                        <Image src={`http://localhost:2000/${item.material[0].url}`} zIndex='1' boxSize='45px' position='relative' top='-5px' left='30px' />
+                                        <Image src={`${API_URL}/${item.material[0].url}`} zIndex='1' boxSize='45px' position='relative' top='-5px' left='30px' />
                                     </Box>
                                     <Box ml='85px'>
                                         <Text fontSize='15px' fontWeight='medium' top='-5px' position='relative'>{item.material[0].material}</Text>
                                     </Box>
                                 </Box>
                                 <Box maxW={'250px'} overflow='hidden' borderRadius='15px' boxShadow='lg' className='item-product'>
-                                    <Image src={`http://localhost:2000/${item.images[0].url}`} width='100%' transition='transform 1.2s ease-in-out' _hover={{ transform: "scale(1.1)" }} />
+                                    <Image src={`${API_URL}/${item.images[0].url}`} width='100%' transition='transform 1.2s ease-in-out' _hover={{ transform: "scale(1.1)" }} />
                                     <Box position='absolute' display='none' >
                                         <Button position='relative' colorScheme='facebook' top='-35px' ml='75px' size='sm'  >Lihat product</Button>
                                     </Box>

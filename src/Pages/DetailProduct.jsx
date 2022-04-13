@@ -44,7 +44,7 @@ const DetailProduct = () => {
         if (images) {
             return images.map((item, index) => {
                 return (
-                    <Image src={`http://localhost:2000/${images && item.url}`} tabIndex='0' _focus={{ border: '2px solid #6B3C3B' }} onClick={() => setThumbnailIdx(index)} ml='10px' w='75px' borderRadius='10px' boxShadow='md' _hover={{ border: '2px solid #6B3C3B' }} cursor='pointer' />
+                    <Image src={`${API_URL}/${images && item.url}`} tabIndex='0' _focus={{ border: '2px solid #6B3C3B' }} onClick={() => setThumbnailIdx(index)} ml='10px' w='75px' borderRadius='10px' boxShadow='md' _hover={{ border: '2px solid #6B3C3B' }} cursor='pointer' />
                 )
             })
         }
@@ -98,7 +98,7 @@ const DetailProduct = () => {
                         <Box mt='20px' display='flex'>
                             <Box>
                                 <Box w='348px' overflow='hidden' h='348px' borderRadius='15px' boxShadow='lg' display='block'  >
-                                    <Image src={`http://localhost:2000/${images[thumbnailIdx].url}`} w='100%' />
+                                    <Image src={`${API_URL}/${images[thumbnailIdx].url}`} w='100%' />
                                 </Box>
                                 <Box display='flex' mt='20px'>
                                     {printImages()}
@@ -109,7 +109,7 @@ const DetailProduct = () => {
                                     {nama}
                                 </Heading>
                                 <Box mt='15px' display='flex'>
-                                    <Image src={`http://localhost:2000/${material && material[0].url}`} boxSize='10' />
+                                    <Image src={`${API_URL}/${material && material[0].url}`} boxSize='10' />
                                     <Center>
                                         <Heading ml='10px' as='h5' size='sm'>{material && material[0].material}</Heading>
                                     </Center>
