@@ -53,6 +53,19 @@ class ModalAddAdmin extends React.Component {
             })
     }
 
+    // getData = async () => {
+    //     try {
+    //         let res = await axios.get(`${API_URL}/admin/getadmin`)
+    //         if (res.data.success) {
+    //             this.setState({
+    //                 nama: res.data.getAdmin
+    //             })
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
     printWarehouse = () => {
         if (this.props.warehouseList.length > 0) {
             return this.props.warehouseList.map((item, index) => {
@@ -68,7 +81,9 @@ class ModalAddAdmin extends React.Component {
             [nameProp]: event.target.value
         })
     }
-    componentDidMount() {        
+
+    componentDidMount() {
+        // this.getData()
         this.props.getWarehouse()
         console.log("cek warehouselist cdm", this.props.warehouseList)
     }

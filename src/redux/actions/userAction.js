@@ -1,5 +1,6 @@
 import axios from "axios"
 import { API_URL } from "../../helper"
+import { getTransactionAction } from "./transactionAction"
 
 export const onLogin = (email, password) => {
     return async (dispatch) => {
@@ -15,6 +16,7 @@ export const onLogin = (email, password) => {
                     type: "LOGIN_SUCCESS",
                     payload: response.data.dataLogin
                 })
+                dispatch(getTransactionAction(6))
                 return { success: response.data.success }
             }
 
@@ -69,6 +71,7 @@ export const keepLoginAction = () => {
                         type: "LOGIN_SUCCESS",
                         payload: res.data.dataLogin
                     })
+                    dispatch(getTransactionAction(6))
                     return { success: res.data.success }
                 }
             }

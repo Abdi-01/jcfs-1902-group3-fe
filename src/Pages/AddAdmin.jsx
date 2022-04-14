@@ -18,7 +18,7 @@ class AddAdminPage extends React.Component {
         page: 1,
         limit: 4,
         selectedIndex:null,
-        dataEdit:{}        
+        dataEdit:{} 
     }
 
     componentDidMount() {
@@ -128,12 +128,14 @@ class AddAdminPage extends React.Component {
                     ModalAddAdmin={this.state.ModalAddAdmin}
                     btClose={() => this.setState({ ModalAddAdmin: !this.state.ModalAddAdmin })}
                 />
+
                 <ModalUpdateAdmin
                     ModalUpdateAdmin={this.state.ModalUpdateAdmin}
                     btClose={() => this.setState({ ModalUpdateAdmin: !this.state.ModalUpdateAdmin })}
                     selectedIndex = {this.state.selectedIndex}
                     dataEdit = {this.state.dataEdit}
                 />                
+
                 <Box style={{ padding: '3%' }}>
                     <Box style={{ textAlign: "right" }}>
                         <Button
