@@ -6,7 +6,7 @@ import { BsCalendar2Week } from 'react-icons/bs'
 import { FaMoneyBillWave, FaChevronRight } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { getTransactionAction } from '../redux/actions'
+import { getTransactionAction, TerimaBarangAction } from '../redux/actions'
 import { API_URL } from '../helper'
 import { Pagination } from '@mantine/core'
 import ModalDetailTransaksi from '../Components/ModalDetailTransaksi'
@@ -106,7 +106,7 @@ const ListTransactionPage = (props) => {
                                 </Box>
                                 <Box mt='15px' display='flex' justifyContent='end'>
                                     <Button size='xs' colorScheme='blackAlpha' bgColor='#6B3C3B' onClick={() => handleModal(!openModal, item)}>Detail Transaksi</Button>
-                                    {item.idstatus === 8 && <Button ml='10px' size='xs' colorScheme='green'>Barang Diterima</Button>}
+                                    {item.idstatus === 8 && <Button ml='10px' size='xs' colorScheme='green' onClick={() => btTerimaBarang(item.idtransaksi)}>Barang Diterima</Button>}
                                     <ModalDetailTransaksi onOpen={openModal} onClose={() => setOpenModal(!openModal)} detailTransaksi={detail} />
                                 </Box>
                             </Box>
@@ -129,6 +129,19 @@ const ListTransactionPage = (props) => {
     const handleLImitData = (event) => {
         setLimitData(event.target.value)
         setPage(1)
+    }
+    const btTerimaBarang = async (idtransaksi) => {
+        let data = {
+            date: new Date().toISOString().slice(0, 19).replace('T', ' ')
+        }
+        try {
+            let res = await dispatch(TerimaBarangAction(idtransaksi, data))
+            if(res.success){
+                getData()
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
     return (
         <>
