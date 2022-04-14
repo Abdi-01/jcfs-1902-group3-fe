@@ -32,9 +32,27 @@ const ModalDetailTransaksi = (props) => {
             })
         }
     }
+    const printTotalBarang = () => {
+        let total = 0
+        if(detail.length > 0){
+            detail.forEach((item) => {
+                total += item.qty
+            })
+        }
+        return total
+    }
+    const printTotalTagihan = () => {
+        let total = 0
+        if(detail.length > 0){
+            detail.forEach((item) => {
+                total += item.sub_total
+            })
+        }
+        return total
+    }
     return (
         <>
-            {/* {console.log('isi detail', props.detailTransaksi)} */}
+            {console.log('isi detail', props.detailTransaksi)}
             <Modal size='md' scrollBehavior='inside' isOpen={props.onOpen} onClose={props.onClose} >
                 <ModalOverlay />
                 <ModalContent>
@@ -70,16 +88,16 @@ const ModalDetailTransaksi = (props) => {
                                 <Box mt='15px'>
                                     <Text fontWeight='semibold'>Rincian Pembayaran</Text>
                                     <Box mt='15px' display='flex' justifyContent='space-between'>
-                                        <Text>Total Harga {`(${detail[0].qty} Barang)`}</Text>
-                                        <Text>Rp.{(detail[0].sub_total).toLocaleString()}</Text>
+                                        <Text>Total Harga {`(${printTotalBarang()} Barang)`}</Text>
+                                        <Text>Rp.{(printTotalTagihan()).toLocaleString()}</Text>
                                     </Box>
                                     <Box mt='15px' display='flex' justifyContent='space-between'>
-                                        <Text>Total Ongkos kirim </Text>
-                                        <Text>Rp.{(ongkir).toLocaleString()}</Text>
+                                        <Text>Pajak </Text>
+                                        <Text>Rp.{(pajak).toLocaleString()}</Text>
                                     </Box>
                                     <Box mt='15px' display='flex' justifyContent='space-between' borderBottom='3px solid  #F3F4F5'>
-                                        <Text>Pajak </Text>
-                                        <Text mb='20px'>Rp.{(pajak).toLocaleString()}</Text>
+                                        <Text>Total Ongkos kirim </Text>
+                                        <Text mb='20px'>Rp.{(ongkir).toLocaleString()}</Text>
                                     </Box>
                                     <Box my='35px' display='flex' justifyContent='space-between'>
                                         <Text fontWeight='semibold'>Total Belanja </Text>
