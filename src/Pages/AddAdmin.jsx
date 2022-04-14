@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ButtonGroup, Card, CardBody, CardSubtitle, CardText, CardTitle, Input } from 'reactstrap';
 import ModalAddAdmin from '../Components/ModalAddAdmin';
+import ModalUpdateAdmin from '../Components/ModalUpdateAdmin';
 import { API_URL } from '../helper';
 import { getAdmin } from '../redux/actions';
 
@@ -15,19 +16,40 @@ class AddAdminPage extends React.Component {
     state = {
         ModalAddAdmin: false,
         page: 1,
-        limit: 4
+        limit: 4,
+        selectedIndex:null,
+        dataEdit:{} 
     }
 
     componentDidMount() {
         this.props.getAdmin()
     }
 
+    deleteAdmin = (iduser) => {
+        let token = localStorage.getItem('data')
+        axios.delete(`${API_URL}/admin/deleteadmin/${iduser}`,{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then((res)=>{
+                this.props.getAdmin()
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+    }
+
     printBtPagination = () => {
         let btn = []
         for (let i = 0; i < Math.ceil(this.props.adminList.length / 9); i++) {
-            btn.push(<Button outline color="primary"
+            btn.push(<Button
+                colorScheme={'blackAlpha'}
+                color="#6c3b3c"
+                variant={'outline'}
                 disabled={this.state.page == i + 1 ? true : false}
-                onClick={() => this.setState({ page: i + 1 })}>
+                onClick={() => this.setState({ page: i + 1 })}
+            >
                 {i + 1}
             </Button>)
         }
@@ -77,6 +99,7 @@ class AddAdminPage extends React.Component {
                                         colorScheme={'blackAlpha'}
                                         color='#6b3c3b'
                                         variant='outline'
+                                        onClick={() => this.setState({ ModalUpdateAdmin: !this.state.ModalUpdateAdmin, selectedIndex:index,dataEdit:value })}
                                     >
                                         Edit Admin
                                     </Button>
@@ -84,6 +107,7 @@ class AddAdminPage extends React.Component {
                                 <Box className='col-6' style={{ paddingLeft: "40%" }}>
                                     <Button
                                         colorScheme={'teal'}
+                                        onClick={() => this.deleteAdmin(value.iduser)}
                                     >
                                         Delete Admin
                                     </Button>
@@ -104,6 +128,14 @@ class AddAdminPage extends React.Component {
                     ModalAddAdmin={this.state.ModalAddAdmin}
                     btClose={() => this.setState({ ModalAddAdmin: !this.state.ModalAddAdmin })}
                 />
+
+                <ModalUpdateAdmin
+                    ModalUpdateAdmin={this.state.ModalUpdateAdmin}
+                    btClose={() => this.setState({ ModalUpdateAdmin: !this.state.ModalUpdateAdmin })}
+                    selectedIndex = {this.state.selectedIndex}
+                    dataEdit = {this.state.dataEdit}
+                />                
+
                 <Box style={{ padding: '3%' }}>
                     <Box style={{ textAlign: "right" }}>
                         <Button

@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Card, CardBody, CardSubtitle, CardText, CardTitle } from 'reactstrap';
 import ModalAddWarehouse from '../Components/ModalAddWarehouse';
+import ModalUpdateWarehouse from '../Components/ModalUpdateWarehouse';
 import { API_URL } from '../helper';
 import { getWarehouse } from '../redux/actions';
 
@@ -14,11 +15,28 @@ class WarehousePage extends React.Component {
 
     state = {
         ModalAddWarehouse: false,
+        selectedIndex: null,
+        dataEdit: {}
     }
 
     componentDidMount() {
         console.log("cek get warehouse", this.props.warehouseList)
         this.props.getWarehouse()
+    }
+
+    deleteWarehouse = (idwarehouse) => {
+        let token = localStorage.getItem('data')
+        axios.delete(`${API_URL}/admin/deletewarehouse/${idwarehouse}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then((res) => {
+                this.props.getWarehouse()
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     printWarehouseList = () => {
@@ -46,14 +64,14 @@ class WarehousePage extends React.Component {
                                     className="mb-2 text-muted"
                                 >
                                     {value.kota}
-                                </CardSubtitle>                                
+                                </CardSubtitle>
                             </Box>
                             <Box className='row' style={{ paddingTop: "10px" }}>
-                                <CardText className='col-9' style={{alignSelf:"center"}}>
+                                <CardText className='col-9' style={{ alignSelf: "center" }}>
                                     {value.alamat}
                                 </CardText>
                                 <CardText className='text-muted col-3'>
-                                <p>Latitude: {value.latitude}</p>
+                                    <p>Latitude: {value.latitude}</p>
                                     <p>Longitude: {value.longitude}</p>
                                 </CardText>
                             </Box>
@@ -63,6 +81,7 @@ class WarehousePage extends React.Component {
                                         colorScheme={'blackAlpha'}
                                         color='#6b3c3b'
                                         variant='outline'
+                                        onClick={() => this.setState({ ModalUpdateWarehouse: !this.state.ModalUpdateWarehouse, selectedIndex: index, dataEdit: value })}
                                     >
                                         Edit Warehouse
                                     </Button>
@@ -70,6 +89,7 @@ class WarehousePage extends React.Component {
                                 <Box className='col-6'>
                                     <Button
                                         colorScheme={'teal'}
+                                        onClick={() => this.deleteWarehouse(value.idwarehouse)}
                                     >
                                         Delete Warehouse
                                     </Button>
@@ -89,6 +109,12 @@ class WarehousePage extends React.Component {
                 <ModalAddWarehouse
                     ModalAddWarehouse={this.state.ModalAddWarehouse}
                     btClose={() => this.setState({ ModalAddWarehouse: !this.state.ModalAddWarehouse })}
+                />
+                <ModalUpdateWarehouse
+                    ModalUpdateWarehouse={this.state.ModalUpdateWarehouse}
+                    btClose={() => this.setState({ ModalUpdateWarehouse: !this.state.ModalUpdateWarehouse })}
+                    selectedIndex={this.state.selectedIndex}
+                    dataEdit={this.state.dataEdit}
                 />
                 <Box style={{ padding: '50px' }}>
                     <Box style={{ textAlign: "right" }}>
