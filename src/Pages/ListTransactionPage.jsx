@@ -1,7 +1,8 @@
-import { Badge, Box, Button, Center, Heading, Icon, Image, Input, InputGroup, InputRightElement, Select, Text } from '@chakra-ui/react'
+import { Badge, Box, Button, Center, FormControl, FormLabel, Heading, Icon, Image, Input, InputGroup, InputLeftAddon, InputRightAddon, InputRightElement, Select, Text } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import MenuManagement from '../Components/MenuManagement'
 import { IoSearch } from 'react-icons/io5'
+import { BsCalendar2Week } from 'react-icons/bs'
 import { FaMoneyBillWave, FaChevronRight } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -18,6 +19,7 @@ const ListTransactionPage = (props) => {
     const [detail, setDetail] = useState({})
     const [page, setPage] = useState(1)
     const [limitData, setLimitData] = useState(5)
+    const [filter, setFilter] = useState({idstatus: null, fromDate: '', toDate: ''})
     const dispatch = useDispatch()
     useEffect(() => {
         getData()
@@ -35,7 +37,18 @@ const ListTransactionPage = (props) => {
     const btfilterStatus = async (index, idstatus) => {
         setActiveIdx(index)
         try {
-            let res = await dispatch(getTransactionAction(idstatus))
+            let res = await dispatch(getTransactionAction({idstatus: idstatus}))
+            if (res.success) {
+                setTransaksi(res.data)
+                setPage(1)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const filterTanggal = async() => {
+        try {
+            let res = await dispatch(getTransactionAction(filter))
             if (res.success) {
                 setTransaksi(res.data)
                 setPage(1)
@@ -65,7 +78,7 @@ const ListTransactionPage = (props) => {
                             <Box mt='20px' p='4' border='2px solid #F3F4F5' borderRadius='10px'>
                                 <Box display='flex'>
                                     <Text>Belanja {item.added_date.substr(0, 10)}</Text>
-                                    <Text mx='10px'><Badge variant='subtle' colorScheme={item.idstatus === 7 ? 'yellow' : item.idstatus === 8 ? 'messenger' : 'green' }>{item.status}</Badge></Text>
+                                    <Text mx='10px'><Badge variant='subtle' colorScheme={item.idstatus === 7 ? 'yellow' : item.idstatus === 8 ? 'messenger' : 'green'}>{item.status}</Badge></Text>
                                     <Text fontWeight='semibold'>{item.invoice}</Text>
                                 </Box>
                                 <Box mt='10px'>
@@ -93,8 +106,8 @@ const ListTransactionPage = (props) => {
                                 </Box>
                                 <Box mt='15px' display='flex' justifyContent='end'>
                                     <Button size='xs' colorScheme='blackAlpha' bgColor='#6B3C3B' onClick={() => handleModal(!openModal, item)}>Detail Transaksi</Button>
-                                    { item.idstatus === 8 && <Button ml='10px'  size='xs' colorScheme='green'>Barang Diterima</Button>}
-                                    <ModalDetailTransaksi onOpen={openModal} onClose={() => setOpenModal(!openModal)} detailTransaksi={detail}/>
+                                    {item.idstatus === 8 && <Button ml='10px' size='xs' colorScheme='green'>Barang Diterima</Button>}
+                                    <ModalDetailTransaksi onOpen={openModal} onClose={() => setOpenModal(!openModal)} detailTransaksi={detail} />
                                 </Box>
                             </Box>
                         }
@@ -128,13 +141,22 @@ const ListTransactionPage = (props) => {
                             Daftar Transaksi
                         </Heading>
                         <Box w='68vw' my='4vh' p='6' borderRadius='15px' border={'2px solid #F3F4F5'}>
-                            <InputGroup width='20vw'>
-                                <Input placeholder='Cari transaksimu di sini' />
-                                <InputRightElement>
-                                    <Button><Icon as={IoSearch} /></Button>
-                                </InputRightElement>
-                            </InputGroup>
-                            <Box mt='30px' display='flex' justifyContent=''>
+                            <Box display='flex' justifyContent='end'>
+                                <Box>
+                                    <FormControl>
+                                        <FormLabel>Cari Tanggal Transaksi</FormLabel>
+                                        <InputGroup>
+                                            <InputLeftAddon children={<Icon as={BsCalendar2Week} />} />
+                                            <Input type='date' onChange={(event) => setFilter({...filter, fromDate: event.target.value})} />
+                                            <Input type='date' onChange={(event) => setFilter({...filter, toDate: event.target.value})} disabled={filter.fromDate ? false : true} />
+                                            <InputRightElement>
+                                                <Button onClick={filterTanggal} disabled={filter.toDate ? false : true}><Icon as={IoSearch}/></Button>
+                                            </InputRightElement>
+                                        </InputGroup>
+                                    </FormControl>
+                                </Box>
+                            </Box>
+                            <Box mt='35px' display='flex' justifyContent=''>
                                 <Text fontWeight='semibold'>Status :</Text>
                                 {printStatus()}
                             </Box>
@@ -171,7 +193,7 @@ const ListTransactionPage = (props) => {
                                         <option value="20">20</option>
                                         <option value="25">25</option>
                                     </Select>
-                                    <Pagination total={Math.ceil(transaksi.length / limitData)} page={page} onChange={(event) => setPage(event)} size='lg' radius='xl' color='dark'/>
+                                    <Pagination total={Math.ceil(transaksi.length / limitData)} page={page} onChange={(event) => setPage(event)} size='lg' radius='xl' color='dark' />
                                 </Box>
                             </Box>
                         </Box>
