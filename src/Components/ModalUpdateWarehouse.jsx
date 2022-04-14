@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { API_URL } from '../helper';
 import { getWarehouse } from '../redux/actions/userAction';
 
-class ModalAddWarehouse extends React.Component {
+class ModalUpdateWarehouse extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,15 +18,14 @@ class ModalAddWarehouse extends React.Component {
             idprovinsi: null,
             idkota: null,
             kecamatan: '',
-            kode_pos: null,
+            kode_pos: '',
             latitude: '',
-            longitude: '',
-            idstatus:1                  
+            longitude: ''
         }
     }
     // nama_penerima, alamat, no_telpon, provinsi, kota, kecamatan, kode_pos
-    btSimpan = async () => {
-        const { nama, alamat, kecamatan, kode_pos, idprovinsi, idkota, latitude, longitude, idstatus } = this.state
+    btSimpan = async (idwarehouse) => {
+        const { nama, alamat, kecamatan, kode_pos, idprovinsi, idkota, latitude, longitude } = this.state
         let data = {
             idprovinsi,
             idkota,
@@ -35,11 +34,10 @@ class ModalAddWarehouse extends React.Component {
             kecamatan,
             kode_pos,
             latitude,
-            longitude,
-            idstatus            
+            longitude           
         }
         let token = localStorage.getItem('data')
-        let res = await axios.post(`${API_URL}/admin/addwarehouse`, data, {
+        let res = await axios.patch(`${API_URL}/admin/updatewarehouse/${this.props.dataEdit.idwarehouse}`, data, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -49,7 +47,7 @@ class ModalAddWarehouse extends React.Component {
                 return Swal.fire({
                     position: 'center',
                     icon: 'success',
-                    title: 'Berhasil Tambah Warehouse',
+                    title: 'Berhasil Update Warehouse',
                     showConfirmButton: false,
                     timer: 1500
                 })
@@ -114,12 +112,13 @@ class ModalAddWarehouse extends React.Component {
 
     render() {
         // console.log("cek provinsi", this.state.provinsi)
+        console.log("cek dataEdit", this.props.dataEdit)
         return (
             <div>
                 <Modal
                     centered
                     style={{}}
-                    isOpen={this.props.ModalAddWarehouse}
+                    isOpen={this.props.ModalUpdateWarehouse}
                     toggle={this.props.btClose}
                     size='lg'
                 >
@@ -130,7 +129,7 @@ class ModalAddWarehouse extends React.Component {
                         {/* <Input type='textarea' innerRef={(element) => this.inNama_Penerima = element} /> */}
                         <FormGroup>
                             <Label>Nama</Label>
-                            <Input placeholder='nama' onChange={(event) => this.handleInput(event, 'nama')} />
+                            <Input defaultValue={this.props.dataEdit.nama} onChange={(event) => this.handleInput(event, 'nama')} />
                         </FormGroup>
                         <InputGroup className='d-flex justify-content-between '>
                             <FormGroup style={{ width: '400px' }}>
@@ -152,31 +151,31 @@ class ModalAddWarehouse extends React.Component {
                             <Box className='col-3'>
                                 <FormGroup style={{width:"90%"}}>
                                     <Label>Kecamatan</Label>
-                                    <Input type='text' placeholder='kecamatan' onChange={(event) => this.handleInput(event, 'kecamatan')} />
+                                    <Input type='text' defaultValue={this.props.dataEdit.kecamatan} onChange={(event) => this.handleInput(event, 'kecamatan')} />
                                 </FormGroup>
                             </Box>
                             <Box className='col-3'>
                                 <FormGroup style={{width:"90%"}}>
                                     <Label>Kode Pos</Label>
-                                    <Input type='number' placeholder='kode pos' onChange={(event) => this.handleInput(event, 'kode_pos')} />
+                                    <Input type='number' defaultValue={this.props.dataEdit.kode_pos} onChange={(event) => this.handleInput(event, 'kode_pos')} />
                                 </FormGroup>
                             </Box>
                             <Box className='col-3'>
                                 <FormGroup style={{width:"90%"}}>
                                     <Label>Latitude</Label>
-                                    <Input type='text' placeholder='latitude' onChange={(event) => this.handleInput(event, 'latitude')} />
+                                    <Input type='text' defaultValue={this.props.dataEdit.latitude} onChange={(event) => this.handleInput(event, 'latitude')} />
                                 </FormGroup>
                             </Box>
                             <Box className='col-3'>
                                 <FormGroup style={{width:"90%"}}>
                                     <Label>Longitude</Label>
-                                    <Input type='text' placeholder='longitude' onChange={(event) => this.handleInput(event, 'longitude')} />
+                                    <Input type='text' defaultValue={this.props.dataEdit.longitude} onChange={(event) => this.handleInput(event, 'longitude')} />
                                 </FormGroup>
                             </Box>
                         </InputGroup>
                         <FormGroup>
                             <Label>Alamat Lengkap</Label>
-                            <Input type='textarea' placeholder='alamat lengkap' onChange={(event) => this.handleInput(event, 'alamat')} />
+                            <Input type='textarea' defaultValue={this.props.dataEdit.alamat} onChange={(event) => this.handleInput(event, 'alamat')} />
                         </FormGroup>
                         <div style={{ float: "right", marginTop: 20 }}>
                             <Button 
@@ -198,8 +197,9 @@ const mapToProps = (state) => {
     return {
         iduser: state.userReducer.iduser,
         warehouseList: state.userReducer.warehouseList,
+        idwarehouse: state.userReducer.idwarehouse
     }
 }
 // nama_penerima, alamat, no_telpon, provinsi, kota, kecamatan, kode_pos
 
-export default connect(mapToProps, { getWarehouse })(ModalAddWarehouse);
+export default connect(mapToProps, { getWarehouse })(ModalUpdateWarehouse);

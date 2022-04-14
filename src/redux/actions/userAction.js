@@ -1,5 +1,6 @@
 import axios from "axios"
 import { API_URL } from "../../helper"
+import { getTransactionAction } from "./transactionAction"
 
 export const onLogin = (email, password) => {
     return async (dispatch) => {
@@ -15,6 +16,7 @@ export const onLogin = (email, password) => {
                     type: "LOGIN_SUCCESS",
                     payload: response.data.dataLogin
                 })
+                dispatch(getTransactionAction(6))
                 return { success: response.data.success }
             }
 
@@ -69,6 +71,7 @@ export const keepLoginAction = () => {
                         type: "LOGIN_SUCCESS",
                         payload: res.data.dataLogin
                     })
+                    dispatch(getTransactionAction(6))
                     return { success: res.data.success }
                 }
             }
@@ -172,6 +175,24 @@ export const getWarehouse = () => {
             dispatch({
                 type: "GET_WAREHOUSE",
                 payload: res.data.warehouse
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+export const getAdmin = () => {
+    return async (dispatch) => {
+        try {
+            let token = localStorage.getItem('data')
+            let res = await axios.get(`${API_URL}/admin/getadmin`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            dispatch({
+                type: "GET_ADMIN",
+                payload: res.data.getAdmin
             })
         } catch (error) {
             console.log(error)
