@@ -22,10 +22,10 @@ class ModalUpdateAdmin extends React.Component {
     btSimpan = async ({ iduser }) => {
         const { email, username, idwarehouse, no_telpon } = this.state
         let data = {
-            email,
-            username,
-            idwarehouse,
-            no_telpon
+            email:email ? email:this.props.dataEdit.email,
+            username:username ? username:this.props.dataEdit.username,
+            idwarehouse:idwarehouse ? idwarehouse:this.props.dataEdit.idwarehouse,
+            no_telpon:no_telpon ? no_telpon:this.props.dataEdit.no_telpon
         }
         let token = localStorage.getItem('data')
         let res = await axios.patch(`${API_URL}/admin/updateadmin/${this.props.dataEdit.iduser}`, data, {
@@ -94,13 +94,13 @@ class ModalUpdateAdmin extends React.Component {
                             <Box className='col-6'>
                                 <FormGroup style={{ width: "90%" }}>
                                     <Label>Username</Label>
-                                    <Input type='text' defaultValue={username} onChange={(event) => this.handleInput(event, 'username')} />
+                                    <Input type='text' defaultValue={this.props.dataEdit.username} onChange={(event) => this.handleInput(event, 'username')} />
                                 </FormGroup>
                             </Box>
                             <Box className='col-6'>
                                 <FormGroup className='col-6' style={{ width: "90%" }}>
                                     <Label>No Handphone</Label>
-                                    <Input type='text' defaultValue={no_telpon} onChange={(event) => this.handleInput(event, 'no_telpon')} />
+                                    <Input type='text' defaultValue={this.props.dataEdit.no_telpon} onChange={(event) => this.handleInput(event, 'no_telpon')} />
                                 </FormGroup>
                             </Box>
                         </InputGroup>
@@ -108,15 +108,15 @@ class ModalUpdateAdmin extends React.Component {
                             <Box className='col-6'>
                                 <FormGroup style={{ width: "90%" }}>
                                     <Label>Email</Label>
-                                    <Input type='text' defaultValue={email} onChange={(event) => this.handleInput(event, 'email')} />
+                                    <Input type='text' defaultValue={this.props.dataEdit.email} onChange={(event) => this.handleInput(event, 'email')} />
                                 </FormGroup>
                             </Box>
                         </InputGroup>
                         <InputGroup className='d-flex '>
                             <FormGroup style={{ width: '90%' }}>
                                 <Label>Warehouse</Label>
-                                <Input type='select' defaultValue={idwarehouse} onChange={(event) => this.handleInput(event, 'idwarehouse')}>
-                                    <option value={this.props.dataEdit.idwarehouse} selected>Pilih Warehouse</option>
+                                <Input type='select' defaultValue={this.props.dataEdit.idwarehouse} onChange={(event) => this.handleInput(event, 'idwarehouse')}>
+                                    <option selected>Pilih Warehouse</option>
                                     {this.printWarehouse()}
                                 </Input>
                             </FormGroup>

@@ -1,8 +1,8 @@
-import { Box, Button, Container } from '@chakra-ui/react';
+import { Box, Container, Button } from '@chakra-ui/react';
 import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Card, CardBody, CardSubtitle, CardText, CardTitle } from 'reactstrap';
+import { Card, CardBody, CardSubtitle, CardText, CardTitle, ButtonGroup } from 'reactstrap';
 import ModalAddWarehouse from '../Components/ModalAddWarehouse';
 import ModalUpdateWarehouse from '../Components/ModalUpdateWarehouse';
 import { API_URL } from '../helper';
@@ -16,12 +16,37 @@ class WarehousePage extends React.Component {
     state = {
         ModalAddWarehouse: false,
         selectedIndex: null,
-        dataEdit: {}
+        dataEdit: {},
+        page: 1,
+        limit: 4
     }
 
-    componentDidMount() {
-        console.log("cek get warehouse", this.props.warehouseList)
-        this.props.getWarehouse()
+    printBtPagination = () => {
+        let btn = []
+        for (let i = 0; i < Math.ceil(this.props.warehouseList.length / 5); i++) {
+            btn.push(<Button
+                colorScheme={'blackAlpha'}
+                color="#6c3b3c"
+                variant={'outline'}
+                disabled={this.state.page == i + 1 ? true : false}
+                onClick={() => this.setState({ page: i + 1 })}
+            >
+                {i + 1}
+            </Button>)
+        }
+        return btn;
+    }
+
+    printPagination = () => {
+        return (
+            <Box className='my-5 d-flex justify-content-center'>
+                <ButtonGroup>
+                    {
+                        this.printBtPagination()
+                    }
+                </ButtonGroup>
+            </Box>
+        )
     }
 
     deleteWarehouse = (idwarehouse) => {
@@ -40,7 +65,8 @@ class WarehousePage extends React.Component {
     }
 
     printWarehouseList = () => {
-        return this.props.warehouseList.map((value, index) => {
+        let { page } = this.state
+        return this.props.warehouseList.slice(page > 1 ? (page - 1) * 5 : page - 1, page * 5).map((value, index) => {
             return (
                 <Box style={{ paddingTop: "10px", paddingBottom: "10px" }}>
                     <Card
@@ -129,6 +155,13 @@ class WarehousePage extends React.Component {
                     </Box>
                     <Box>
                         {this.printWarehouseList()}
+                    </Box>
+                    <Box className='my-5 d-flex justify-content-center'>
+                        <ButtonGroup>
+                            {
+                                this.printBtPagination()
+                            }
+                        </ButtonGroup>
                     </Box>
                 </Box>
             </Box>

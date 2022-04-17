@@ -7,7 +7,7 @@ import MenuManagement from './Components/MenuManagement';
 import ManagementProduct from './Pages/ManagementProduct';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCartAction, getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction, getWarehouseAction, keepLoginAction } from './redux/actions';
+import { getCartAction, getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction, getWarehouseAction, keepLoginAction, getWarehouse } from './redux/actions';
 import LandingPage from './Pages/LandingPage';
 import LoginPage from './Pages/LoginPage';
 import RegisterPage from './Pages/RegisterPage';
@@ -44,6 +44,7 @@ function App() {
     dispatch(getProductAction())
     dispatch(getCartAction())
     dispatch(getWarehouseAction())
+    dispatch(getWarehouse())
   }, [])
 
   return (
