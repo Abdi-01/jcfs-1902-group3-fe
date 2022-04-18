@@ -1,20 +1,44 @@
-import { Box, Button, Heading, Image, InputGroup, Select, Text } from '@chakra-ui/react'
+import { Box, Button, Center, Heading, Image, InputGroup, Select, Text } from '@chakra-ui/react'
 import { Pagination } from '@mantine/core'
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import MenuManagement from '../Components/MenuManagement'
 import ModalUploadReceipt from '../Components/ModalUploadReceipt'
+import { API_URL } from '../helper'
+import { getTransactionAction } from '../redux/actions'
 
 const MenungguPembayaranPage = () => {
     const [openModal, setOpenModal] = useState(false)
     const [detail, setDetail] = useState({})
     const [page, setPage] = useState(1)
     const [limitData, setLimitData] = useState(5)
-    const { transaksiUser } = useSelector((state) => {
-        return {
-            transaksiUser: state.transactionReducer.transaksi
+    const [transaksiUser, setTransaksiUser] = useState([])
+    const dispatch = useDispatch()
+    // const { transaksiUser } = useSelector((state) => {
+    //     return {
+    //         transaksiUser: state.transactionReducer.transaksi
+    //     }
+    // })
+    useEffect(() => {
+        getData()
+    }, [])
+    const getData = async () => {
+        try {
+            let token = localStorage.getItem('data')
+            let res = await axios.get(`${API_URL}/transactions?idstatus=6`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            if (res.data.success) {
+                setTransaksiUser(res.data.dataTransaksi)
+            }
+        } catch (error) {
+            console.log(error)
         }
-    })
+    }
     const handleModal = (open, item) => {
         setOpenModal(open)
         setDetail(item)
@@ -47,6 +71,16 @@ const MenungguPembayaranPage = () => {
                     </>
                 )
             })
+        } else {
+            return (
+                <>
+                    <Center>
+                        <Box my='40vh'>
+                            <Heading as='h3' size='lg'>Belum ada Transaksi</Heading>
+                        </Box>
+                    </Center>
+                </>
+            )
         }
     }
     const handleLImitData = (event) => {
@@ -55,7 +89,7 @@ const MenungguPembayaranPage = () => {
     }
     return (
         <>
-            {/* {console.log('isi transaksi', transaksiUser)} */}
+            {console.log('isi transaksi', transaksiUser)}
             <Box mx='60px' my='20px'>
                 <Box display='flex'>
                     <MenuManagement />

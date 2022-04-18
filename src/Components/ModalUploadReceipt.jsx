@@ -1,11 +1,13 @@
 import { Button, FormControl, FormLabel, Image, Input, Modal, ModalCloseButton, ModalContent, ModalFooter, ModalOverlay, ModalBody, ModalHeader, Text, Center } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { Navigate } from 'react-router-dom'
 import { getTransactionAction, uploadReceiptaAction } from '../redux/actions'
 
 
 const ModalUploadReceipt = (props) => {
     const [receipt, setReceipt] = useState(null)
+    const [redirect, setRedirect] = useState(false)
     const dispatch = useDispatch()
     const handleUnggah = (event) => {
         let temp = { name: event.target.files[0].name, file: event.target.files[0] }
@@ -25,8 +27,9 @@ const ModalUploadReceipt = (props) => {
             formUnggah.append('data', temp.file)
             let res = await dispatch(uploadReceiptaAction(props.detailTrans.idtransaksi, formUnggah))
             if(res.success){
-                dispatch(getTransactionAction(6))
+                setReceipt(null)
                 props.onClose()
+                setRedirect(!redirect)
             }
         } catch (error) {
             console.log(error)
@@ -36,6 +39,7 @@ const ModalUploadReceipt = (props) => {
     return (
         <>
         {/* {console.log('isi props', props.detailTrans)} */}
+        {redirect && <Navigate to='/transaction/list' />}
             <Modal isOpen={props.open} onClose={() => closeModal()}>
                 <ModalOverlay />
                 <ModalContent>

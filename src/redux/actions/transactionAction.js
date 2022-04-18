@@ -148,14 +148,14 @@ export const getTransactionAction = (search = null) => {
         } catch (error) {
             console.log(error)
         }
-    }
+    } 
 }
 export const uploadReceiptaAction = (idtransaksi, data) => {
     return async (dispatch) => {
         try {
             let token = localStorage.getItem('data')
             if (token) {
-                let res = await axios.patch(`${API_URL}/transactions/${idtransaksi}`, data, {
+                let res = await axios.patch(`${API_URL}/transactions/upload/${idtransaksi}`, data, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

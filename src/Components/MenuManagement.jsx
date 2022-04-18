@@ -1,20 +1,41 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect} from 'react'
 import { Badge, Box, Center, Collapse, Icon, Image, Menu, Text } from '@chakra-ui/react'
 import { MdProductionQuantityLimits } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa'
 import { CgProfile } from 'react-icons/cg'
+import axios from 'axios'
+import { API_URL } from '../helper'
 
 const MenuManagement = (props) => {
     const [openPembelian, setOpenPembelian] = useState(false)
     const [openProfile, setOpenProfile] = useState(false)
-    const { idrole, menungguBayar } = useSelector((state) => {
+    const [menungguBayar, setMenungguBayar] = useState([])
+    const { idrole } = useSelector((state) => {
         return {
             idrole: state.userReducer.idrole,
-            menungguBayar: state.transactionReducer.transaksi
         }
     })
+    useEffect(() => {
+        getData()
+    },[])
+    const getData = async () => {
+        try {
+            let token = localStorage.getItem('data')
+            let res = await axios.get(`${API_URL}/transactions?idstatus=6`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            if (res.data.success) {
+                setMenungguBayar(res.data.dataTransaksi)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <>
             <Box w='20vw' h='40vw' borderRadius='15px' boxShadow='lg'>
