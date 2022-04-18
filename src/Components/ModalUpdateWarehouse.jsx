@@ -20,22 +20,23 @@ class ModalUpdateWarehouse extends React.Component {
             kecamatan: '',
             kode_pos: '',
             latitude: '',
-            longitude: ''
+            longitude: ''            
         }
     }
     // nama_penerima, alamat, no_telpon, provinsi, kota, kecamatan, kode_pos
     btSimpan = async (idwarehouse) => {
-        const { nama, alamat, kecamatan, kode_pos, idprovinsi, idkota, latitude, longitude } = this.state
+        const { nama, alamat, kecamatan, kode_pos, idprovinsi, idkota, latitude, longitude, inProvinsi, inKota } = this.state
         let data = {
-            idprovinsi,
-            idkota,
-            nama,
-            alamat,
-            kecamatan,
-            kode_pos,
-            latitude,
-            longitude           
+            idprovinsi:idprovinsi ? idprovinsi:this.props.dataEdit.idprovinsi,
+            idkota:idkota ? idkota:this.props.dataEdit.idkota,
+            nama:nama ? nama:this.props.dataEdit.nama,
+            alamat:alamat ? alamat:this.props.dataEdit.alamat,
+            kecamatan:kecamatan ? kecamatan:this.props.dataEdit.kecamatan,
+            kode_pos:kode_pos ? kode_pos:this.props.dataEdit.kode_pos,
+            latitude:latitude ? latitude:this.props.dataEdit.latitude,
+            longitude:longitude ? longitude:this.props.dataEdit.longitude                                
         }
+        console.log('btsimpan', data)
         let token = localStorage.getItem('data')
         let res = await axios.patch(`${API_URL}/admin/updatewarehouse/${this.props.dataEdit.idwarehouse}`, data, {
             headers: {
@@ -52,7 +53,7 @@ class ModalUpdateWarehouse extends React.Component {
                     timer: 1500
                 })
             }).then(result => {
-                this.props.btClose()
+                this.props.btClose()                
                 this.props.getWarehouse()
             })
             .catch((err) => {
@@ -81,6 +82,7 @@ class ModalUpdateWarehouse extends React.Component {
         }
     }
     handleKota = async (event) => {
+        console.log("handle kota",event.target.value)
         let res = await axios.get(`${API_URL}/alamat/kota/${event.target.value}`)
         if (res.data.success) {
             this.setState({
@@ -112,7 +114,12 @@ class ModalUpdateWarehouse extends React.Component {
 
     render() {
         // console.log("cek provinsi", this.state.provinsi)
-        console.log("cek dataEdit", this.props.dataEdit)
+        console.log("cek provinsi state", this.state.idprovinsi)
+        console.log("cek state kota", this.state.idkota)
+        console.log("cek provinsi props", this.props.dataEdit.idprovinsi)
+        // console.log("cek kota", this.props.dataEdit.idkota)
+        // console.log("cek dataEdit", this.props.dataEdit)
+        // console.log("handle kota",this.handleKota)
         return (
             <div>
                 <Modal
@@ -134,15 +141,15 @@ class ModalUpdateWarehouse extends React.Component {
                         <InputGroup className='d-flex justify-content-between '>
                             <FormGroup style={{ width: '400px' }}>
                                 <Label>Provinsi</Label>
-                                <Input type='select' placeholder='Provinsi' onChange={(event) => this.handleKota(event)}>
-                                    <option value='Provinsi' selected>Pilih Provinsi</option>
+                                <Input type='select' defaultValue={this.props.dataEdit.idprovinsi} onChange={(event) => this.handleKota(event)}>
+                                    <option selected>Pilih Provinsi</option>
                                     {this.printProvinsi()}
                                 </Input>
                             </FormGroup>
                             <FormGroup style={{ width: '300px' }}>
                                 <Label>Kota</Label>
-                                <Input type='select' placeholder='Kota' onChange={(event) => this.handleInput(event, 'idkota')}>
-                                    <option value='Kota' selected>Pilih Kota</option>
+                                <Input type='select' defaultValue={this.props.dataEdit.idkota} onChange={(event) => this.handleInput(event, 'idkota')}>
+                                    <option selected>Pilih Kota</option>
                                     {this.printKota()}
                                 </Input>
                             </FormGroup>
