@@ -167,3 +167,23 @@ export const uploadReceiptaAction = (idtransaksi, data) => {
         }
     }
 }
+
+export const TerimaBarangAction = (idtransaksi,data) => {
+    return async (dispatch) => {
+        try {
+            let token = localStorage.getItem('data')
+            if(token){
+                let res = await axios.patch(`${API_URL}/transactions/${idtransaksi}`, data, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                if(res.data.success){
+                    return {success: res.data.success}
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
