@@ -3,7 +3,7 @@ import React from 'react'
 import { API_URL } from '../helper'
 
 const ModalDetailTransaksi = (props) => {
-    const { invoice, added_date, warehouse, detail, ongkir, total_tagihan, pajak } = props.detailTransaksi
+    const { invoice, added_date, warehouse, detail, ongkir, total_tagihan, pajak, nama_penerima } = props.detailTransaksi
     const printDetail = () => {
         if (detail.length > 0) {
             // detail.splice(1, 2)
@@ -34,7 +34,7 @@ const ModalDetailTransaksi = (props) => {
     }
     const printTotalBarang = () => {
         let total = 0
-        if(detail.length > 0){
+        if (detail.length > 0) {
             detail.forEach((item) => {
                 total += item.qty
             })
@@ -43,7 +43,7 @@ const ModalDetailTransaksi = (props) => {
     }
     const printTotalTagihan = () => {
         let total = 0
-        if(detail.length > 0){
+        if (detail.length > 0) {
             detail.forEach((item) => {
                 total += item.sub_total
             })
@@ -64,7 +64,7 @@ const ModalDetailTransaksi = (props) => {
                     <ModalCloseButton />
                     <ModalBody>
                         {
-                            added_date && invoice &&
+                            added_date && invoice && detail &&
                             <>
                                 <Box borderBottom='8px solid  #F3F4F5'>
                                     <Box display='flex' justifyContent='space-between'>
@@ -77,12 +77,25 @@ const ModalDetailTransaksi = (props) => {
                                     </Box>
                                 </Box>
                                 <Box mt='15px'>
-                                    <Box display='flex' justifyContent='space-between' >
+                                    <Box display='flex' justifyContent='space-between' mb='10px' >
                                         <Text fontWeight='semibold'>Detail Produk</Text>
                                         <Text fontWeight='semibold'>{warehouse}</Text>
                                     </Box>
                                     <Box borderBottom='8px solid  #F3F4F5' h='30vh' overflow='auto' overflowX='hidden'>
                                         {printDetail()}
+                                    </Box>
+                                </Box>
+                                <Box mt='15px' borderBottom='8px solid  #F3F4F5'>
+                                    <Text fontWeight='semibold'>Info Pengiriman</Text>
+                                    <Box display='flex' my='15px'>
+                                        <Text mr='10px'>Alamat :</Text>
+                                        <Box>
+                                            <Text fontWeight='semibold'>{detail[0].nama_penerima}</Text>
+                                            <Text>{detail[0].no_telpon}</Text>
+                                            <Text>{detail[0].alamat}</Text>
+                                            <Text>{detail[0].kecamatan}, {detail[0].kota}</Text>
+                                            <Text>{detail[0].provinsi} {detail[0].kode_pos}</Text>
+                                        </Box>
                                     </Box>
                                 </Box>
                                 <Box mt='15px'>

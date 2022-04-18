@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { API_URL } from '../helper'
 import { AiOutlineMinus, AiOutlinePlus, AiOutlineDelete } from 'react-icons/ai'
-import { deleteCartAction, getAddress, getCartAction, getOngkirAction, getTransactionAction, updateQtyCartAction } from '../redux/actions'
+import { deleteCartAction, getAddress, getCartAction, getOngkirAction, getTransactionAction, getWarehouseAction, updateQtyCartAction } from '../redux/actions'
 import ModalSetAlamat from '../Components/ModalSetAlamat'
 import axios from 'axios'
-import {Navigate} from 'react-router'
+import { Navigate } from 'react-router'
+import { Pagination } from '@mantine/core'
 
 const CheckoutPage = () => {
 
@@ -14,6 +15,8 @@ const CheckoutPage = () => {
     const [selectedWarehouse, setSelectedWarehouse] = useState(null)
     const [dataOngkir, setDataOngkir] = useState({})
     const [redirect, setRedirect] = useState(false)
+    const [limitData, setLimitData] = useState(4)
+    const [page, setPage] = useState(1)
     let dispatch = useDispatch()
     const { carts, defaultAlamat, warehouse } = useSelector((state) => {
         return {
@@ -60,7 +63,7 @@ const CheckoutPage = () => {
     }
     const printProductCart = () => {
         if (carts.length > 0) {
-            return carts.map((item, index) => {
+            return carts.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
                 return (
                     <>
                         <Box mt='20px' p='4' borderBottom='6px solid #F3F4F5'>
@@ -99,7 +102,7 @@ const CheckoutPage = () => {
         } else {
             return (
                 <>
-                    <Box mx='10vw' my='60vh'>
+                    <Box mx='10vw' my='50vh'>
                         <Heading as='h2' size='lg'>
                             Belum Ada Barang
                         </Heading>
@@ -117,6 +120,7 @@ const CheckoutPage = () => {
                             <Box mt='20px' borderBottom='2px solid #F3F4F5'>
                                 <Text fontWeight='semibold' mb='5px'>{item.nama_penerima}</Text>
                                 <Text my='5px'>{item.no_telpon}</Text>
+                                <Text my='5px'>{item.provinsi} - {item.kota}</Text>
                                 <Text mb='10px' fontSize='13px'>{item.alamat}</Text>
                             </Box>
                         </>
@@ -129,7 +133,7 @@ const CheckoutPage = () => {
         if (warehouse.length > 0) {
             return warehouse.map((item, index) => {
                 return (
-                    <option value={item.idwarehouse} onClick={() => setSelectedWarehouse(item)}>{item.nama}</option>
+                    <option value={index} >{item.nama}</option>
                 )
             })
         }
@@ -157,8 +161,10 @@ const CheckoutPage = () => {
     const btCheckout = async () => {
         let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
         let token = localStorage.getItem('data')
+        let alamat = defaultAlamat.filter(item => item.idstatus === 4)
         let data = {
             idwarehouse: selectedWarehouse.idwarehouse,
+            idaddress: alamat[0].idaddress,
             idstatus: 6,
             invoice: `INV/${new Date().getTime()}`,
             total_tagihan: Number((printSubtotal() + dataOngkir.costs[1].cost[0].value) + (printSubtotal() * 0.1)),
@@ -182,18 +188,24 @@ const CheckoutPage = () => {
                     setTimeout(() => {
                         setRedirect(!redirect)
                     }, 600);
-                    
+
                 }
             }
+            console.log('isi data',data)
         } catch (error) {
             console.log(error)
         }
     }
+    const handleLImitData = (event) => {
+        setLimitData(event.target.value)
+        setPage(1)
+    }
     return (
         <>
             {
-                redirect &&  <Navigate to='/payment'/>
+                redirect && <Navigate to='/payment' />
             }
+            {console.log('isi select wwarehouse', selectedWarehouse)}
             <Box marginX={'8vw'} marginY={'5vh'}>
                 <Box display='flex' justifyContent='space-between'>
                     <Box >
@@ -201,6 +213,18 @@ const CheckoutPage = () => {
                             Keranjang
                         </Heading>
                         {printProductCart()}
+                        <Box mt='40px' mb='10px' display='flex' justifyContent='center'>
+                            <Box display='flex'>
+                                <Select w='20' mr='5' onChange={(event) => handleLImitData(event)}>
+                                    <option selected value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="25">25</option>
+                                </Select>
+                                <Pagination total={Math.ceil(carts.length / limitData)} page={page} onChange={(event) => setPage(event)} size='lg' radius='xl' color='dark' />
+                            </Box>
+                        </Box>
                     </Box>
                     <Box>
                         <Box w='30vw' borderRadius='15px' boxShadow='md' p='5'>
@@ -223,7 +247,7 @@ const CheckoutPage = () => {
                                 </Box>
                             }
                             <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Select mb='10px' fontWeight='semibold' placeholder='pilih warehouse'>
+                                <Select mb='10px' fontWeight='semibold' placeholder='pilih warehouse' disabled={carts.length > 0 ? false : true} onChange={(event) => setSelectedWarehouse(warehouse[event.target.value])}>
                                     {printSelectWarehouse()}
                                 </Select>
                             </Box>
@@ -239,7 +263,7 @@ const CheckoutPage = () => {
                                 </Box>
                             }
                             <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Select mb='10px' fontWeight='semibold' placeholder='pilih pengiriman' onClick={(event) => selectKurir(event)}>
+                                <Select mb='10px' fontWeight='semibold' placeholder='pilih pengiriman' disabled={selectedWarehouse ? false : true} onClick={(event) => selectKurir(event)}>
                                     <option value='jne'>JNE</option>
                                     <option value='tiki'>TIKI</option>
                                 </Select>
