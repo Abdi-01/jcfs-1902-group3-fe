@@ -3,15 +3,17 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { API_URL } from '../helper'
 import { AiOutlineMinus, AiOutlinePlus, AiOutlineDelete } from 'react-icons/ai'
-import { deleteCartAction, getAddress, getCartAction, getOngkirAction, updateQtyCartAction } from '../redux/actions'
+import { deleteCartAction, getAddress, getCartAction, getOngkirAction, getTransactionAction, updateQtyCartAction } from '../redux/actions'
 import ModalSetAlamat from '../Components/ModalSetAlamat'
 import axios from 'axios'
+import {Navigate} from 'react-router'
 
 const CheckoutPage = () => {
 
     const [openModalAlamat, setOpenModalAlamat] = useState(false)
     const [selectedWarehouse, setSelectedWarehouse] = useState(null)
     const [dataOngkir, setDataOngkir] = useState({})
+    const [redirect, setRedirect] = useState(false)
     let dispatch = useDispatch()
     const { carts, defaultAlamat, warehouse } = useSelector((state) => {
         return {
@@ -174,8 +176,13 @@ const CheckoutPage = () => {
                 })
                 if (res.data.success) {
                     dispatch(getCartAction())
+                    dispatch(getTransactionAction(6))
                     setSelectedWarehouse(null)
                     setDataOngkir({})
+                    setTimeout(() => {
+                        setRedirect(!redirect)
+                    }, 600);
+                    
                 }
             }
         } catch (error) {
@@ -184,7 +191,9 @@ const CheckoutPage = () => {
     }
     return (
         <>
-            {console.log('isi cart', carts)}
+            {
+                redirect &&  <Navigate to='/payment'/>
+            }
             <Box marginX={'8vw'} marginY={'5vh'}>
                 <Box display='flex' justifyContent='space-between'>
                     <Box >

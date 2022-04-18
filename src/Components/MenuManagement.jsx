@@ -84,7 +84,9 @@ const MenuManagement = (props) => {
                                                         }
                                                     </Box>
                                                     <Box my='15px' cursor='pointer'>
-                                                        <Text fontSize='12px'>Daftar Transaksi</Text>
+                                                        <Link to='/transaction/list'>
+                                                            <Text fontSize='12px'>Daftar Transaksi</Text>
+                                                        </Link>
                                                     </Box>
                                                 </Collapse>
                                             </Box>

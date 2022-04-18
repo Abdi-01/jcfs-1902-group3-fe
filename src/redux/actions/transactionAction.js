@@ -106,18 +106,32 @@ export const getOngkirAction = (data) => {
         }
     }
 }
-export const getTransactionAction = (idstatus = null) => {
+export const getTransactionAction = (search = null) => {
     return async (dispatch) => {
         try {
             let token = localStorage.getItem('data')
             let res
             if (token) {
-                if (idstatus) {
-                    res = await axios.get(`${API_URL}/transactions?idstatus=${idstatus}`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    })
+                if (search) {
+                    if (search.idstatus) {
+                        res = await axios.get(`${API_URL}/transactions?idstatus=${search.idstatus}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        })
+                    } else if (search.fromDate && search.toDate) {
+                        res = await axios.get(`${API_URL}/transactions?fromDate=${search.fromDate}&toDate=${search.toDate}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        })
+                    } else {
+                        res = await axios.get(`${API_URL}/transactions`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        })
+                    }
                 } else {
                     res = await axios.get(`${API_URL}/transactions`, {
                         headers: {

@@ -25,6 +25,7 @@ import NotFoundPage from './Pages/NotFoundPage';
 import WarehousePage from './Pages/Warehouse';
 import MenungguPembayaranPage from './Pages/MenungguPembayaranPage';
 import AddAdminPage from './Pages/AddAdmin';
+import ListTransactionPage from './Pages/ListTransactionPage';
 
 function App() {
 
@@ -55,6 +56,7 @@ function App() {
             <>
               <Route path='/product/checkout' element={<CheckoutPage />} />
               <Route path='/payment' element={<MenungguPembayaranPage/>} />
+              <Route path='/transaction/list' element={<ListTransactionPage/>} />
             </>
             :
             idrole == 2 ?
