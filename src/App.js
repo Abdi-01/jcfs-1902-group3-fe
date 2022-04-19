@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -27,6 +27,7 @@ import MenungguPembayaranPage from './Pages/MenungguPembayaranPage';
 import AddAdminPage from './Pages/AddAdmin';
 import ListTransactionPage from './Pages/ListTransactionPage';
 import ListTransactionWarehousePage from './Pages/ListTransactionWarehousePage';
+import LoadingPage from './Pages/LoadingPage';
 
 function App() {
 
@@ -73,7 +74,7 @@ function App() {
                   <Route path='/addadmin' element={<AddAdminPage />} />
                 </>
                 :
-                <Route path="/*" element={<NotFoundPage />} />
+                <Route path="*" element={<LoadingPage />} />
         }
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -84,7 +85,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path='/product' element={<ProductPage />} />
         <Route path='/detail/product' element={<DetailProduct />} />
-        <Route path="/*" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
     </>
@@ -92,36 +93,3 @@ function App() {
 }
 
 export default App;
-
-
-// import logo from './logo.svg';
-// import './App.css';
-// import LoginPage from './Pages/LoginPage';
-// import { Route, Routes } from 'react-router-dom';
-// import ResetPasswordPage from './Pages/ResetPasswordPage';
-// import ForgotPasswordPage from './Pages/ForgotPasswordPage';
-// import RegisterPage from './Pages/RegisterPage';
-// import LandingPage from './Pages/LandingPage';
-// import VerificationPage from './Pages/VerificationPage';
-// import { connect } from 'react-redux';
-// import { keepLoginAction } from './redux/actions';
-
-// componentDidMount() {
-//   this.props.keepLoginAction()
-// }
-// function App() {
-//   return (
-//     <div>
-//       <Routes>
-//         <Route path="/" element={<LandingPage />} />
-//         <Route path="/login" element={<LoginPage />} />
-//         <Route path="/resetpassword/:token" element={<ResetPasswordPage />} />
-//         <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
-//         <Route path="/register" element={<RegisterPage />} />
-//         <Route path="/verification/:token" element={<VerificationPage />} />
-//       </Routes>
-//     </div>
-//   );
-// }
-
-// export default connect(null, { keepLoginAction })(App);
