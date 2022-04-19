@@ -1,16 +1,17 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { Badge, Box, Center, Collapse, Icon, Image, Menu, Text } from '@chakra-ui/react'
 import { MdProductionQuantityLimits } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa'
-import { CgProfile } from 'react-icons/cg'
+import { CgProfile, CgFileDocument } from 'react-icons/cg'
 import axios from 'axios'
 import { API_URL } from '../helper'
 
 const MenuManagement = (props) => {
     const [openPembelian, setOpenPembelian] = useState(false)
     const [openProfile, setOpenProfile] = useState(false)
+    const [openManagement, setOpenManagement] = useState(false)
     const [menungguBayar, setMenungguBayar] = useState([])
     const { idrole } = useSelector((state) => {
         return {
@@ -19,7 +20,7 @@ const MenuManagement = (props) => {
     })
     useEffect(() => {
         getData()
-    },[])
+    }, [])
     const getData = async () => {
         try {
             let token = localStorage.getItem('data')
@@ -62,11 +63,48 @@ const MenuManagement = (props) => {
                     {
                         idrole == 2 ?
                             <>
-                                <Box display='flex'>
+                                <Box display='flex' justifyContent='space-between' borderBottom='1.5px solid gray'>
+                                    <Icon as={CgProfile} boxSize='7' />
+                                    <Center mb='10px'>
+                                        <Box>
+                                            <Text fontWeight='semibold' cursor='pointer' fontSize='15px' onClick={() => setOpenProfile(!openProfile)}>Profile Saya<Icon as={openProfile ? FaChevronUp : FaChevronDown} ml='70px' /></Text>
+                                            <Collapse in={openProfile} animateOpacity>
+                                                <Box my='15px' cursor='pointer'>
+                                                    <Link to='/profile'>
+                                                        <Text fontSize='12px'>Pengaturan</Text>
+                                                    </Link>
+                                                </Box>
+                                            </Collapse>
+                                        </Box>
+                                    </Center>
+                                </Box>
+                                <Box my='15px' display='flex' justifyContent='space-between' borderBottom='1.5px solid gray'>
+                                    <Icon as={CgFileDocument} boxSize='7' />
+                                    <Center mb='10px'>
+                                        <Box>
+                                            <Text fontWeight='semibold' cursor='pointer' fontSize='15px' onClick={() => setOpenManagement(!openManagement)}>Management<Icon as={openManagement ? FaChevronUp : FaChevronDown} ml='60px' /></Text>
+                                            <Collapse in={openManagement} animateOpacity>
+                                                <Box my='15px' cursor='pointer'>
+                                                    <Link to='/management/product'>
+                                                        <Text fontSize='12px'>Product</Text>
+                                                    </Link>
+                                                </Box>
+                                            </Collapse>
+                                        </Box>
+                                    </Center>
+                                </Box>
+                                <Box my='15px' display='flex' justifyContent='space-between' borderBottom='1.5px solid gray'>
                                     <Icon as={MdProductionQuantityLimits} boxSize='7' />
-                                    <Center>
-                                        <Box ml='20px'>
-                                            <Link to='/management/product'>Management Product</Link>
+                                    <Center mb='10px'>
+                                        <Box>
+                                            <Text fontWeight='semibold' cursor='pointer' fontSize='15px' onClick={() => setOpenPembelian(!openPembelian)}>Pembelian<Icon as={openPembelian ? FaChevronUp : FaChevronDown} ml='80px' /></Text>
+                                            <Collapse in={openPembelian} animateOpacity>
+                                                <Box my='15px' cursor='pointer'>
+                                                    <Link to='/transaction/admin/list'>
+                                                        <Text fontSize='12px'>Daftar Transaksi</Text>
+                                                    </Link>
+                                                </Box>
+                                            </Collapse>
                                         </Box>
                                     </Center>
                                 </Box>
@@ -115,7 +153,38 @@ const MenuManagement = (props) => {
                                     </Box>
                                 </>
                                 :
-                                <></>
+                                <>
+                                    <Box display='flex' justifyContent='space-between' borderBottom='1.5px solid gray'>
+                                        <Icon as={CgProfile} boxSize='7' />
+                                        <Center mb='10px'>
+                                            <Box>
+                                                <Text fontWeight='semibold' cursor='pointer' fontSize='15px' onClick={() => setOpenProfile(!openProfile)}>Profile Saya<Icon as={openProfile ? FaChevronUp : FaChevronDown} ml='70px' /></Text>
+                                                <Collapse in={openProfile} animateOpacity>
+                                                    <Box my='15px' cursor='pointer'>
+                                                        <Link to='/profile'>
+                                                            <Text fontSize='12px'>Pengaturan</Text>
+                                                        </Link>
+                                                    </Box>
+                                                </Collapse>
+                                            </Box>
+                                        </Center>
+                                    </Box>
+                                    <Box my='15px' display='flex' justifyContent='space-between' borderBottom='1.5px solid gray'>
+                                    <Icon as={MdProductionQuantityLimits} boxSize='7' />
+                                    <Center mb='10px'>
+                                        <Box>
+                                            <Text fontWeight='semibold' cursor='pointer' fontSize='15px' onClick={() => setOpenPembelian(!openPembelian)}>Pembelian<Icon as={openPembelian ? FaChevronUp : FaChevronDown} ml='80px' /></Text>
+                                            <Collapse in={openPembelian} animateOpacity>
+                                                <Box my='15px' cursor='pointer'>
+                                                    <Link to='/transaction/admin/list'>
+                                                        <Text fontSize='12px'>Daftar Transaksi</Text>
+                                                    </Link>
+                                                </Box>
+                                            </Collapse>
+                                        </Box>
+                                    </Center>
+                                </Box>
+                                </>
                     }
                 </Box>
             </Box>

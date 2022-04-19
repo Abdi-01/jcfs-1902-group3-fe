@@ -26,6 +26,7 @@ import WarehousePage from './Pages/Warehouse';
 import MenungguPembayaranPage from './Pages/MenungguPembayaranPage';
 import AddAdminPage from './Pages/AddAdmin';
 import ListTransactionPage from './Pages/ListTransactionPage';
+import ListTransactionWarehousePage from './Pages/ListTransactionWarehousePage';
 
 function App() {
 
@@ -55,22 +56,24 @@ function App() {
           idrole == 3 ?
             <>
               <Route path='/product/checkout' element={<CheckoutPage />} />
-              <Route path='/payment' element={<MenungguPembayaranPage/>} />
-              <Route path='/transaction/list' element={<ListTransactionPage/>} />
+              <Route path='/payment' element={<MenungguPembayaranPage />} />
+              <Route path='/transaction/list' element={<ListTransactionPage />} />
             </>
             :
             idrole == 2 ?
               <>
+                <Route path='/transaction/admin/list' element={<ListTransactionWarehousePage />} />
                 <Route path='/management/product' element={<ManagementProduct />} />
               </>
               :
-              idrole == 1?
-              <>
-                <Route path='/warehouse' element={<WarehousePage />} />
-                <Route path='/addadmin' element={<AddAdminPage />} />
-              </>
-          :
-        <Route path="/*" element={<NotFoundPage />} />
+              idrole == 1 ?
+                <>
+                  <Route path='/transaction/admin/list' element={<ListTransactionWarehousePage />} />
+                  <Route path='/warehouse' element={<WarehousePage />} />
+                  <Route path='/addadmin' element={<AddAdminPage />} />
+                </>
+                :
+                <Route path="/*" element={<NotFoundPage />} />
         }
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
