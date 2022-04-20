@@ -168,7 +168,7 @@ export const uploadReceiptaAction = (idtransaksi, data) => {
     }
 }
 
-export const TerimaBarangAction = (idtransaksi,data) => {
+export const KonfirmasiPesananAction = (idtransaksi,data) => {
     return async (dispatch) => {
         try {
             let token = localStorage.getItem('data')
