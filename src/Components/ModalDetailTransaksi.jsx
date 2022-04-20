@@ -3,7 +3,7 @@ import React from 'react'
 import { API_URL } from '../helper'
 
 const ModalDetailTransaksi = (props) => {
-    const { invoice, added_date, warehouse, detail, ongkir, total_tagihan, pajak, nama_penerima } = props.detailTransaksi
+    const { invoice, added_date, warehouse, detail, ongkir, total_tagihan, pajak } = props.detailTransaksi
     const printDetail = () => {
         if (detail.length > 0) {
             // detail.splice(1, 2)
