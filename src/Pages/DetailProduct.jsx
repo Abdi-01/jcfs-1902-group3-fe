@@ -1,7 +1,7 @@
 import { Box, Image, Text, Heading, Center, Tabs, TabList, Tab, TabPanels, TabPanel, InputGroup, InputLeftElement, InputRightElement, Icon, Input, Button } from '@chakra-ui/react'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { API_URL } from '../helper'
 import { getProductAction, getStock } from '../redux/actions'
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
@@ -9,6 +9,7 @@ import { FiEdit2 } from 'react-icons/fi'
 import { useLocation } from 'react-router-dom'
 import { addCartAction } from '../redux/actions/transactionAction'
 import DrawerCart from '../Components/DrawerCart'
+import { addCartAdminAction, getWarehouseAdmin } from '../redux/actions/transactionAdminAction'
 
 const DetailProduct = () => {
 
@@ -19,14 +20,22 @@ const DetailProduct = () => {
     const [inputCatatan, setInputCatatan] = useState('Tambah Catatan')
     const [catatan, setCatatan] = useState('')
     let getTotalStock = useLocation()
-    let { idproduct ,nama, harga, material, stock, deskripsi, kategori, images } = detailProduct
+    let { idproduct, nama, harga, material, stock, deskripsi, kategori, images } = detailProduct
     const [totalStock, setTotalStock] = useState({})
-    const [openCart,setOpenCart] = useState(false)
+    const [openCart, setOpenCart] = useState(false)
     let dispatch = useDispatch()
 
     useEffect(() => {
         getData()
+        dispatch(getWarehouseAdmin())
     }, [])
+
+    const { warehouseAdminList } = useSelector((state) => {
+        return {
+          warehouseAdminList: state.transactionAdminReducer.warehouseAdminList
+        }
+      })
+
     const getData = async () => {
         try {
             let res = await dispatch(getStock(getTotalStock.state.nama))
@@ -71,16 +80,16 @@ const DetailProduct = () => {
     const btKeranjang = async () => {
         try {
             let temp = {
-               idproduct,
-               idstock: stock[0].idstock,
-               qty: Number(jumlah),
-               catatan
+                idproduct,
+                idstock: stock[0].idstock,
+                qty: Number(jumlah),
+                catatan
             }
 
             console.log('isi cart', temp)
 
             let res = await dispatch(addCartAction(temp))
-            if(res.success){
+            if (res.success) {
                 setOpenCart(!openCart)
             }
         } catch (error) {
@@ -88,9 +97,36 @@ const DetailProduct = () => {
         }
     }
 
+    const btKeranjangAdmin = async () => {
+        try {
+            let temp = {
+                idproduct,
+                idstock: stock[0].idstock,
+                qty: Number(jumlah),
+                catatan
+            }
+
+            console.log('isi cart', temp)
+
+            let res = await dispatch(addCartAdminAction(temp))
+            if (res.success) {
+                setOpenCart(!openCart)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const { idrole } = useSelector((state) => {
+        return {
+            idrole: state.userReducer.idrole
+        }
+    })
+
     return (
         <>
-        {/* {console.log(getTotalStock)} */}
+            {/* {console.log(getTotalStock)} */}
+            {console.log('getwarehouseadmin', warehouseAdminList)}
             <Box marginX={'8vw'} marginY={'10vh'}>
                 {
                     detailProduct && material && images && totalStock[0] &&
@@ -163,10 +199,21 @@ const DetailProduct = () => {
                                     <Heading as='h6' size='xs'>SubTotal</Heading>
                                     <Text fontWeight='semibold'>Rp.{(jumlah * harga).toLocaleString()}</Text>
                                 </Box>
-                                <Box mt='20px'>
-                                    <Button colorScheme='blackAlpha' w='100%' bgColor='#6B3C3B' onClick={btKeranjang} ><Icon as={AiOutlinePlus} mr='10px'  /> Keranjang</Button>
-                                    <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)}/>
-                                </Box>
+                                {
+                                    idrole == 3 ?
+                                        <Box mt='20px'>
+                                            <Button colorScheme='blackAlpha' w='100%' bgColor='#6B3C3B' onClick={btKeranjang} ><Icon as={AiOutlinePlus} mr='10px' /> Keranjang</Button>
+                                            <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)} />
+                                        </Box>
+                                        :
+                                        idrole == 2 ?
+                                            <Box mt='20px'>
+                                                <Button colorScheme='blackAlpha' w='100%' bgColor='#6B3C3B' onClick={btKeranjangAdmin} ><Icon as={AiOutlinePlus} mr='10px' /> Request</Button>
+                                                <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)} />
+                                            </Box>
+                                            :
+                                            null
+                                }
                             </Box>
                         </Box>
                     </>
