@@ -52,9 +52,9 @@ const ModalDetailTransaksi = (props) => {
     }
     return (
         <>
-            {console.log('isi detail', props.detailTransaksi)}
+            {/* {console.log('isi detail', props.detailTransaksi)} */}
             <Modal size='md' scrollBehavior='inside' isOpen={props.onOpen} onClose={props.onClose} >
-                <ModalOverlay />
+                <ModalOverlay bg='blackAlpha.300' backdropFilter='blur(10px) hue-rotate(90deg)' />
                 <ModalContent>
                     <ModalHeader>
                         <Center>

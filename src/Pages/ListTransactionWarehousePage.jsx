@@ -6,10 +6,11 @@ import { BsCalendar2Week } from 'react-icons/bs'
 import { FaMoneyBillWave, FaChevronRight } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { getTransactionAction, TerimaBarangAction } from '../redux/actions'
+import { getTransactionAction, KonfirmasiPesananAction } from '../redux/actions'
 import { API_URL } from '../helper'
 import { Pagination } from '@mantine/core'
 import ModalDetailTransaksi from '../Components/ModalDetailTransaksi'
+import Swal from 'sweetalert2'
 
 const ListTransactionWarehousePage = () => {
     const [status, setStatus] = useState([{ id: null, status: 'Semua' }, { id: 6, status: 'Menunggu Pembayaran' }, { id: 7, status: 'Menunggu Konfirmasi' }, { id: 8, status: 'Pesanan Diproses' }, { id: 9, status: 'Pesanan Diterima' }, { id: 10, status: 'Dibatalkan' }])
@@ -46,7 +47,7 @@ const ListTransactionWarehousePage = () => {
             let res = await dispatch(getTransactionAction({ idstatus: idstatus }))
             if (res.success) {
                 setTransaksi(res.data)
-                setFilter({idstatus: null, fromDate: '', toDate: ''})
+                setFilter({ idstatus: null, fromDate: '', toDate: '' })
                 setPage(1)
             }
         } catch (error) {
@@ -65,12 +66,12 @@ const ListTransactionWarehousePage = () => {
             console.log(error)
         }
     }
-    const btResetFilter =  async() => {
+    const btResetFilter = async () => {
         try {
             let res = await dispatch(getTransactionAction())
             if (res.success) {
                 setTransaksi(res.data)
-                setFilter({idstatus: null, fromDate: '', toDate: ''})
+                setFilter({ idstatus: null, fromDate: '', toDate: '' })
                 setActiveIdx(0)
                 setPage(1)
             }
@@ -97,7 +98,7 @@ const ListTransactionWarehousePage = () => {
                         <Box mt='20px' p='4' border='2px solid #F3F4F5' borderRadius='10px'>
                             <Box display='flex'>
                                 <Text>Belanja {item.added_date.substr(0, 10)}</Text>
-                                <Text mx='10px'><Badge variant='subtle' colorScheme={item.idstatus === 6 ? 'gray' : item.idstatus === 7 ? 'yellow' : item.idstatus === 8 ? 'messenger' : 'green'}>{item.status}</Badge></Text>
+                                <Text mx='10px'><Badge variant='subtle' colorScheme={item.idstatus === 6 ? 'gray' : item.idstatus === 7 ? 'yellow' : item.idstatus === 8 ? 'messenger' : item.idstatus === 9 ? 'green' : 'red'}>{item.status}</Badge></Text>
                                 <Text fontWeight='semibold'>{item.invoice}</Text>
                             </Box>
                             <Box mt='10px'>
@@ -126,8 +127,8 @@ const ListTransactionWarehousePage = () => {
                             </Box>
                             <Box mt='15px' display='flex' justifyContent='end'>
                                 <Button size='xs' colorScheme='blackAlpha' bgColor='#6B3C3B' onClick={() => handleModal(!openModal, item)}>Detail Transaksi</Button>
-                                {item.idstatus === 7 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='green'>Konfirmasi</Button>}
-                                {item.idstatus === 6 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='yellow' color='white'>Konfirmasi</Button>}
+                                {item.idstatus === 7 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='green' onClick={() => btKonfirPembayaran(item.idtransaksi, item.receipt)}>Konfirmasi Pembayaran</Button>}
+                                {item.idstatus === 6 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='yellow' color='white' onClick={() => btKonfirMenungguBayar(item.idtransaksi)}>Konfirmasi</Button>}
                                 <ModalDetailTransaksi onOpen={openModal} onClose={() => setOpenModal(!openModal)} detailTransaksi={detail} />
                             </Box>
                         </Box>
@@ -137,9 +138,9 @@ const ListTransactionWarehousePage = () => {
         } else {
             return (
                 <>
-                <Box display='flex' justifyContent='center' my='20vh'>
-                    <Heading as='h3' size='lg'>Belum ada transaksi</Heading>
-                </Box>
+                    <Box display='flex' justifyContent='center' my='20vh'>
+                        <Heading as='h3' size='lg'>Belum ada transaksi</Heading>
+                    </Box>
                 </>
             )
         }
@@ -151,6 +152,75 @@ const ListTransactionWarehousePage = () => {
     const handleLImitData = (event) => {
         setLimitData(event.target.value)
         setPage(1)
+    }
+    const btKonfirMenungguBayar = (idtransaksi) => {
+        let data
+        Swal.fire({
+            title: 'Konfirmasi pesanan ini ?',
+            text: 'Anda tidak dapat merubahnya kembali!',
+            icon: 'warning',
+            showDenyButton: true,
+            confirmButtonColor: 'green',
+            confirmButtonText: 'Konfirmasi',
+            denyButtonText: 'Batalkan'
+        }).then((res) => {
+            if (res.isConfirmed) {
+                data = {
+                    date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+                    idstatus: 7
+                }
+                dispatch(KonfirmasiPesananAction(idtransaksi, data))
+                Swal.fire(
+                    'Berhasil!',
+                    'Pesanan ini terkonfirmasi',
+                    'success'
+                )
+                getData()
+                btfilterStatus()
+            } else if (res.isDenied) {
+                data = {
+                    date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+                    idstatus: 10
+                }
+                dispatch(KonfirmasiPesananAction(idtransaksi, data))
+                Swal.fire(
+                    'Berhasil!',
+                    'Pesanan ini terkonfirmasi',
+                    'success'
+                )
+                getData()
+                btfilterStatus()
+            }
+        })
+    }
+    const btKonfirPembayaran = (idtransaksi, receipt) => {
+        Swal.fire({
+            title: 'Konfirmasi pesanan ini ?',
+            text: 'Anda tidak dapat merubahnya kembali!',
+            showDenyButton: true,
+            confirmButtonColor: 'green',
+            confirmButtonText: 'Konfirmasi',
+            denyButtonText: 'Cancel',
+            imageUrl: `${API_URL}/${receipt}`,
+            imageWidth: 200,
+            imageHeight: 300,
+            imageAlt: 'receipt'
+        }).then((res) => {
+            if (res.isConfirmed) {
+                let data = {
+                    date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+                    idstatus: 8
+                }
+                dispatch(KonfirmasiPesananAction(idtransaksi, data))
+                Swal.fire(
+                    'Berhasil!',
+                    'Pesanan ini terkonfirmasi',
+                    'success'
+                )
+                getData()
+                btfilterStatus()
+            }
+        })
     }
     return (
         <>
@@ -171,7 +241,7 @@ const ListTransactionWarehousePage = () => {
                                             <Input type='date' value={filter.fromDate} onChange={(event) => setFilter({ ...filter, fromDate: event.target.value })} />
                                             <Input type='date' value={filter.toDate} onChange={(event) => setFilter({ ...filter, toDate: event.target.value })} disabled={filter.fromDate ? false : true} />
                                             <InputRightElement >
-                                                <Button onClick={filterTanggal} disabled={filter.toDate ? false : true}  colorScheme='blackAlpha'  bgColor='#6B3C3B' ><Icon as={IoSearch} /></Button>
+                                                <Button onClick={filterTanggal} disabled={filter.toDate ? false : true} colorScheme='blackAlpha' bgColor='#6B3C3B' ><Icon as={IoSearch} /></Button>
                                             </InputRightElement>
                                         </InputGroup>
                                     </FormControl>

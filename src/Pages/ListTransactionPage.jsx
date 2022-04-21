@@ -6,7 +6,7 @@ import { BsCalendar2Week } from 'react-icons/bs'
 import { FaMoneyBillWave, FaChevronRight } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { getTransactionAction, TerimaBarangAction } from '../redux/actions'
+import { getTransactionAction, KonfirmasiPesananAction } from '../redux/actions'
 import { API_URL } from '../helper'
 import { Pagination } from '@mantine/core'
 import ModalDetailTransaksi from '../Components/ModalDetailTransaksi'
@@ -34,7 +34,7 @@ const ListTransactionPage = (props) => {
             console.log(error)
         }
     }
-    const btfilterStatus = async (index, idstatus) => {
+    const btfilterStatus = async (index = 0, idstatus = null) => {
         setActiveIdx(index)
         try {
             let res = await dispatch(getTransactionAction({ idstatus: idstatus }))
@@ -154,12 +154,14 @@ const ListTransactionPage = (props) => {
     }
     const btTerimaBarang = async (idtransaksi) => {
         let data = {
-            date: new Date().toISOString().slice(0, 19).replace('T', ' ')
+            date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+            idstatus: 9
         }
         try {
-            let res = await dispatch(TerimaBarangAction(idtransaksi, data))
+            let res = await dispatch(KonfirmasiPesananAction(idtransaksi, data))
             if (res.success) {
                 getData()
+                btfilterStatus()
             }
         } catch (error) {
             console.log(error)
