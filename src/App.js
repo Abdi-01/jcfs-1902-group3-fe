@@ -7,7 +7,7 @@ import MenuManagement from './Components/MenuManagement';
 import ManagementProduct from './Pages/ManagementProduct';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCartAction, getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction, getWarehouseAction, keepLoginAction, getWarehouse } from './redux/actions';
+import { getCartAction, getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction, getWarehouseAction, keepLoginAction, getWarehouse, getWarehouseAdmin } from './redux/actions';
 import LandingPage from './Pages/LandingPage';
 import LoginPage from './Pages/LoginPage';
 import RegisterPage from './Pages/RegisterPage';
@@ -25,6 +25,8 @@ import NotFoundPage from './Pages/NotFoundPage';
 import WarehousePage from './Pages/Warehouse';
 import MenungguPembayaranPage from './Pages/MenungguPembayaranPage';
 import AddAdminPage from './Pages/AddAdmin';
+import TransactionManagementPage from './Pages/TransactionManagement';
+import RequestStockPage from './Pages/RequestStock';
 import ListTransactionPage from './Pages/ListTransactionPage';
 import ListTransactionWarehousePage from './Pages/ListTransactionWarehousePage';
 import LoadingPage from './Pages/LoadingPage';
@@ -48,6 +50,7 @@ function App() {
     dispatch(getCartAction())
     dispatch(getWarehouseAction())
     dispatch(getWarehouse())
+    dispatch(getWarehouseAdmin())
   }, [])
 
   return (
@@ -57,26 +60,27 @@ function App() {
         {
           idrole == 3 ?
             <>
-              <Route path='/product/checkout' element={<CheckoutPage />} />
-              <Route path='/payment' element={<MenungguPembayaranPage />} />
-              <Route path='/transaction/list' element={<ListTransactionPage />} />
+              <Route path='/payment' element={<MenungguPembayaranPage/>} />
             </>
             :
             idrole == 2 ?
-              <>
+            <>
                 <Route path='/transaction/admin/list' element={<ListTransactionWarehousePage />} />
-                <Route path='/management/product' element={<ManagementProduct />} />
+                <Route path='/management/product' element={<ManagementProduct />} />                
+                <Route path='/transaction/warehouse' element={<TransactionManagementPage />} />                
+                <Route path='/requeststock' element={<RequestStockPage />} />                
               </>
               :
-              idrole == 1 ?
-                <>
-                  <Route path='/transaction/admin/list' element={<ListTransactionWarehousePage />} />
-                  <Route path='/warehouse' element={<WarehousePage />} />
-                  <Route path='/addadmin' element={<AddAdminPage />} />
-                </>
-                :
-                <Route path="*" element={<LoadingPage />} />
+              idrole == 1?
+              <>
+                <Route path='/transaction/admin/list' element={<ListTransactionWarehousePage />} />
+                <Route path='/warehouse' element={<WarehousePage />} />
+                <Route path='/addadmin' element={<AddAdminPage />} />
+              </>
+          :
+          <Route path="/*" element={<NotFoundPage />} />
         }
+        <Route path='/product/checkout' element={<CheckoutPage />} />
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/resetpassword/:token" element={<ResetPasswordPage />} />

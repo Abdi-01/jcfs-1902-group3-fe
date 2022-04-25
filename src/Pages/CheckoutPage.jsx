@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { API_URL } from '../helper'
 import { AiOutlineMinus, AiOutlinePlus, AiOutlineDelete } from 'react-icons/ai'
-import { deleteCartAction, getAddress, getCartAction, getOngkirAction, getTransactionAction, getWarehouseAction, updateQtyCartAction } from '../redux/actions'
+import { deleteCartAction, getAddress, getCartAction, getOngkirAction, getWarehouseAdmin, getTransactionAction, getWarehouseAction, updateQtyCartAction } from '../redux/actions'
 import ModalSetAlamat from '../Components/ModalSetAlamat'
 import axios from 'axios'
 import { Navigate } from 'react-router'
@@ -18,13 +18,18 @@ const CheckoutPage = () => {
     const [limitData, setLimitData] = useState(4)
     const [page, setPage] = useState(1)
     let dispatch = useDispatch()
-    const { carts, defaultAlamat, warehouse } = useSelector((state) => {
+    const { carts, defaultAlamat, warehouse, warehouseAdminList } = useSelector((state) => {
         return {
             carts: state.transactionReducer.carts,
             defaultAlamat: state.userReducer.addressList,
-            warehouse: state.warehouseReducer.listWarehouse
+            warehouse: state.warehouseReducer.listWarehouse,
+            warehouseAdminList: state.transactionAdminReducer.warehouseAdminList
         }
     })
+    useEffect(() => {
+        dispatch(getWarehouseAdmin())
+    }, [])
+
     const btIncrement = (index, idcart) => {
         let temp = [...carts]
         if (temp[index].qty < temp[index].stocks[0].qty) {
@@ -158,6 +163,25 @@ const CheckoutPage = () => {
             }
         }
     }
+    const selectKurirAdmin = async (event) => {
+        let temp
+        if (event.target.value) {
+            temp = {
+                asal: warehouseAdminList[0].idkota,
+                tujuan: selectedWarehouse.idkota,
+                berat: carts[0].products[0].berat * 1000,
+                kurir: event.target.value
+            }
+            try {
+                let res = await dispatch(getOngkirAction(temp))
+                if (res.success) {
+                    setDataOngkir(res.data)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
     const btCheckout = async () => {
         let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
         let token = localStorage.getItem('data')
@@ -205,7 +229,6 @@ const CheckoutPage = () => {
             {
                 redirect && <Navigate to='/payment' />
             }
-            {console.log('isi select wwarehouse', selectedWarehouse)}
             <Box marginX={'8vw'} marginY={'5vh'}>
                 <Box display='flex' justifyContent='space-between'>
                     <Box >
@@ -230,12 +253,25 @@ const CheckoutPage = () => {
                         <Box w='30vw' borderRadius='15px' boxShadow='md' p='5'>
                             <Box borderBottom='2px solid #F3F4F5'>
                                 <Text fontWeight='bold' mb='10px'>Alamat Pengiriman</Text>
+                                {
+                                    warehouseAdminList[0]&&
+                                    warehouseAdminList[0].idrole === 2 ?
+                                        <Box mt='20px' borderBottom='2px solid #F3F4F5'>
+                                            <Text fontWeight='semibold' mb='5px'>{warehouseAdminList[0].username}</Text>
+                                            <Text my='5px'>{warehouseAdminList[0].no_telpon}</Text>
+                                            <Text mb='10px' fontSize='13px'>{warehouseAdminList[0].alamat}</Text>
+                                        </Box>
+                                        :
+                                        <>
+                                            {printDefaultAlamat()}
+                                            < Box mt='20px' borderBottom='5px solid #F3F4F5'>
+                                                <Button colorScheme='gray' mb='15px' onClick={() => setOpenModalAlamat(!openModalAlamat)}>Pilih Alamat Lain</Button>
+                                                <ModalSetAlamat openModal={openModalAlamat} closeModal={() => setOpenModalAlamat(!openModalAlamat)} />
+                                            </Box>
+                                        </>
+                                }
                             </Box>
-                            {printDefaultAlamat()}
-                            <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Button colorScheme='gray' mb='15px' onClick={() => setOpenModalAlamat(!openModalAlamat)}>Pilih Alamat Lain</Button>
-                                <ModalSetAlamat openModal={openModalAlamat} closeModal={() => setOpenModalAlamat(!openModalAlamat)} />
-                            </Box>
+
                             <Box mt='30px' borderBottom='2px solid #F3F4F5'>
                                 <Text fontWeight='bold' mb='10px'>Alamat Toko</Text>
                             </Box>
@@ -263,10 +299,21 @@ const CheckoutPage = () => {
                                 </Box>
                             }
                             <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Select mb='10px' fontWeight='semibold' placeholder='pilih pengiriman' disabled={selectedWarehouse ? false : true} onClick={(event) => selectKurir(event)}>
-                                    <option value='jne'>JNE</option>
-                                    <option value='tiki'>TIKI</option>
-                                </Select>
+
+                                {
+                                    warehouseAdminList[0]&&
+                                    warehouseAdminList[0].idrole === 2 ?
+                                        <Select mb='10px' fontWeight='semibold' placeholder='pilih pengiriman' onClick={(event) => selectKurirAdmin(event)}>
+                                            <option value='jne'>JNE</option>
+                                            <option value='tiki'>TIKI</option>
+                                        </Select>
+                                        :
+                                        <Select mb='10px' fontWeight='semibold' placeholder='pilih pengiriman' onClick={(event) => selectKurir(event)}>
+                                            <option value='jne'>JNE</option>
+                                            <option value='tiki'>TIKI</option>
+                                        </Select>
+                                }
+
                             </Box>
                             <Box mt='25px' borderBottom='2px solid #F3F4F5'>
                                 <Text fontWeight='bold' mb='10px'>Ringkasan Belanja</Text>
