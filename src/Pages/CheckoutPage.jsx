@@ -8,6 +8,7 @@ import ModalSetAlamat from '../Components/ModalSetAlamat'
 import axios from 'axios'
 import { Navigate } from 'react-router'
 import { Pagination } from '@mantine/core'
+import { findNearest } from 'geolib'
 
 const CheckoutPage = () => {
 
@@ -17,14 +18,19 @@ const CheckoutPage = () => {
     const [redirect, setRedirect] = useState(false)
     const [limitData, setLimitData] = useState(4)
     const [page, setPage] = useState(1)
+    const [printWarehouse, setPrintWarehouse] = useState([])
+    const [getWarehouse, setGetWarehouse] = useState([])
     let dispatch = useDispatch()
-    const { carts, defaultAlamat, warehouse } = useSelector((state) => {
+    const { carts, defaultAlamat} = useSelector((state) => {
         return {
             carts: state.transactionReducer.carts,
             defaultAlamat: state.userReducer.addressList,
-            warehouse: state.warehouseReducer.listWarehouse
         }
     })
+    useEffect(() => {
+        getWarehouseTerdekat()
+        getDataWarehouse()
+    },[defaultAlamat])
     const btIncrement = (index, idcart) => {
         let temp = [...carts]
         if (temp[index].qty < temp[index].stocks[0].qty) {
@@ -129,13 +135,43 @@ const CheckoutPage = () => {
             })
         }
     }
+    const getWarehouseTerdekat = async () => {
+        if (defaultAlamat.length > 0) {
+            let alamat = defaultAlamat.filter(item => item.idstatus === 4)
+            let dataCoordWarehouse = []
+            getWarehouse.forEach((item, index) => {
+                dataCoordWarehouse.push({ latitude: item.latitude, longitude: item.longitude })
+            })
+
+            let data = findNearest({ latitude: alamat[0].latitude, longitude: alamat[0].longitude }, dataCoordWarehouse)
+            try {
+                let res = await dispatch(getWarehouseAction(data))
+                if (res.success) {
+                    setPrintWarehouse(res.data)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
+    }
     const printSelectWarehouse = () => {
-        if (warehouse.length > 0) {
-            return warehouse.map((item, index) => {
+        if (printWarehouse.length > 0) {
+            return printWarehouse.map((item, index) => {
                 return (
                     <option value={index} >{item.nama}</option>
                 )
             })
+        }
+    }
+    const getDataWarehouse = async () => {
+        try {
+            let res = await axios.get(`${API_URL}/warehouse`)
+            if(res.data.success){
+                setGetWarehouse(res.data.dataWarehouse)
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
     const selectKurir = async (event) => {
@@ -191,7 +227,7 @@ const CheckoutPage = () => {
 
                 }
             }
-            console.log('isi data',data)
+            console.log('isi data', data)
         } catch (error) {
             console.log(error)
         }
@@ -205,7 +241,7 @@ const CheckoutPage = () => {
             {
                 redirect && <Navigate to='/payment' />
             }
-            {console.log('isi select wwarehouse', selectedWarehouse)}
+            {/* {console.log('isi warehouse', getWarehouse)} */}
             <Box marginX={'8vw'} marginY={'5vh'}>
                 <Box display='flex' justifyContent='space-between'>
                     <Box >
@@ -247,7 +283,7 @@ const CheckoutPage = () => {
                                 </Box>
                             }
                             <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Select mb='10px' fontWeight='semibold' placeholder='pilih warehouse' disabled={carts.length > 0 ? false : true} onChange={(event) => setSelectedWarehouse(warehouse[event.target.value])}>
+                                <Select mb='10px' fontWeight='semibold' placeholder='pilih warehouse' disabled={carts.length > 0 ? false : true} onChange={(event) => setSelectedWarehouse(printWarehouse[event.target.value])}>
                                     {printSelectWarehouse()}
                                 </Select>
                             </Box>
