@@ -15,11 +15,12 @@ const MenuManagement = (props) => {
     const [openManagement, setOpenManagement] = useState(false)
     const [menungguBayar, setMenungguBayar] = useState([])
     const dispatch = useDispatch()
-    const { idrole, nama, photo } = useSelector((state) => {
+    const { idrole, nama, photo, username } = useSelector((state) => {
         return {
             idrole: state.userReducer.idrole,
             nama: state.userReducer.nama,
             photo: state.userReducer.photo,
+            username: state.userReducer.username
         }
     })
     useEffect(() => {
@@ -51,7 +52,10 @@ const MenuManagement = (props) => {
                             <Text ml='10px'>{nama}</Text>
                             {
                                 idrole == 2 ?
-                                    <Text ml='10px'>Admin</Text>
+                                    <>
+                                        <Text ml='10px' fontSize='13px'>{username}</Text>
+                                        <Text ml='10px'>Admin</Text>
+                                    </>
                                     :
                                     idrole == 3 ?
                                         <Text ml='10px'>User</Text>

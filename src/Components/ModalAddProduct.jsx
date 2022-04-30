@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addProductAction, getJenisProductAction } from '../redux/actions'
 import axios from 'axios'
 import { API_URL } from '../helper'
+import Swal from 'sweetalert2'
 
 const ModalAddProduct = (props) => {
     const [inputPhoto, setInputPhoto] = useState([{}])
@@ -97,6 +98,11 @@ const ModalAddProduct = (props) => {
             inputPhoto.forEach((item) => formData.append('images', item.file))
             let res = await dispatch(addProductAction(formData))
             if (res.success) {
+                Swal.fire(
+                    'Success!',
+                    'Data berhasil ditambah',
+                    'success'
+                )
                 props.modalClose()
             }
         } catch (error) {

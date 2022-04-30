@@ -60,7 +60,9 @@ function App() {
         {
           idrole == 3 ?
             <>
-              <Route path='/payment' element={<MenungguPembayaranPage/>} />
+              <Route path='/product/checkout' element={<CheckoutPage />} />
+              <Route path='/payment' element={<MenungguPembayaranPage />} />
+              <Route path='/transaction/list' element={<ListTransactionPage />} />
             </>
             :
             idrole == 2 ?
@@ -78,7 +80,7 @@ function App() {
                 <Route path='/addadmin' element={<AddAdminPage />} />
               </>
           :
-          <Route path="/*" element={<NotFoundPage />} />
+          <Route path="*" element={<LoadingPage />} />
         }
         <Route path='/product/checkout' element={<CheckoutPage />} />
         <Route path="/" element={<LandingPage />} />

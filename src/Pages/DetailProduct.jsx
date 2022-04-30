@@ -10,6 +10,7 @@ import { useLocation } from 'react-router-dom'
 import { addCartAction } from '../redux/actions/transactionAction'
 import DrawerCart from '../Components/DrawerCart'
 import { addCartAdminAction, getWarehouseAdmin } from '../redux/actions/transactionAdminAction'
+import Swal from 'sweetalert2'
 
 const DetailProduct = () => {
 
@@ -30,11 +31,11 @@ const DetailProduct = () => {
         dispatch(getWarehouseAdmin())
     }, [])
 
-    const { warehouseAdminList } = useSelector((state) => {
+    const { username } = useSelector((state) => {
         return {
-          warehouseAdminList: state.transactionAdminReducer.warehouseAdminList
+            username: state.userReducer.username
         }
-      })
+    })
 
     const getData = async () => {
         try {
@@ -85,48 +86,27 @@ const DetailProduct = () => {
                 qty: Number(jumlah),
                 catatan
             }
-
-            console.log('isi cart', temp)
-
-            let res = await dispatch(addCartAction(temp))
-            if (res.success) {
-                setOpenCart(!openCart)
+            if(username){
+                let res = await dispatch(addCartAction(temp))
+                if (res.success) {
+                    setOpenCart(!openCart)
+                }
+            } else  {
+                Swal.fire(
+                    '',
+                    'Anda harus login terlebih dahulu',
+                    'info'
+                )
             }
         } catch (error) {
             console.log(error)
         }
     }
-
-    const btKeranjangAdmin = async () => {
-        try {
-            let temp = {
-                idproduct,
-                idstock: stock[0].idstock,
-                qty: Number(jumlah),
-                catatan
-            }
-
-            console.log('isi cart', temp)
-
-            let res = await dispatch(addCartAdminAction(temp))
-            if (res.success) {
-                setOpenCart(!openCart)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const { idrole } = useSelector((state) => {
-        return {
-            idrole: state.userReducer.idrole
-        }
-    })
+    
 
     return (
         <>
             {/* {console.log(getTotalStock)} */}
-            {console.log('getwarehouseadmin', warehouseAdminList)}
             <Box marginX={'8vw'} marginY={'10vh'}>
                 {
                     detailProduct && material && images && totalStock[0] &&
@@ -199,21 +179,10 @@ const DetailProduct = () => {
                                     <Heading as='h6' size='xs'>SubTotal</Heading>
                                     <Text fontWeight='semibold'>Rp.{(jumlah * harga).toLocaleString()}</Text>
                                 </Box>
-                                {
-                                    idrole == 3 ?
-                                        <Box mt='20px'>
-                                            <Button colorScheme='blackAlpha' w='100%' bgColor='#6B3C3B' onClick={btKeranjang} ><Icon as={AiOutlinePlus} mr='10px' /> Keranjang</Button>
-                                            <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)} />
-                                        </Box>
-                                        :
-                                        idrole == 2 ?
-                                            <Box mt='20px'>
-                                                <Button colorScheme='blackAlpha' w='100%' bgColor='#6B3C3B' onClick={btKeranjangAdmin} ><Icon as={AiOutlinePlus} mr='10px' /> Request</Button>
-                                                <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)} />
-                                            </Box>
-                                            :
-                                            null
-                                }
+                                <Box mt='20px'>
+                                    <Button colorScheme='blackAlpha' w='100%' bgColor='#6B3C3B' onClick={btKeranjang} ><Icon as={AiOutlinePlus} mr='10px' /> Keranjang</Button>
+                                    <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)} />
+                                </Box>
                             </Box>
                         </Box>
                     </>

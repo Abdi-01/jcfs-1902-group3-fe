@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Badge, Box, Button, Center, Flex, Heading, HStack, Icon, Image, Input, InputGroup, Spacer, Text } from '@chakra-ui/react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { BsCart3, BsPerson } from 'react-icons/bs'
 import logoWeb from '../assets/web-icon.png'
@@ -13,6 +13,8 @@ const Navbar = () => {
     const [openCart, setOpenCart] = useState(false)
     const [openUser, setOpenUser] = useState(false)
     const [openAdmin, setOpenAdmin] = useState(false)
+    const [idxKategori, setIdxKategori] = useState(null)
+    const location = useLocation()
     const { dataKategori, carts, username, idrole } = useSelector((state) => {
 
         return {
@@ -27,11 +29,13 @@ const Navbar = () => {
         if (dataKategori.length > 0) {
             return dataKategori.map((item, index) => {
                 return (
-                    <Link to={`/product?kategori=${item.idkategori}`} state={dataKategori[index]}>
-                        <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'}>
-                            {item.kategori}
-                        </Text>
-                    </Link>
+                    <Box borderBottom={idxKategori === index && location.pathname == '/product' ? '5px solid brown' : 'none'}>
+                        <Link to={`/product?kategori=${item.idkategori}`} state={dataKategori[index]}>
+                            <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'} my='15px' onClick={() => setIdxKategori(index)}>
+                                {item.kategori}
+                            </Text>
+                        </Link>
+                    </Box>
                 )
             })
         }

@@ -2,6 +2,7 @@ import { Button, FormControl, FormLabel, Image, Input, Modal, ModalCloseButton, 
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Navigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
 import { getTransactionAction, uploadReceiptaAction } from '../redux/actions'
 
 
@@ -30,6 +31,11 @@ const ModalUploadReceipt = (props) => {
                 setReceipt(null)
                 props.onClose()
                 setRedirect(!redirect)
+                Swal.fire(
+                    'Success!',
+                    'Berhasil unggah bukti transaksi',
+                    'success'
+                )
             }
         } catch (error) {
             console.log(error)
