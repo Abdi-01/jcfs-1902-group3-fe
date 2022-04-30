@@ -5,6 +5,7 @@ import {materialReducer} from './materialReducer'
 import {jenisProductReducer} from './jenisProductReducer'
 import {productReducer} from './productReducer'
 import {transactionReducer} from './transactionReducer'
+import {transactionAdminReducer} from './transactionAdminReducer'
 import {warehouseReducer} from './warehouseReducer'
 
 export const rootReducers = combineReducers({
@@ -14,5 +15,6 @@ export const rootReducers = combineReducers({
     jenisProductReducer,
     productReducer,
     transactionReducer,
+    transactionAdminReducer,
     warehouseReducer
 })
