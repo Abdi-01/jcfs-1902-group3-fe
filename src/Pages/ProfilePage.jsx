@@ -27,7 +27,10 @@ class ProfilePage extends React.Component {
         modalOpenPassword: false,
         modalOpenPhone: false,
         openModalAddAddress: false,
-        photo: [""]
+        photo: [""],
+        latitude: '',
+        longitude: '',
+        statusGetCoords: null
     }
 
     componentDidMount() {
@@ -94,7 +97,11 @@ class ProfilePage extends React.Component {
                 'Authorization': `Bearer ${token}`
             }
         }).then((res) => {
-            alert("Berhasil Pilih Alamat")
+            Swal.fire(
+                'Success!',
+                'Alamat utama dipilih',
+                'success'
+            )
             this.props.getAddress();
             this.printAddressList();
         }).catch((err) => {
@@ -161,6 +168,30 @@ class ProfilePage extends React.Component {
         })
     }
 
+    getLocation = () => {
+        if (!navigator.geolocation) {
+            this.setState({
+                statusGetCoords: `Geolocation is not supported by your browser`,
+                openModalAddAddress: !this.state.openModalAddAddress
+            })
+        } else {
+            this.setState({
+                statusGetCoords: `Locating...`,
+                openModalAddAddress: !this.state.openModalAddAddress
+            })
+            navigator.geolocation.getCurrentPosition((position) => {
+                this.setState({
+                    statusGetCoords: null,
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                })
+            }, () => {
+                this.setState({
+                    statusGetCoords: `Unable to retrieve your locationUnable to retrieve your location`
+                })
+            })
+        }
+    }
     render() {
         return (
             <Box mx='60px' my='20px'>
@@ -187,6 +218,9 @@ class ProfilePage extends React.Component {
                 <ModalAddAddress
                     openModalAddAddress={this.state.openModalAddAddress}
                     btClose={() => this.setState({ openModalAddAddress: !this.state.openModalAddAddress })}
+                    latitude={this.state.latitude}
+                    longitude={this.state.longitude}
+                    
                 />
                 <Box display='flex'>
                     <MenuManagement />
@@ -284,7 +318,7 @@ class ProfilePage extends React.Component {
                                     <TabPanel>
                                         <Box>
                                             <div style={{ textAlign: "end", marginTop: "5%" }}>
-                                                <Button onClick={() => this.setState({ openModalAddAddress: !this.state.openModalAddAddress })} colorScheme='green' size='sm' style={{ borderRadius: 10, fontSize: "15px" }}>Tambah Alamat</Button>
+                                                <Button onClick={this.getLocation} colorScheme='green' size='sm' style={{ borderRadius: 10, fontSize: "15px" }}>Tambah Alamat</Button>
                                             </div>
                                             <Box mt='20px' w='45vw'>
                                                 {this.printAddressList()}
