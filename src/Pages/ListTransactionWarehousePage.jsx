@@ -11,6 +11,7 @@ import { API_URL } from '../helper'
 import { Pagination } from '@mantine/core'
 import ModalDetailTransaksi from '../Components/ModalDetailTransaksi'
 import Swal from 'sweetalert2'
+import LoadingPage from './LoadingPage'
 
 const ListTransactionWarehousePage = () => {
     const [status, setStatus] = useState([{ id: null, status: 'Semua' }, { id: 6, status: 'Menunggu Pembayaran' }, { id: 7, status: 'Menunggu Konfirmasi' }, { id: 8, status: 'Pesanan Diproses' }, { id: 9, status: 'Pesanan Diterima' }, { id: 10, status: 'Dibatalkan' }])
@@ -21,6 +22,7 @@ const ListTransactionWarehousePage = () => {
     const [page, setPage] = useState(1)
     const [limitData, setLimitData] = useState(5)
     const [filter, setFilter] = useState({ idstatus: null, fromDate: '', toDate: '' })
+    const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
 
     const { idrole } = useSelector((state) => {
@@ -36,6 +38,7 @@ const ListTransactionWarehousePage = () => {
             let res = await dispatch(getTransactionAction())
             if (res.success) {
                 setTransaksi(res.data)
+                setLoading(!loading)
             }
         } catch (error) {
             console.log(error)
@@ -56,9 +59,11 @@ const ListTransactionWarehousePage = () => {
     }
     const filterTanggal = async () => {
         try {
+            setLoading(true)
             let res = await dispatch(getTransactionAction(filter))
             if (res.success) {
                 setTransaksi(res.data)
+                setLoading(false)
                 setActiveIdx(0)
                 setPage(1)
             }
@@ -224,53 +229,58 @@ const ListTransactionWarehousePage = () => {
     }
     return (
         <>
-            <Box mx='60px' my='20px'>
-                <Box display='flex'>
-                    <MenuManagement />
-                    <Box ml='20px'>
-                        <Heading as='h3' size='lg'>
-                            Daftar Transaksi
-                        </Heading>
-                        <Box w='68vw' my='4vh' p='6' borderRadius='15px' border={'2px solid #F3F4F5'}>
-                            <Box display='flex' justifyContent='end'>
-                                <Box display='flex'>
-                                    <FormControl>
-                                        <FormLabel fontWeight='semibold' display='flex' justifyContent='end'>Cari Tanggal Transaksi</FormLabel>
-                                        <InputGroup>
-                                            <InputLeftAddon children={<Icon as={BsCalendar2Week} />} />
-                                            <Input type='date' value={filter.fromDate} onChange={(event) => setFilter({ ...filter, fromDate: event.target.value })} />
-                                            <Input type='date' value={filter.toDate} onChange={(event) => setFilter({ ...filter, toDate: event.target.value })} disabled={filter.fromDate ? false : true} />
-                                            <InputRightElement >
-                                                <Button onClick={filterTanggal} disabled={filter.toDate ? false : true} colorScheme='blackAlpha' bgColor='#6B3C3B' ><Icon as={IoSearch} /></Button>
-                                            </InputRightElement>
-                                        </InputGroup>
-                                    </FormControl>
-                                    <FormControl ml='15px' mt='31px'>
-                                        <Button size='md' onClick={btResetFilter} colorScheme='blue'>Reset</Button>
-                                    </FormControl>
-                                </Box>
-                            </Box>
-                            <Box mt='35px' display='flex' justifyContent=''>
-                                <Text fontWeight='semibold'>Status :</Text>
-                                {printStatus()}
-                            </Box>
-                            {printTransaksi()}
-                            <Box mt='40px' mb='10px' display='flex' justifyContent='center'>
-                                <Box display='flex'>
-                                    <Select w='20' mr='5' onChange={(event) => handleLImitData(event)}>
-                                        <option selected value="5">5</option>
-                                        <option value="10">10</option>
-                                        <option value="15">15</option>
-                                        <option value="20">20</option>
-                                        <option value="25">25</option>
-                                    </Select>
-                                    <Pagination total={Math.ceil(transaksi.length / limitData)} page={page} onChange={(event) => setPage(event)} size='lg' radius='xl' color='dark' />
+            {
+                loading === true ?
+                    <LoadingPage />
+                    :
+                    <Box mx='60px' my='20px'>
+                        <Box display='flex'>
+                            <MenuManagement />
+                            <Box ml='20px'>
+                                <Heading as='h3' size='lg'>
+                                    Daftar Transaksi
+                                </Heading>
+                                <Box w='68vw' my='4vh' p='6' borderRadius='15px' border={'2px solid #F3F4F5'}>
+                                    <Box display='flex' justifyContent='end'>
+                                        <Box display='flex'>
+                                            <FormControl>
+                                                <FormLabel fontWeight='semibold' display='flex' justifyContent='end'>Cari Tanggal Transaksi</FormLabel>
+                                                <InputGroup>
+                                                    <InputLeftAddon children={<Icon as={BsCalendar2Week} />} />
+                                                    <Input type='date' value={filter.fromDate} onChange={(event) => setFilter({ ...filter, fromDate: event.target.value })} />
+                                                    <Input type='date' value={filter.toDate} onChange={(event) => setFilter({ ...filter, toDate: event.target.value })} disabled={filter.fromDate ? false : true} />
+                                                    <InputRightElement >
+                                                        <Button onClick={filterTanggal} disabled={filter.toDate ? false : true} colorScheme='blackAlpha' bgColor='#6B3C3B' ><Icon as={IoSearch} /></Button>
+                                                    </InputRightElement>
+                                                </InputGroup>
+                                            </FormControl>
+                                            <FormControl ml='15px' mt='31px'>
+                                                <Button size='md' onClick={btResetFilter} colorScheme='blue'>Reset</Button>
+                                            </FormControl>
+                                        </Box>
+                                    </Box>
+                                    <Box mt='35px' display='flex' justifyContent=''>
+                                        <Text fontWeight='semibold'>Status :</Text>
+                                        {printStatus()}
+                                    </Box>
+                                    {printTransaksi()}
+                                    <Box mt='40px' mb='10px' display='flex' justifyContent='center'>
+                                        <Box display='flex'>
+                                            <Select w='20' mr='5' onChange={(event) => handleLImitData(event)}>
+                                                <option selected value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                                <option value="25">25</option>
+                                            </Select>
+                                            <Pagination total={Math.ceil(transaksi.length / limitData)} page={page} onChange={(event) => setPage(event)} size='lg' radius='xl' color='dark' />
+                                        </Box>
+                                    </Box>
                                 </Box>
                             </Box>
                         </Box>
                     </Box>
-                </Box>
-            </Box>
+            }
         </>
     )
 }

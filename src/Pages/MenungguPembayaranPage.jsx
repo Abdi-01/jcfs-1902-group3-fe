@@ -7,6 +7,7 @@ import MenuManagement from '../Components/MenuManagement'
 import ModalUploadReceipt from '../Components/ModalUploadReceipt'
 import { API_URL } from '../helper'
 import { getTransactionAction } from '../redux/actions'
+import LoadingPage from './LoadingPage'
 
 const MenungguPembayaranPage = () => {
     const [openModal, setOpenModal] = useState(false)
@@ -14,6 +15,7 @@ const MenungguPembayaranPage = () => {
     const [page, setPage] = useState(1)
     const [limitData, setLimitData] = useState(5)
     const [transaksiUser, setTransaksiUser] = useState([])
+    const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
     // const { transaksiUser } = useSelector((state) => {
     //     return {
@@ -34,6 +36,7 @@ const MenungguPembayaranPage = () => {
 
             if (res.data.success) {
                 setTransaksiUser(res.data.dataTransaksi)
+                setLoading(!loading)
             }
         } catch (error) {
             console.log(error)
@@ -89,33 +92,38 @@ const MenungguPembayaranPage = () => {
     }
     return (
         <>
-            {console.log('isi transaksi', transaksiUser)}
-            <Box mx='60px' my='20px'>
-                <Box display='flex'>
-                    <MenuManagement />
-                    <Box ml='20px'>
-                        <Heading as='h3' size='lg'>
-                            Menunggu Pembayaran
-                        </Heading>
-                        <Box w='68vw' my='4vh' p='6' borderRadius='15px' border={'2px solid #F3F4F5'}>
-                            {printTransaksi()}
-                            <ModalUploadReceipt open={openModal} onClose={() => setOpenModal(!openModal)} detailTrans={detail} />
-                            <Box mt='40px' mb='10px' display='flex' justifyContent='center'>
-                                <Box display='flex'>
-                                    <Select w='20' mr='5' onChange={(event) => handleLImitData(event)}>
-                                        <option selected value="5">5</option>
-                                        <option value="10">10</option>
-                                        <option value="15">15</option>
-                                        <option value="20">20</option>
-                                        <option value="25">25</option>
-                                    </Select>
-                                    <Pagination total={Math.ceil(transaksiUser.length / limitData)} page={page} onChange={(event) => setPage(event)} size='lg' radius='xl' color='dark' />
+            {/* {console.log('isi transaksi', transaksiUser)} */}
+            {
+                loading === true ?
+                    <LoadingPage />
+                    :
+                    <Box mx='60px' my='20px'>
+                        <Box display='flex'>
+                            <MenuManagement />
+                            <Box ml='20px'>
+                                <Heading as='h3' size='lg'>
+                                    Menunggu Pembayaran
+                                </Heading>
+                                <Box w='68vw' my='4vh' p='6' borderRadius='15px' border={'2px solid #F3F4F5'}>
+                                    {printTransaksi()}
+                                    <ModalUploadReceipt open={openModal} onClose={() => setOpenModal(!openModal)} detailTrans={detail} />
+                                    <Box mt='40px' mb='10px' display='flex' justifyContent='center'>
+                                        <Box display='flex'>
+                                            <Select w='20' mr='5' onChange={(event) => handleLImitData(event)}>
+                                                <option selected value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                                <option value="25">25</option>
+                                            </Select>
+                                            <Pagination total={Math.ceil(transaksiUser.length / limitData)} page={page} onChange={(event) => setPage(event)} size='lg' radius='xl' color='dark' />
+                                        </Box>
+                                    </Box>
                                 </Box>
                             </Box>
                         </Box>
                     </Box>
-                </Box>
-            </Box>
+            }
         </>
     )
 }
