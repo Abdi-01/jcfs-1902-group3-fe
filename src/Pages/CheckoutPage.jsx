@@ -157,25 +157,7 @@ const CheckoutPage = () => {
             }
         }
     }
-    const selectKurirAdmin = async (event) => {
-        let temp
-        if (event.target.value) {
-            temp = {
-                asal: warehouseAdminList[0].idkota,
-                tujuan: selectedWarehouse.idkota,
-                berat: carts[0].products[0].berat * 1000,
-                kurir: event.target.value
-            }
-            try {
-                let res = await dispatch(getOngkirAction(temp))
-                if (res.success) {
-                    setDataOngkir(res.data)
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
-    }
+    
     const btCheckout = async () => {
         let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
         let token = localStorage.getItem('data')
@@ -223,8 +205,8 @@ const CheckoutPage = () => {
                             <Box borderBottom='2px solid #F3F4F5'>
                                 <Text fontWeight='bold' mb='10px'>Alamat Pengiriman</Text>
                                 {
-                                    warehouseAdminList[0]&&
-                                    warehouseAdminList[0].idrole === 2 ?
+                                    warehouseAdminList[0] &&
+                                        warehouseAdminList[0].idrole === 2 ?
                                         <Box mt='20px' borderBottom='2px solid #F3F4F5'>
                                             <Text fontWeight='semibold' mb='5px'>{warehouseAdminList[0].username}</Text>
                                             <Text my='5px'>{warehouseAdminList[0].no_telpon}</Text>
@@ -268,19 +250,10 @@ const CheckoutPage = () => {
                                 </Box>
                             }
                             <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                {
-                                    warehouseAdminList[0]&&
-                                    warehouseAdminList[0].idrole === 2 ?
-                                        <Select mb='10px' fontWeight='semibold' placeholder='pilih pengiriman' onClick={(event) => selectKurirAdmin(event)}>
-                                            <option value='jne'>JNE</option>
-                                            <option value='tiki'>TIKI</option>
-                                        </Select>
-                                        :
-                                        <Select mb='10px' fontWeight='semibold' placeholder='pilih pengiriman' onClick={(event) => selectKurir(event)}>
-                                            <option value='jne'>JNE</option>
-                                            <option value='tiki'>TIKI</option>
-                                        </Select>
-                                }
+                                <Select mb='10px' fontWeight='semibold' placeholder='pilih pengiriman' onClick={(event) => selectKurir(event)}>
+                                    <option value='jne'>JNE</option>
+                                    <option value='tiki'>TIKI</option>
+                                </Select>
                             </Box>
                             <Box mt='25px' borderBottom='2px solid #F3F4F5'>
                                 <Text fontWeight='bold' mb='10px'>Ringkasan Belanja</Text>

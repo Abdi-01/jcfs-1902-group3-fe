@@ -121,8 +121,9 @@ class LandingPage extends React.Component {
                     </div>
                 </div >
             )
-        } else {
-            if (this.props.idrole >= 2) {
+        }
+        else {
+            if (this.props.idrole == 3) {
                 return (
                     <div>
                         <ModalForgotPassword
@@ -147,7 +148,35 @@ class LandingPage extends React.Component {
                         </div>
                     </div >
                 )
-            } else {
+            } else if (this.props.idrole == 2) {
+                return (
+                    <div>
+                        <ModalForgotPassword
+                            modalOpenForgot={this.state.modalOpenForgot}
+                            btClose={() => this.setState({ modalOpenForgot: !this.state.modalOpenForgot })}
+                        />
+                        <div className='bg-image' style={{ height: "75vh", backgroundRepeat: "no-repeat", width: "100%", backgroundSize: "cover", backgroundPosition: "80% 40%", backgroundImage: "url('https://images.pexels.com/photos/5711874/pexels-photo-5711874.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260')" }}>
+                        </div>
+                        <div className='bg-text' style={{ width: "80%" }}>
+                            <div style={{ textAlign: "center" }}>
+                                <h6 style={{ fontSize: "48px", fontWeight: 600, marginBottom: "50px" }}>We help startups launch their products with awesome website</h6>
+                                <p style={{ fontSize: "17px", paddingTop: "" }}>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                <div style={{ paddingTop: "35px" }}>
+                                    <Link to='/adminrequest'>
+                                        <Button colorScheme='teal' size={'lg'} variant='solid' style={{ borderRadius: "50%" }}>
+                                            <img src={productIcon} style={{ blockSize: 20 }} />
+                                        </Button>
+                                        <Button colorScheme='white' variant='link' style={{ paddingLeft: 10 }}>
+                                            Request Stock
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div >
+                )
+            }
+            else {
                 if (this.props.idrole == 1) {
                     return (
                         <div>
