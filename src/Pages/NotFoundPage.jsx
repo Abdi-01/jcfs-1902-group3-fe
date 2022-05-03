@@ -1,17 +1,14 @@
-import React from 'react';
+import { Box, Heading } from '@chakra-ui/react'
+import React from 'react'
 
-class NotFoundPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {  }
-    }
-    render() { 
-        return ( 
-            <div>
-                <h1>404 Page Not Found</h1>
-            </div>
-         );
-    }
+const NotFoundPage = () => {
+  return (
+    <>
+        <Box display='flex' justifyContent='center' my='10vw'>
+            <Heading as='h2' size='xl'>Maaf, halaman yang dicari tidak ditemukan</Heading>
+        </Box>
+    </>
+  )
 }
- 
-export default NotFoundPage;
+
+export default NotFoundPage

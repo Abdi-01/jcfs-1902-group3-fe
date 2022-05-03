@@ -1,5 +1,5 @@
 import { Box, Button, Center, Heading, Icon, Input, InputGroup, InputRightElement, NumberInput, NumberInputField, NumberInputStepper, Select, Table, TableContainer, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MenuManagement from '../Components/MenuManagement'
 import { AiOutlinePlusSquare, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai'
 import ModalAddProduct from '../Components/ModalAddProduct'
@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import ModalEditProduct from '../Components/ModalEditProduct'
 import { deleteProductAction } from '../redux/actions'
 import { Pagination } from '@mantine/core'
+import axios from 'axios'
+import { API_URL } from '../helper'
 
 const ManagementProduct = (props) => {
 
@@ -15,15 +17,32 @@ const ManagementProduct = (props) => {
     const [detailProduct, setDetailProduct] = useState({})
     const [page, setPage] = useState(1)
     const [limitData, setLimitData] = useState(5)
-
-    const { dataProduct } = useSelector((state) => {
-        return {
-            dataProduct: state.productReducer.listProduct
-        }
-    })
-
+    const [dataProduct, setDataProduct] = useState([])
     const dispatch = useDispatch()
 
+    // const { dataProduct } = useSelector((state) => {
+    //     return {
+    //         dataProduct: state.productReducer.listProduct
+    //     }
+    // })
+    useEffect(() => {
+        getData()
+    },[modalOpen, modalEditOpen])
+    const getData = async () => {
+        try {
+            let token = localStorage.getItem('data')
+            let res = await axios.get(`${API_URL}/products/admin`,{
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            if (res.data.success){
+                setDataProduct(res.data.dataProductWarehouse)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const printProduct = () => {
         if (dataProduct.length > 0) {
             return dataProduct.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
@@ -62,7 +81,7 @@ const ManagementProduct = (props) => {
 
     return (
         <>
-            {console.log('isi detail', detailProduct)}
+            {/* {console.log('isi detail', detailProduct)} */}
             <Box mx='60px' my='20px'>
                 <Box display='flex'>
                     <MenuManagement />

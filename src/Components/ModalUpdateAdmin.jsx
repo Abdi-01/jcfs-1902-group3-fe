@@ -22,10 +22,10 @@ class ModalUpdateAdmin extends React.Component {
     btSimpan = async ({ iduser }) => {
         const { email, username, idwarehouse, no_telpon } = this.state
         let data = {
-            email:email ? email:this.props.dataEdit.email,
-            username:username ? username:this.props.dataEdit.username,
-            idwarehouse:idwarehouse ? idwarehouse:this.props.dataEdit.idwarehouse,
-            no_telpon:no_telpon ? no_telpon:this.props.dataEdit.no_telpon
+            email: email ? email : this.props.dataEdit.email,
+            username: username ? username : this.props.dataEdit.username,
+            idwarehouse: idwarehouse ? idwarehouse : this.props.dataEdit.idwarehouse,
+            no_telpon: no_telpon ? no_telpon : this.props.dataEdit.no_telpon
         }
         let token = localStorage.getItem('data')
         let res = await axios.patch(`${API_URL}/admin/updateadmin/${this.props.dataEdit.iduser}`, data, {
@@ -76,7 +76,7 @@ class ModalUpdateAdmin extends React.Component {
         console.log("cek warehouselist", this.props.warehouseList)
         console.log("cek adminList", this.props.adminList)
         console.log("cek dataEdit", this.props.dataEdit)
-        let {username, no_telpon, email, idwarehouse, nama} = this.props.dataEdit
+        let { username, no_telpon, email, idwarehouse, nama } = this.props.dataEdit
         return (
             <div>
                 <Modal
@@ -138,10 +138,10 @@ const mapToProps = (state) => {
         iduser: state.userReducer.iduser,
         adminList: state.userReducer.adminList,
         idwarehouse: state.userReducer.idwarehouse,
-        warehouseList: state.userReducer.warehouseList,        
-        email: state.userReducer.email,        
-        username: state.userReducer.username,        
-        no_telpon: state.userReducer.no_telpon,        
+        warehouseList: state.userReducer.warehouseList,
+        email: state.userReducer.email,
+        username: state.userReducer.username,
+        no_telpon: state.userReducer.no_telpon,
     }
 }
 
