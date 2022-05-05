@@ -86,6 +86,7 @@ const ProductPage = () => {
         }
     }
     const printProduct = () => {
+        {console.log(`cek product page`, product)}
         if (product.length > 0) {
             return product.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
                 return (
