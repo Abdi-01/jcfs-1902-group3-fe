@@ -5,6 +5,7 @@ import { FaEdit } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { addProductAction, getJenisProductAction, getProductAction, updateImgProductAction, updateProductAction } from '../redux/actions'
 import { API_URL } from '../helper'
+import Swal from 'sweetalert2'
 
 const ModalEditProduct = (props) => {
 
@@ -123,6 +124,11 @@ const ModalEditProduct = (props) => {
             let res = await dispatch(updateProductAction(idproduct, temp))
             if (res.success) {
                 btKlikCancel()
+                Swal.fire(
+                    'Success!',
+                    'Data berhasil diupdate',
+                    'success'
+                )
                 setData({ idmaterial: null, idkategori: null, idjenis_product: null, nama: '', harga: 0, deskripsi: '', berat: 0 })
                 dispatch(getProductAction())
             }
@@ -138,6 +144,11 @@ const ModalEditProduct = (props) => {
             formImage.append('images', temp[index].file)
             let res = await dispatch(updateImgProductAction(temp[index].idimage, formImage))
             if (res.success) {
+                Swal.fire(
+                    'Success!',
+                    'Data berhasil diupdate',
+                    'success'
+                )
                 dispatch(getProductAction())
                 btKlikCancel()
             }
@@ -151,7 +162,7 @@ const ModalEditProduct = (props) => {
     return (
         <>
             {
-                console.log('isi image edit', editImage, images)
+                // console.log('isi image edit', editImage, images)
                 // console.log('isi image',images.url)
             }
             <Modal isOpen={props.openEdit} closeOnOverlayClick={false} onClose={btKlikCancel} size='xl'>

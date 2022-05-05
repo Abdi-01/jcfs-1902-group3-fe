@@ -27,7 +27,10 @@ class ProfilePage extends React.Component {
         modalOpenPassword: false,
         modalOpenPhone: false,
         openModalAddAddress: false,
-        photo: [""]
+        photo: [""],
+        latitude: '',
+        longitude: '',
+        statusGetCoords: null
     }
 
     componentDidMount() {
@@ -94,7 +97,11 @@ class ProfilePage extends React.Component {
                 'Authorization': `Bearer ${token}`
             }
         }).then((res) => {
-            alert("Berhasil Pilih Alamat")
+            Swal.fire(
+                'Success!',
+                'Alamat utama dipilih',
+                'success'
+            )
             this.props.getAddress();
             this.printAddressList();
         }).catch((err) => {
@@ -161,6 +168,30 @@ class ProfilePage extends React.Component {
         })
     }
 
+    getLocation = () => {
+        if (!navigator.geolocation) {
+            this.setState({
+                statusGetCoords: `Geolocation is not supported by your browser`,
+                openModalAddAddress: !this.state.openModalAddAddress
+            })
+        } else {
+            this.setState({
+                statusGetCoords: `Locating...`,
+                openModalAddAddress: !this.state.openModalAddAddress
+            })
+            navigator.geolocation.getCurrentPosition((position) => {
+                this.setState({
+                    statusGetCoords: null,
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                })
+            }, () => {
+                this.setState({
+                    statusGetCoords: `Unable to retrieve your locationUnable to retrieve your location`
+                })
+            })
+        }
+    }
     render() {
         return (
             <Box mx='60px' my='20px'>
@@ -187,6 +218,9 @@ class ProfilePage extends React.Component {
                 <ModalAddAddress
                     openModalAddAddress={this.state.openModalAddAddress}
                     btClose={() => this.setState({ openModalAddAddress: !this.state.openModalAddAddress })}
+                    latitude={this.state.latitude}
+                    longitude={this.state.longitude}
+
                 />
                 <Box display='flex'>
                     <MenuManagement />
@@ -196,103 +230,193 @@ class ProfilePage extends React.Component {
                             <BiUser style={{ marginTop: 5, marginRight: 10 }} /><p style={{ fontSize: "16px", fontWeight: 600, color: "gray" }}>{this.props.username}</p>
                         </Box>
                         <Box boxShadow={"sm"} style={{ background: "white", border: "none", borderRadius: "9px" }}>
-                            <Tabs>
-                                <TabList>
-                                    <Tab style={{ fontSize: "14px", fontWeight: 800, color: "#6b3c3b" }}>Biodata Diri</Tab>
-                                    <Tab style={{ fontSize: "14px", fontWeight: 800, color: "#6b3c3b" }}>Daftar Alamat</Tab>
-                                </TabList>
-                                <TabPanels>
-                                    <TabPanel>
-                                        <Box display='flex'>
-                                            <Box>
-                                                <Box boxShadow={'md'} style={{ background: "white", border: "none", borderRadius: "9px", width: "20vw" }}>
+                            {
+                                this.props.idrole === 3 ?
+                                    <Tabs>
+                                        <TabList>
+                                            <Tab style={{ fontSize: "14px", fontWeight: 800, color: "#6b3c3b" }}>Biodata Diri</Tab>
+                                            <Tab style={{ fontSize: "14px", fontWeight: 800, color: "#6b3c3b" }}>Daftar Alamat</Tab>
+                                        </TabList>
+                                        <TabPanels>
+                                            <TabPanel>
+                                                <Box display='flex'>
                                                     <Box>
-                                                        <Card style={{ border: "none", marginTop: "13px" }}>
-                                                            <CardImg
-                                                                alt="Profile Image"
-                                                                src={API_URL + this.props.photo}
-                                                                style={{ margin: "auto", paddingLeft: 13, paddingRight: 13, borderRadius: "20px" }}
-                                                            />
-                                                            <CardBody>
-                                                                <FormGroup>
-                                                                    <Input
-                                                                        id="exampleFile"
-                                                                        name="file"
-                                                                        type="file"
-                                                                        onChange={(e) => this.handlePhoto(e)} className='input-radius'
+                                                        <Box boxShadow={'md'} style={{ background: "white", border: "none", borderRadius: "9px", width: "20vw" }}>
+                                                            <Box>
+                                                                <Card style={{ border: "none", marginTop: "13px" }}>
+                                                                    <CardImg
+                                                                        alt="Profile Image"
+                                                                        src={API_URL + this.props.photo}
+                                                                        style={{ margin: "auto", paddingLeft: 13, paddingRight: 13, borderRadius: "20px" }}
                                                                     />
-                                                                    {
-                                                                        this.state.photo[0] ?
-                                                                            <img src={URL.createObjectURL(this.state.photo[0].file)} alt='...' style={{ marginTop: '15px', marginBottom: '15px' }} />
-                                                                            :
-                                                                            <img src={API_URL + this.state.photo[0]} alt='...' />
-                                                                    }
-                                                                    <Box className='col-12' style={{ textAlign: "center" }}>
-                                                                        <Button
-                                                                            colorScheme={'blackAlpha'}
-                                                                            variant='outline'
-                                                                            style={{ width: "75%", color: "#6b3c3b" }}
-                                                                            onClick={this.onBtSimpan}
-                                                                        >
-                                                                            Simpan
-                                                                        </Button>
-                                                                    </Box>
-                                                                    <FormText className='text-muted' style={{ width: "90%", margin: "auto", fontSize: "12px" }}>
-                                                                        Besar file: maksimum 10.000.000 bytes (10 Megabytes). Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG
-                                                                    </FormText>
-                                                                </FormGroup>
-                                                            </CardBody>
-                                                            <Button onClick={() => this.setState({ modalOpenPassword: !this.state.modalOpenPassword })} boxShadow={'sm'} colorScheme='gray' variant='outline' style={{ fontSize: "12px" }}>
-                                                                Ubah Kata Sandi
-                                                            </Button>
-                                                        </Card>
+                                                                    <CardBody>
+                                                                        <FormGroup>
+                                                                            <Input
+                                                                                id="exampleFile"
+                                                                                name="file"
+                                                                                type="file"
+                                                                                onChange={(e) => this.handlePhoto(e)} className='input-radius'
+                                                                            />
+                                                                            {
+                                                                                this.state.photo[0] ?
+                                                                                    <img src={URL.createObjectURL(this.state.photo[0].file)} alt='...' style={{ marginTop: '15px', marginBottom: '15px' }} />
+                                                                                    :
+                                                                                    <img src={API_URL + this.state.photo[0]} alt='...' />
+                                                                            }
+                                                                            <Box className='col-12' style={{ textAlign: "center" }}>
+                                                                                <Button
+                                                                                    colorScheme={'blackAlpha'}
+                                                                                    variant='outline'
+                                                                                    style={{ width: "75%", color: "#6b3c3b" }}
+                                                                                    onClick={this.onBtSimpan}
+                                                                                >
+                                                                                    Simpan
+                                                                                </Button>
+                                                                            </Box>
+                                                                            <FormText className='text-muted' style={{ width: "90%", margin: "auto", fontSize: "12px" }}>
+                                                                                Besar file: maksimum 10.000.000 bytes (10 Megabytes). Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG
+                                                                            </FormText>
+                                                                        </FormGroup>
+                                                                    </CardBody>
+                                                                    <Button onClick={() => this.setState({ modalOpenPassword: !this.state.modalOpenPassword })} boxShadow={'sm'} colorScheme='gray' variant='outline' style={{ fontSize: "12px" }}>
+                                                                        Ubah Kata Sandi
+                                                                    </Button>
+                                                                </Card>
+                                                            </Box>
+                                                        </Box>
+                                                    </Box>
+                                                    <Box ml='20px' width='30vw'>
+                                                        <Box style={{ background: "white", border: "none", borderRadius: "9px" }}>
+                                                            <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Ubah Biodata Diri</p>
+                                                            <Box style={{ paddingTop: "10px" }}>
+                                                                <Box display='flex' justifyContent='space-between'>
+                                                                    <Text className='text-muted' >Nama</Text>
+                                                                    <Text className='text-muted' >{this.props.nama} <a onClick={() => this.setState({ modalOpenNama: !this.state.modalOpenNama })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
+                                                                </Box>
+                                                                <Box display='flex' style={{ paddingTop: "10px" }} justifyContent='space-between'>
+                                                                    <Text className='text-muted'>Tanggal Lahir</Text>
+                                                                    <Text className='text-muted'>{this.props.umur} <a onClick={() => this.setState({ modalOpenUmur: !this.state.modalOpenUmur })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
+                                                                </Box>
+                                                                <Box display='flex' style={{ paddingTop: "10px" }} justifyContent='space-between'>
+                                                                    <Text className='text-muted'>Jenis Kelamin</Text>
+                                                                    <Text className='text-muted'>{this.props.gender} <a onClick={() => this.setState({ modalOpenGender: !this.state.modalOpenGender })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
+                                                                </Box>
+                                                            </Box>
+                                                            <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Ubah Kontak</p>
+                                                            <Box style={{ paddingTop: "10px" }}>
+                                                                <Box display='flex' justifyContent='space-between'>
+                                                                    <Text className='text-muted'>Email</Text>
+                                                                    <Text className='text-muted'>{this.props.email} <a style={{ color: "#6b3c3b" }}>Ubah</a></Text>
+                                                                </Box>
+                                                                <Box display='flex' style={{ paddingTop: "10px" }} justifyContent='space-between'>
+                                                                    <Text className='text-muted'>Nomor HP</Text>
+                                                                    <Text className='text-muted'>{this.props.no_telpon} <a onClick={() => this.setState({ modalOpenPhone: !this.state.modalOpenPhone })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
+                                                                </Box>
+                                                            </Box>
+                                                        </Box>
                                                     </Box>
                                                 </Box>
-                                            </Box>
-                                            <Box ml='20px' width='30vw'>
-                                                <Box style={{ background: "white", border: "none", borderRadius: "9px" }}>
-                                                    <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Ubah Biodata Diri</p>
-                                                    <Box style={{ paddingTop: "10px" }}>
-                                                        <Box display='flex' justifyContent='space-between'>
-                                                            <Text className='text-muted' >Nama</Text>
-                                                            <Text className='text-muted' >{this.props.nama} <a onClick={() => this.setState({ modalOpenNama: !this.state.modalOpenNama })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
-                                                        </Box>
-                                                        <Box display='flex' style={{ paddingTop: "10px" }} justifyContent='space-between'>
-                                                            <Text className='text-muted'>Tanggal Lahir</Text>
-                                                            <Text className='text-muted'>{this.props.umur} <a onClick={() => this.setState({ modalOpenUmur: !this.state.modalOpenUmur })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
-                                                        </Box>
-                                                        <Box display='flex' style={{ paddingTop: "10px" }} justifyContent='space-between'>
-                                                            <Text className='text-muted'>Jenis Kelamin</Text>
-                                                            <Text className='text-muted'>{this.props.gender} <a onClick={() => this.setState({ modalOpenGender: !this.state.modalOpenGender })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
+                                            </TabPanel>
+                                            <TabPanel>
+                                                <Box>
+                                                    <div style={{ textAlign: "end", marginTop: "5%" }}>
+                                                        <Button onClick={this.getLocation} colorScheme='green' size='sm' style={{ borderRadius: 10, fontSize: "15px" }}>Tambah Alamat</Button>
+                                                    </div>
+                                                    <Box mt='20px' w='45vw'>
+                                                        {this.printAddressList()}
+                                                    </Box>
+                                                </Box>
+                                            </TabPanel>
+                                        </TabPanels>
+                                    </Tabs>
+                                    :
+                                    <Tabs>
+                                        <TabList>
+                                            <Tab style={{ fontSize: "14px", fontWeight: 800, color: "#6b3c3b" }}>Biodata Diri</Tab>
+                                        </TabList>
+                                        <TabPanels>
+                                            <TabPanel>
+                                                <Box display='flex'>
+                                                    <Box>
+                                                        <Box boxShadow={'md'} style={{ background: "white", border: "none", borderRadius: "9px", width: "20vw" }}>
+                                                            <Box>
+                                                                <Card style={{ border: "none", marginTop: "13px" }}>
+                                                                    <CardImg
+                                                                        alt="Profile Image"
+                                                                        src={API_URL + this.props.photo}
+                                                                        style={{ margin: "auto", paddingLeft: 13, paddingRight: 13, borderRadius: "20px" }}
+                                                                    />
+                                                                    <CardBody>
+                                                                        <FormGroup>
+                                                                            <Input
+                                                                                id="exampleFile"
+                                                                                name="file"
+                                                                                type="file"
+                                                                                onChange={(e) => this.handlePhoto(e)} className='input-radius'
+                                                                            />
+                                                                            {
+                                                                                this.state.photo[0] ?
+                                                                                    <img src={URL.createObjectURL(this.state.photo[0].file)} alt='...' style={{ marginTop: '15px', marginBottom: '15px' }} />
+                                                                                    :
+                                                                                    <img src={API_URL + this.state.photo[0]} alt='...' />
+                                                                            }
+                                                                            <Box className='col-12' style={{ textAlign: "center" }}>
+                                                                                <Button
+                                                                                    colorScheme={'blackAlpha'}
+                                                                                    variant='outline'
+                                                                                    style={{ width: "75%", color: "#6b3c3b" }}
+                                                                                    onClick={this.onBtSimpan}
+                                                                                >
+                                                                                    Simpan
+                                                                                </Button>
+                                                                            </Box>
+                                                                            <FormText className='text-muted' style={{ width: "90%", margin: "auto", fontSize: "12px" }}>
+                                                                                Besar file: maksimum 10.000.000 bytes (10 Megabytes). Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG
+                                                                            </FormText>
+                                                                        </FormGroup>
+                                                                    </CardBody>
+                                                                    <Button onClick={() => this.setState({ modalOpenPassword: !this.state.modalOpenPassword })} boxShadow={'sm'} colorScheme='gray' variant='outline' style={{ fontSize: "12px" }}>
+                                                                        Ubah Kata Sandi
+                                                                    </Button>
+                                                                </Card>
+                                                            </Box>
                                                         </Box>
                                                     </Box>
-                                                    <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Ubah Kontak</p>
-                                                    <Box style={{ paddingTop: "10px" }}>
-                                                        <Box display='flex' justifyContent='space-between'>
-                                                            <Text className='text-muted'>Email</Text>
-                                                            <Text className='text-muted'>{this.props.email} <a style={{ color: "#6b3c3b" }}>Ubah</a></Text>
-                                                        </Box>
-                                                        <Box display='flex' style={{ paddingTop: "10px" }} justifyContent='space-between'>
-                                                            <Text className='text-muted'>Nomor HP</Text>
-                                                            <Text className='text-muted'>{this.props.no_telpon} <a onClick={() => this.setState({ modalOpenPhone: !this.state.modalOpenPhone })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
+                                                    <Box ml='20px' width='30vw'>
+                                                        <Box style={{ background: "white", border: "none", borderRadius: "9px" }}>
+                                                            {/* <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Ubah Biodata Diri</p>
+                                                            <Box style={{ paddingTop: "10px" }}>
+                                                                <Box display='flex' justifyContent='space-between'>
+                                                                    <Text className='text-muted' >Nama</Text>
+                                                                    <Text className='text-muted' >{this.props.nama} <a onClick={() => this.setState({ modalOpenNama: !this.state.modalOpenNama })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
+                                                                </Box>
+                                                                <Box display='flex' style={{ paddingTop: "10px" }} justifyContent='space-between'>
+                                                                    <Text className='text-muted'>Tanggal Lahir</Text>
+                                                                    <Text className='text-muted'>{this.props.umur} <a onClick={() => this.setState({ modalOpenUmur: !this.state.modalOpenUmur })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
+                                                                </Box>
+                                                                <Box display='flex' style={{ paddingTop: "10px" }} justifyContent='space-between'>
+                                                                    <Text className='text-muted'>Jenis Kelamin</Text>
+                                                                    <Text className='text-muted'>{this.props.gender} <a onClick={() => this.setState({ modalOpenGender: !this.state.modalOpenGender })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
+                                                                </Box>
+                                                            </Box> */}
+                                                            <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Kontak Admin</p>
+                                                            <Box style={{ paddingTop: "10px" }}>
+                                                                <Box display='flex' justifyContent='space-between'>
+                                                                    <Text className='text-muted'>Email</Text>
+                                                                    <Text className='text-muted'>{this.props.email} <a style={{ color: "#6b3c3b" }}>Ubah</a></Text>
+                                                                </Box>
+                                                                <Box display='flex' style={{ paddingTop: "10px" }} justifyContent='space-between'>
+                                                                    <Text className='text-muted'>Nomor HP</Text>
+                                                                    <Text className='text-muted'>{this.props.no_telpon} <a onClick={() => this.setState({ modalOpenPhone: !this.state.modalOpenPhone })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
+                                                                </Box>
+                                                            </Box>
                                                         </Box>
                                                     </Box>
                                                 </Box>
-                                            </Box>
-                                        </Box>
-                                    </TabPanel>
-                                    <TabPanel>
-                                        <Box>
-                                            <div style={{ textAlign: "end", marginTop: "5%" }}>
-                                                <Button onClick={() => this.setState({ openModalAddAddress: !this.state.openModalAddAddress })} colorScheme='green' size='sm' style={{ borderRadius: 10, fontSize: "15px" }}>Tambah Alamat</Button>
-                                            </div>
-                                            <Box mt='20px' w='45vw'>
-                                                {this.printAddressList()}
-                                            </Box>
-                                        </Box>
-                                    </TabPanel>
-                                </TabPanels>
-                            </Tabs>
+                                            </TabPanel>
+                                        </TabPanels>
+                                    </Tabs>
+                            }
                         </Box>
                     </Box>
                 </Box>
@@ -312,7 +436,8 @@ const mapToProps = (state) => {
         gender: state.userReducer.gender,
         iduser: state.userReducer.iduser,
         addressList: state.userReducer.addressList,
-        username: state.userReducer.username
+        username: state.userReducer.username,
+        idrole: state.userReducer.idrole
     }
 }
 
