@@ -66,18 +66,18 @@ class LandingPage extends React.Component {
                                                         <p style={{ fontWeight: 500, color: "#6b3c3b", fontSize: 27 }}>Register Account</p>
                                                         <div style={{}}>
                                                             <FormGroup style={{ marginTop: 25, textAlign: "center", border: "none" }}>
-                                                                <Input type="text" id="textEmail" value={this.state.username} defaultValue={this.state.username} placeholder='Username'
+                                                                <Input type="text" id="textEmail" defaultValue="" placeholder='Username'
                                                                     innerRef={(element) => this.username = element}
                                                                     style={{ width: 300, margin: "auto" }} />
                                                             </FormGroup>
                                                             <FormGroup style={{ marginTop: 25 }}>
-                                                                <Input type="text" id="textEmail" value={this.state.email} defaultValue={this.state.email} placeholder='Email'
+                                                                <Input type="text" id="textEmail" placeholder='Email'
                                                                     innerRef={(element) => this.email = element}
                                                                     style={{ width: 300, margin: "auto" }} />
                                                             </FormGroup>
                                                             <FormGroup style={{ marginTop: 25 }}>
                                                                 <InputGroup style={{ width: 300, margin: "auto" }}>
-                                                                    <Input id="textEmail" value={this.state.password} defaultValue={this.state.password} placeholder='Password'
+                                                                    <Input id="textEmail" placeholder='Password'
                                                                         innerRef={(element) => this.password = element} type={this.state.passType}
                                                                     />
                                                                     <InputGroupText style={{ cursor: "pointer" }} onClick={this.showPass}>
@@ -270,11 +270,9 @@ class LandingPage extends React.Component {
                             showConfirmButton: false,
                             timer: 1500
                         })
-                        this.setState({
-                            username: "",
-                            email: "",
-                            password: ""
-                        })
+                        this.username.value = ""
+                        this.email.value = ""
+                        this.password.value = ""
                     })
                     .catch((error) => {
                         console.log(error)
@@ -295,6 +293,9 @@ class LandingPage extends React.Component {
                     showConfirmButton: false,
                     timer: 1500
                 })
+                this.username.value = ""
+                this.email.value = ""
+                this.password.value = ""
             }
         }
     }
