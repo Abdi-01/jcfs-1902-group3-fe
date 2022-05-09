@@ -28,16 +28,16 @@ const DetailProductRequest = () => {
     let dispatch = useDispatch()
 
     useEffect(() => {
-        getData()
+        getData()        
     }, [])
 
-    const { warehouseAdminList, warehouse, password } = useSelector((state) => {
+    const { warehouseAdminList } = useSelector((state) => {
         return {
             warehouseAdminList: state.transactionAdminReducer.warehouseAdminList[0],
         }
     })
 
-    const RequestStock = async () => {        
+    const RequestStock = async () => {
         let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
         let token = localStorage.getItem('data')
         let data = {
@@ -124,7 +124,7 @@ const DetailProductRequest = () => {
         if (jumlah > 1) {
             setJumlah(jumlah - 1)
         }
-    }    
+    }
 
     const btKeranjangAdmin = async () => {
         try {
@@ -169,7 +169,7 @@ const DetailProductRequest = () => {
     return (
         <>
             {/* {console.log(getTotalStock)} */}
-            {console.log('getwarehouseadmin', warehouseAdminList)}
+            {console.log('getwarehouseadmin', [warehouseAdminList])}
             {/* {console.log('getwarehouseaja', warehouse)} */}
             {console.log('selectedwarehouseaja', selectedWarehouse)}
             {console.log(`cekDetailProduct`, detailProduct)}
