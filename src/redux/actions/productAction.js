@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_URL } from "../../helper";
+// import { getProductWarehouseAction } from "./productAdminAction";
 
 export const getProductAction = (kategori = null, material = null, jenisProduct = null, namaProduct = null) => {
 
@@ -87,7 +88,7 @@ export const updateImgProductAction = (idimage, data) => {
         try {
             let token = localStorage.getItem('data')
             if (token) {
-                let res = await axios.patch(`${API_URL}/products/image/${idimage}`, data,{
+                let res = await axios.patch(`${API_URL}/products/image/${idimage}`, data, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -106,14 +107,15 @@ export const deleteProductAction = (idproduct) => {
     return async (dispatch) => {
         try {
             let token = localStorage.getItem('data')
-            if(token){
-                let res = await axios.delete(`${API_URL}/products/${idproduct}`,{
+            if (token) {
+                let res = await axios.delete(`${API_URL}/products/${idproduct}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 })
                 if (res.data.success) {
                     dispatch(getProductAction())
+                    dispatch(getProductWarehouseAction())
                 }
             }
         } catch (error) {
@@ -138,6 +140,61 @@ export const sortingProductAction = (sort = null, order = null) => {
                 })
                 return { success: res.data.success, data: res.data.dataProduct }
             }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+
+export const getProductWarehouseAction = (filter) => {
+    return async (dispatch) => {
+        try {
+            let token = localStorage.getItem('data')
+            let res
+            if (filter) {
+                if (filter.namaProduk && filter.kategori) {
+                    res = await axios.get(`${API_URL}/products/admin?nama=${filter.namaProduk}&kategori=${filter.kategori}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                } else if (filter.namaProduct) {
+                    res = await axios.get(`${API_URL}/products/admin?nama=${filter.namaProduk}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                } else if (filter.kategori) {
+                    res = await axios.get(`${API_URL}/products/admin?kategori=${filter.kategori}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                } else {
+                    res = await axios.get(`${API_URL}/products/admin`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                }
+
+            } else {
+                res = await axios.get(`${API_URL}/products/admin`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+            }
+
+            if (res.data.success){
+                dispatch({
+                    type: 'GET DATA PRODUCT WAREHOUSE',
+                    payload: res.data.dataProductWarehouse
+                })
+
+                return {success: res.data.success, data: res.data.dataProductWarehouse}
+            }
+
         } catch (error) {
             console.log(error)
         }

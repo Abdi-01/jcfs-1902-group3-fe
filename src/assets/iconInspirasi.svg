@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="87.521" height="48.6" viewBox="0 0 87.521 48.6">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_327" data-name="Rectangle 327" width="87.521" height="48.6" transform="translate(168.65 156.54)" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Group_634" data-name="Group 634" transform="translate(-168.65 -156.54)">
+    <g id="Group_633" data-name="Group 633">
+      <g id="Group_632" data-name="Group 632" clip-path="url(#clip-path)">
+        <path id="Path_75" data-name="Path 75" d="M213.971,173.333h-3.579a1.3,1.3,0,0,1-1.3-1.3v-.4h6.183v.4A1.3,1.3,0,0,1,213.971,173.333Zm-10.357,0h-3.579a1.3,1.3,0,0,1-1.3-1.3v-2.9h6.183v2.9A1.3,1.3,0,0,1,203.614,173.333Z" fill="none" stroke="#4d4d4f" stroke-miterlimit="10" stroke-width="0.992"/>
+        <path id="Path_76" data-name="Path 76" d="M244.029,166.333a9.952,9.952,0,0,0-10.173-1.474m-1.291.661a9.987,9.987,0,0,0-3.86,12.781l-2.008,3.054a.674.674,0,0,0,.749,1.018l3.471-1.015a9.932,9.932,0,0,0,15.027-1.634m.634-1.063a9.966,9.966,0,0,0,1.111-4.589m-68.83,24.252V178.69m3.613,15.606h-6.977m6.544-5.171-6.15-.061m-2.282,15.326h10.966L181.43,186.4h-5.083Zm38.952-6.066V178.69m3.612,15.606h-6.977m6.544-5.171-6.15-.061m-2.282,15.326h10.966L215.129,186.4h-5.083Zm15.765-25.543h-53.66v-2.525h53.66Z" fill="none" stroke="#4d4d4f" stroke-miterlimit="10" stroke-width="1.5"/>
+        <path id="Path_77" data-name="Path 77" d="M232.382,179.669l-1.224-1.531a.659.659,0,0,1,.1-.929l.471-.375a.663.663,0,0,1,.931.1l1.225,1.531a.66.66,0,0,1-.105.929l-.471.375a.663.663,0,0,1-.931-.1" fill="#4d4d4f"/>
+        <path id="Path_78" data-name="Path 78" d="M232.382,179.669l-1.224-1.531a.659.659,0,0,1,.1-.929l.471-.375a.663.663,0,0,1,.931.1l1.225,1.531a.66.66,0,0,1-.105.929l-.471.375A.663.663,0,0,1,232.382,179.669Z" fill="none" stroke="#4d4d4f" stroke-miterlimit="10" stroke-width="0.5"/>
+        <path id="Path_79" data-name="Path 79" d="M237.543,156.576l.241,4.979m9.335-3.126-4.957,7.37m14.006,7.68-10.112.042m6.53-7.84-6.821,3.143m-9.21.753a4.271,4.271,0,0,0-1.594,3.668l-.825,1.211a.555.555,0,0,0-.087.781l1.765,2.214a.556.556,0,0,0,.781.088l1.362-.537a4.274,4.274,0,1,0,1.47-8.354" fill="none" stroke="#4d4d4f" stroke-miterlimit="10" stroke-width="1.5"/>
+      </g>
+    </g>
+    <rect id="Rectangle_328" data-name="Rectangle 328" width="53.657" height="2.606" transform="translate(169.15 176.302)" fill="#4d4d4f"/>
+  </g>
+</svg>

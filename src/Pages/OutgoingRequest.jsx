@@ -6,11 +6,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import Swal from 'sweetalert2'
 import MenuManagement from '../Components/MenuManagement'
 import { API_URL } from '../helper'
-import { getRequest } from '../redux/actions'
+import { getRequest, outgoingRequest } from '../redux/actions'
 import { IoSearch } from 'react-icons/io5'
 import { BsCalendar2Week } from 'react-icons/bs'
 
-const ManagementRequest = (props) => {
+const OutgoingRequest = (props) => {
     const dispatch = useDispatch()
     const [status, setStatus] = useState([{ id: null, status: 'Semua' }, { id: 7, status: 'Menunggu Konfirmasi' }, { id: 8, status: 'Pesanan Diproses' }, { id: 9, status: 'Pesanan Diterima' }, { id: 10, status: 'Dibatalkan' }])
     const [page, setPage] = useState(1)
@@ -18,7 +18,7 @@ const ManagementRequest = (props) => {
     const [activeIdx, setActiveIdx] = useState(0)
     const [filter, setFilter] = useState({ idstatus: null, fromDate: '', toDate: '' })
     const [loading, setLoading] = useState(true)
-    const [requestList, setRequestList] = useState([])
+    const [outgoingList, setoutgoingList] = useState([])
 
 
     // const { requestList } = useSelector((state) => {
@@ -34,9 +34,9 @@ const ManagementRequest = (props) => {
 
     const getData = async () => {
         try {
-            let res = await dispatch(getRequest())
+            let res = await dispatch(outgoingRequest())
             if(res.success) {
-                setRequestList(res.data)
+                setoutgoingList(res.data)
             }
         } catch (error) {
             
@@ -52,9 +52,9 @@ const ManagementRequest = (props) => {
     const btfilterStatus = async (index = 0, idstatus = null) => {
         setActiveIdx(index)
         try {
-            let res = await dispatch(getRequest({ idstatus: idstatus }))
+            let res = await dispatch(outgoingRequest({ idstatus: idstatus }))
             if (res.success) {
-                setRequestList(res.data)                
+                setoutgoingList(res.data)                
                 setFilter({ idstatus: null, fromDate: '', toDate: '' })
                 setPage(1)
             }
@@ -64,12 +64,11 @@ const ManagementRequest = (props) => {
     }
 
     const filterTanggal = async () => {        
-        console.log(`cek tanggal`, filter)
         try {
             setLoading(true)
-            let res = await dispatch(getRequest(filter))
+            let res = await dispatch(outgoingRequest(filter))
             if (res.success) {
-                setRequestList(res.data)                
+                setoutgoingList(res.data)                
                 setLoading(false)
                 setActiveIdx(0)
                 setPage(1)
@@ -80,9 +79,9 @@ const ManagementRequest = (props) => {
     }
     const btResetFilter = async () => {
         try {
-            let res = await dispatch(getRequest())
+            let res = await dispatch(outgoingRequest())
             if (res.success) {                
-                setRequestList(res.data)                
+                setoutgoingList(res.data)                
                 setFilter({ idstatus: null, fromDate: '', toDate: '' })
                 setActiveIdx(0)
                 setPage(1)
@@ -101,60 +100,9 @@ const ManagementRequest = (props) => {
                 </>
             )
         })
-    }
+    }    
 
-    const btProcess = async (idtransaksi_warehouse) => {
-        try {
-            let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            let token = localStorage.getItem('data')
-            let data = {
-                idstatus: 8,
-                date
-            }
-            Swal.fire({
-                title: 'Proses Request?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, Proses!'
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    Swal.fire(
-                        'Proses Berhasil!',
-                        'Request Sedang Dalam Proses.',
-                        'success',
-                        await axios.patch(`${API_URL}/transactionwarehouse/konfirmasi/${idtransaksi_warehouse}`, data, {
-                            headers: {
-                                'Authorization': `Bearer ${token}`
-                            }
-                        }),
-                        dispatch(getRequest())
-                    )
-                }
-            })
-                .then(res => {
-                    console.log("cek res.data", res.data)
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'Process Request',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-
-            dispatch(getRequest())
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const btReject = async (idtransaksi_warehouse) => {
+    const btBatal = async (idtransaksi_warehouse) => {
         try {
             let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
             let token = localStorage.getItem('data')
@@ -169,19 +117,19 @@ const ManagementRequest = (props) => {
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, reject it!'
+                confirmButtonText: 'Yes, Batalkan Transaksi!'
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     Swal.fire(
                         'Rejected!',
-                        'Request has been rejected',
+                        'Request Dibatalkan',
                         'success',
                         await axios.patch(`${API_URL}/transactionwarehouse/reject/${idtransaksi_warehouse}`, data, {
                             headers: {
                                 'Authorization': `Bearer ${token}`
                             }
                         }),
-                        dispatch(getRequest())
+                        dispatch(outgoingRequest())
                     )
                 }
             })
@@ -190,7 +138,7 @@ const ManagementRequest = (props) => {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Reject Request',
+                        title: 'Batalkan Request',
                         showConfirmButton: false,
                         timer: 1500
                     })
@@ -206,8 +154,8 @@ const ManagementRequest = (props) => {
     }
 
     const printRequest = () => {
-        if (requestList.length > 0) {
-            return requestList.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
+        if (outgoingList.length > 0) {
+            return outgoingList.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
                 return (
                     <>
                         <Box mt='20px' p='4' border='2px solid #F3F4F5' borderRadius='10px'>
@@ -224,7 +172,7 @@ const ManagementRequest = (props) => {
                             </Box>
                             <Box mt='10px'>
                                 <Text fontWeight='semibold'>{item.warehouse}</Text>
-                                <Text fontWeight='semibold'>Warehouse : {item.nama}</Text>
+                                <Text fontWeight='semibold'>Warehouse : {item.nama_pengirim}</Text>
                             </Box>
                             <Box display='flex' justifyContent='space-between'>
                                 <Box mt='10px' display='flex'>
@@ -245,8 +193,7 @@ const ManagementRequest = (props) => {
                                 </Box>
                             </Box>
                             <Box mt='15px' display='flex' justifyContent='end'>
-                                {item.idstatus === 7 && idrole === 2 && <Button size='xs' colorScheme='blackAlpha' onClick={() => btReject(item.idtransaksi_warehouse)} bgColor='red'>Reject</Button>}
-                                {item.idstatus === 7 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='green' onClick={() => btProcess(item.idtransaksi_warehouse)}>Process Request</Button>}
+                                {item.idstatus === 7 && idrole === 2 && <Button size='xs' colorScheme='blackAlpha' onClick={() => btBatal(item.idtransaksi_warehouse)} bgColor='red'>Batalkan</Button>}                                
                             </Box>
                         </Box>
                     </>
@@ -263,7 +210,7 @@ const ManagementRequest = (props) => {
         }
     }
 
-    console.log(`requestList`, requestList)
+    console.log(`outgoingList`, outgoingList)
     return (
         <>
             <Box>
@@ -303,11 +250,11 @@ const ManagementRequest = (props) => {
                     </Box>
                 </Box>
                 <Center>
-                    <Pagination total={Math.ceil(requestList.length / limitData)} page={page} onChange={(event) => setPage(event)} size='lg' radius='xl' color='dark' />
+                    <Pagination total={Math.ceil(outgoingList.length / limitData)} page={page} onChange={(event) => setPage(event)} size='lg' radius='xl' color='dark' />
                 </Center>
             </Box>
         </>
     )
 }
 
-export default ManagementRequest
+export default OutgoingRequest

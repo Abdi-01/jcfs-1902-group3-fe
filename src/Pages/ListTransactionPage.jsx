@@ -12,6 +12,8 @@ import { Pagination } from '@mantine/core'
 import ModalDetailTransaksi from '../Components/ModalDetailTransaksi'
 import Swal from 'sweetalert2'
 import LoadingPage from './LoadingPage'
+import GoOnTop from '../Components/GoOnTop'
+import BtnOnTop from '../Components/BtnOnTop'
 
 const ListTransactionPage = (props) => {
     const [status, setStatus] = useState([{ id: null, status: 'Semua' }, { id: 7, status: 'Menunggu Konfirmasi' }, { id: 8, status: 'Pesanan Diproses' }, { id: 9, status: 'Pesanan Diterima' }, { id: 10, status: 'Dibatalkan' }])
@@ -54,6 +56,7 @@ const ListTransactionPage = (props) => {
     const filterTanggal = async () => {
         try {
             setLoading(true)
+            console.log('isi filter', filter)
             let res = await dispatch(getTransactionAction(filter))
             if (res.success) {
                 setTransaksi(res.data)
@@ -189,6 +192,10 @@ const ListTransactionPage = (props) => {
         }
 
     }
+    const btPagination = (event) => {
+        setPage(event)
+        window.scrollTo(0,0)  
+    }
     return (
         <>
             {/* {console.log('isi transaksi', transaksi)} */}
@@ -259,14 +266,16 @@ const ListTransactionPage = (props) => {
                                                 <option value="20">20</option>
                                                 <option value="25">25</option>
                                             </Select>
-                                            <Pagination total={Math.ceil(transaksi.length / limitData)} page={page} onChange={(event) => setPage(event)} size='lg' radius='xl' color='dark' />
+                                            <Pagination total={Math.ceil(transaksi.length / limitData)} page={page} onChange={(event) => btPagination(event)} size='lg' radius='xl' color='dark' />
                                         </Box>
                                     </Box>
                                 </Box>
                             </Box>
                         </Box>
+                        <BtnOnTop/>
                     </Box>
             }
+            <GoOnTop/>
         </>
     )
 }
