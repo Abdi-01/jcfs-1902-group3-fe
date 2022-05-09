@@ -9,7 +9,7 @@ import MenuManagement from './Components/MenuManagement';
 import ManagementProduct from './Pages/ManagementProduct';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCartAction, getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction, getWarehouseAction, keepLoginAction, getWarehouse, getWarehouseAdmin, getProductWarehouseAction } from './redux/actions';
+import { getCartAction, getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction, getWarehouseAction, keepLoginAction, getWarehouse, getWarehouseAdmin, getProductWarehouseAction, getProductAdminAction } from './redux/actions';
 import LandingPage from './Pages/LandingPage';
 import LoginPage from './Pages/LoginPage';
 import RegisterPage from './Pages/RegisterPage';
@@ -27,11 +27,15 @@ import NotFoundPage from './Pages/NotFoundPage';
 import WarehousePage from './Pages/Warehouse';
 import MenungguPembayaranPage from './Pages/MenungguPembayaranPage';
 import AddAdminPage from './Pages/AddAdmin';
-import TransactionManagementPage from './Pages/TransactionManagement';
 import RequestStockPage from './Pages/RequestStock';
+import DetailProductRequest from './Pages/DetailProductRequest';
+import AdminRequest from './Pages/AdminRequest';
+import ManagementRequest from './Pages/ManagementRequest';
 import ListTransactionPage from './Pages/ListTransactionPage';
 import ListTransactionWarehousePage from './Pages/ListTransactionWarehousePage';
 import LoadingPage from './Pages/LoadingPage';
+import OutgoingRequest from './Pages/OutgoingRequest';
+
 
 function App() {
 
@@ -54,6 +58,7 @@ function App() {
     dispatch(getWarehouse())
     dispatch(getWarehouseAdmin())
     dispatch(getProductWarehouseAction())
+    dispatch(getProductAdminAction())
   }, [])
 
   return (
@@ -72,7 +77,7 @@ function App() {
             <>
                 <Route path='/transaction/admin/list' element={<ListTransactionWarehousePage />} />
                 <Route path='/management/product' element={<ManagementProduct />} />                
-                <Route path='/transaction/warehouse' element={<TransactionManagementPage />} />                
+                <Route path='/adminrequest' element={<AdminRequest />} />                
                 <Route path='/requeststock' element={<RequestStockPage />} />                
               </>
               :
@@ -95,7 +100,10 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path='/product' element={<ProductPage />} />
         <Route path='/detail/product' element={<DetailProduct />} />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path='/detail/productreq' element={<DetailProductRequest />} />
+        <Route path='/management-request' element={<ManagementRequest />} />
+        <Route path='/outgoing-request' element={<OutgoingRequest />} />
+        <Route path="*" element={<NotFoundPage />} />        
       </Routes>
       <Footer />
     </>

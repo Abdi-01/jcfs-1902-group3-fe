@@ -105,6 +105,21 @@ const MenuManagement = (props) => {
                                                         <Text fontSize='12px'>Product</Text>
                                                     </Link>
                                                 </Box>
+                                                <Box my='15px' cursor='pointer'>
+                                                    <Link to='/adminrequest'>
+                                                        <Text fontSize='12px'>Add Request</Text>
+                                                    </Link>
+                                                </Box>
+                                                <Box my='15px' cursor='pointer'>
+                                                    <Link to='/management-request'>
+                                                        <Text fontSize='12px'>Incoming Request</Text>
+                                                    </Link>
+                                                </Box>
+                                                <Box my='15px' cursor='pointer'>
+                                                    <Link to='/outgoing-request'>
+                                                        <Text fontSize='12px'>Outgoing Request</Text>
+                                                    </Link>
+                                                </Box>
                                             </Collapse>
                                         </Box>
                                     </Center>

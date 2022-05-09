@@ -237,7 +237,7 @@ class LandingPage extends React.Component {
                         modalOpenForgot={this.state.modalOpenForgot}
                         btClose={() => this.setState({ modalOpenForgot: !this.state.modalOpenForgot })}
                     />
-                    {/* <GoOnTop/> */}
+                    <GoOnTop/>
                     <Box>
                         <Slider {...this.state.settingsCarousel}>
                             {this.printBanner()}

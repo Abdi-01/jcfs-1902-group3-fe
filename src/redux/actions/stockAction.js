@@ -5,7 +5,7 @@ export const getStock = (nama) => {
     return async (dispatch) => {
         try {
             let res = await axios.get(`${API_URL}/stock/sum?nama=${nama}`)
-            console.log('isi stock', res.data)
+            console.log('isi stock', res.data.dataTotalStock)
             if(res.data.success) {
                 return {success: res.data.success, data: res.data.dataTotalStock}
             }
