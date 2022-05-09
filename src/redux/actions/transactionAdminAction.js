@@ -63,19 +63,19 @@ export const getWarehouseAdmin = () => {
 export const getProductAdminAction = (search) => {
 
     return async (dispatch) => {
-        try {            
-            let token = localStorage.getItem('data')   
-            let res;         
+        try {
+            let token = localStorage.getItem('data')
+            let res;
             if (token) {
-                if(search){
-                    if(search.idwarehouse){
+                if (search) {
+                    if (search.idwarehouse) {
                         res = await axios.get(`${API_URL}/transactionwarehouse?idwarehouse=${search.idwarehouse}`, {
                             headers: {
                                 'Authorization': `Bearer ${token}`
                             }
                         })
                     }
-                }else{
+                } else {
                     res = await axios.get(`${API_URL}/transactionwarehouse`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
@@ -93,23 +93,114 @@ export const getProductAdminAction = (search) => {
     }
 }
 
-export const getRequest = () => {
+export const getRequest = (search = null) => {
     return async (dispatch) => {
         try {
             let token = localStorage.getItem('data')
+            let res
             if (token) {
-                let res = await axios.get(`${API_URL}/transactionwarehouse/getrequest`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+                if (search) {
+                    if (search.idstatus) {
+                        res = await axios.get(`${API_URL}/transactionwarehouse/getrequest?idstatus=${search.idstatus}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        })
+                    } else if (search.fromDate && search.toDate) {
+                        res = await axios.get(`${API_URL}/transactionwarehouse/getrequest?fromDate=${search.fromDate}&toDate=${search.toDate}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        })
+                    } else {
+                        res = await axios.get(`${API_URL}/transactionwarehouse/getrequest`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        })
                     }
-                })
+                } else {
+                    res = await axios.get(`${API_URL}/transactionwarehouse/getrequest`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                }
                 dispatch({
                     type: 'GET_DATA_REQUEST',
                     payload: res.data.dataRequest
                 })
+                return { success: res.data.success, data: res.data.dataRequest }
             }
+
         } catch (error) {
             console.log(error)
         }
     }
 }
+
+export const outgoingRequest = (search = null) => {
+    return async (dispatch) => {
+        try {
+            let token = localStorage.getItem('data')
+            let res
+            if (token) {
+                if (search) {
+                    if (search.idstatus) {
+                        res = await axios.get(`${API_URL}/transactionwarehouse/outgoingrequest?idstatus=${search.idstatus}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        })
+                    } else if (search.fromDate && search.toDate) {
+                        res = await axios.get(`${API_URL}/transactionwarehouse/outgoingrequest?fromDate=${search.fromDate}&toDate=${search.toDate}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        })
+                    } else {
+                        res = await axios.get(`${API_URL}/transactionwarehouse/outgoingrequest`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        })
+                    }
+                } else {
+                    res = await axios.get(`${API_URL}/transactionwarehouse/outgoingrequest`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                }
+                dispatch({
+                    type: 'GET_OUTGOING_REQUEST',
+                    payload: res.data.dataRequest
+                })
+                return { success: res.data.success, data: res.data.dataRequest }
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+// export const getRequest = () => {
+//     return async (dispatch) => {
+//         try {
+//             let token = localStorage.getItem('data')
+//             if (token) {
+//                 let res = await axios.get(`${API_URL}/transactionwarehouse/getrequest`, {
+//                     headers: {
+//                         'Authorization': `Bearer ${token}`
+//                     }
+//                 })
+//                 dispatch({
+//                     type: 'GET_DATA_REQUEST',
+//                     payload: res.data.dataRequest
+//                 })
+//             }
+//         } catch (error) {
+//             console.log(error)
+//         }
+//     }
+// }
