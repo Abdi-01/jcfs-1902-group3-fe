@@ -15,6 +15,8 @@ import Swal from 'sweetalert2';
 import ModalAddAddress from '../Components/ModalAddAddress';
 import { BsCheckCircle } from 'react-icons/bs';
 import MenuManagement from '../Components/MenuManagement';
+import GoOnTop from '../Components/GoOnTop';
+import BtnOnTop from '../Components/BtnOnTop';
 
 class ProfilePage extends React.Component {
     constructor(props) {
@@ -384,21 +386,6 @@ class ProfilePage extends React.Component {
                                                     </Box>
                                                     <Box ml='20px' width='30vw'>
                                                         <Box style={{ background: "white", border: "none", borderRadius: "9px" }}>
-                                                            {/* <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Ubah Biodata Diri</p>
-                                                            <Box style={{ paddingTop: "10px" }}>
-                                                                <Box display='flex' justifyContent='space-between'>
-                                                                    <Text className='text-muted' >Nama</Text>
-                                                                    <Text className='text-muted' >{this.props.nama} <a onClick={() => this.setState({ modalOpenNama: !this.state.modalOpenNama })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
-                                                                </Box>
-                                                                <Box display='flex' style={{ paddingTop: "10px" }} justifyContent='space-between'>
-                                                                    <Text className='text-muted'>Tanggal Lahir</Text>
-                                                                    <Text className='text-muted'>{this.props.umur} <a onClick={() => this.setState({ modalOpenUmur: !this.state.modalOpenUmur })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
-                                                                </Box>
-                                                                <Box display='flex' style={{ paddingTop: "10px" }} justifyContent='space-between'>
-                                                                    <Text className='text-muted'>Jenis Kelamin</Text>
-                                                                    <Text className='text-muted'>{this.props.gender} <a onClick={() => this.setState({ modalOpenGender: !this.state.modalOpenGender })} style={{ color: "#6b3c3b", cursor: "pointer" }}>Ubah</a></Text>
-                                                                </Box>
-                                                            </Box> */}
                                                             <p style={{ paddingTop: "10px", fontSize: "14px", fontWeight: 700 }}>Kontak Admin</p>
                                                             <Box style={{ paddingTop: "10px" }}>
                                                                 <Box display='flex' justifyContent='space-between'>
@@ -419,6 +406,8 @@ class ProfilePage extends React.Component {
                             }
                         </Box>
                     </Box>
+                    <GoOnTop/>
+                    <BtnOnTop/>
                 </Box>
             </Box>
         );

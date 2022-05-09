@@ -1,5 +1,6 @@
 const INITIAL_STATE = {
-    listProduct: []
+    listProduct: [],
+    listProductWarehouse: []
 }
 
 export const productReducer = (state=INITIAL_STATE, action) => {
@@ -9,6 +10,11 @@ export const productReducer = (state=INITIAL_STATE, action) => {
             return{
                 ...state,
                 listProduct: action.payload
+            }
+        case 'GET DATA PRODUCT WAREHOUSE' :
+            return {
+                ...state,
+                listProductWarehouse: action.payload
             }
     
         default:

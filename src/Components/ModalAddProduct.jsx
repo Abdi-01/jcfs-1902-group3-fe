@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Box, Center, Icon, Image, Menu, Text, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, ModalFooter, Button, Select, NumberInput, NumberInputField, Textarea } from '@chakra-ui/react'
 import { FiPlusCircle, FiMinusCircle } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
-import { addProductAction, getJenisProductAction } from '../redux/actions'
+import { addProductAction, getJenisProductAction, getProductWarehouseAction } from '../redux/actions'
 import axios from 'axios'
 import { API_URL } from '../helper'
 import Swal from 'sweetalert2'
@@ -104,13 +104,14 @@ const ModalAddProduct = (props) => {
                     'success'
                 )
                 props.modalClose()
+                dispatch(getProductWarehouseAction())
             }
         } catch (error) {
             console.log(error)
         }
 
-        console.log(data)
-        console.log('data foto', inputPhoto)
+        // console.log(data)
+        // console.log('data foto', inputPhoto)
     }
 
     return (

@@ -3,6 +3,8 @@ import { Pagination } from '@mantine/core'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import BtnOnTop from '../Components/BtnOnTop'
+import GoOnTop from '../Components/GoOnTop'
 import MenuManagement from '../Components/MenuManagement'
 import ModalUploadReceipt from '../Components/ModalUploadReceipt'
 import { API_URL } from '../helper'
@@ -17,11 +19,6 @@ const MenungguPembayaranPage = () => {
     const [transaksiUser, setTransaksiUser] = useState([])
     const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
-    // const { transaksiUser } = useSelector((state) => {
-    //     return {
-    //         transaksiUser: state.transactionReducer.transaksi
-    //     }
-    // })
     useEffect(() => {
         getData()
     }, [])
@@ -90,9 +87,12 @@ const MenungguPembayaranPage = () => {
         setLimitData(event.target.value)
         setPage(1)
     }
+    const btPagination = (event) => {
+        setPage(event)
+        window.scrollTo(0,0)  
+    }
     return (
         <>
-            {/* {console.log('isi transaksi', transaksiUser)} */}
             {
                 loading === true ?
                     <LoadingPage />
@@ -116,14 +116,16 @@ const MenungguPembayaranPage = () => {
                                                 <option value="20">20</option>
                                                 <option value="25">25</option>
                                             </Select>
-                                            <Pagination total={Math.ceil(transaksiUser.length / limitData)} page={page} onChange={(event) => setPage(event)} size='lg' radius='xl' color='dark' />
+                                            <Pagination total={Math.ceil(transaksiUser.length / limitData)} page={page} onChange={(event) => btPagination(event)} size='lg' radius='xl' color='dark' />
                                         </Box>
                                     </Box>
                                 </Box>
                             </Box>
                         </Box>
+                        <BtnOnTop/>
                     </Box>
             }
+            <GoOnTop />
         </>
     )
 }

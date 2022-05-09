@@ -3,17 +3,15 @@ import { Badge, Box, Button, Center, Flex, Heading, HStack, Icon, Image, Input, 
 import { Link, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { BsCart3, BsPerson } from 'react-icons/bs'
-import logoWeb from '../assets/web-icon.png'
+import logoWeb from '../assets/logoNav.png'
 import DrawerCart from './DrawerCart'
-import DrawerUser from './DrawerUser'
-import DrawerAdmin from './DrawerAdmin'
 
 const Navbar = () => {
 
     const [openCart, setOpenCart] = useState(false)
     const [openUser, setOpenUser] = useState(false)
     const [openAdmin, setOpenAdmin] = useState(false)
-    const [idxKategori, setIdxKategori] = useState(null)
+    // const [idxKategori, setIdxKategori] = useState(null)
     const location = useLocation()
     const { dataKategori, carts, username, idrole } = useSelector((state) => {
 
@@ -29,11 +27,13 @@ const Navbar = () => {
         if (dataKategori.length > 0) {
             return dataKategori.map((item, index) => {
                 return (
-                    <Box borderBottom={idxKategori === index && location.pathname == '/product' ? '5px solid brown' : 'none'}>
+                    <Box borderBottom={location.pathname == '/product' && location.state.kategori == item.kategori ? '5px solid brown' : 'none'}>
                         <Link to={`/product?kategori=${item.idkategori}`} state={dataKategori[index]}>
-                            <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'} my='15px' onClick={() => setIdxKategori(index)}>
-                                {item.kategori}
-                            </Text>
+                            <Box my='15px'>
+                                <Text fontSize={'lg'} fontWeight='bold' color={'#6b3c3b'} >
+                                    {item.kategori}
+                                </Text>
+                            </Box>
                         </Link>
                     </Box>
                 )
@@ -51,12 +51,12 @@ const Navbar = () => {
     }
     return (
         <>
-            <Box bg={'white'} height='10vh' boxShadow='md' position='sticky'>
+            <Box bg={'white'} height='10vh' boxShadow='md' position='sticky' top='0' width='full' zIndex='3'>
                 <Box mx='90px' display='flex'>
                     <Center>
                         <Box position='absolute'>
                             <Link to='/'>
-                                <Image src={logoWeb} w='200px' position='relative' left='55px' />
+                                <Image src={logoWeb} w='100px' position='relative' left='55px' />
                             </Link>
                         </Box>
                     </Center>
