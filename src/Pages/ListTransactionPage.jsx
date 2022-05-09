@@ -31,10 +31,11 @@ const ListTransactionPage = (props) => {
     }, [])
     const getData = async () => {
         try {
+            setLoading(true)
             let res = await dispatch(getTransactionAction())
             if (res.success) {
                 setTransaksi(res.data)
-                setLoading(!loading)
+                setLoading(false)
             }
         } catch (error) {
             console.log(error)
