@@ -1,7 +1,8 @@
 const INITIAL_STATE = {
     warehouseAdminList: [],
     productAdminList:[],
-    requestList:[]
+    requestList:[],
+    outgoingList:[]
 }
 
 export const transactionAdminReducer = (state = INITIAL_STATE, action) => {
@@ -21,6 +22,11 @@ export const transactionAdminReducer = (state = INITIAL_STATE, action) => {
             console.log("DATA DARI ACTION PAYLOAD==>", action.payload)
             return {
                 ...state, requestList: action.payload
+            }
+        case "GET_OUTGOING_REQUEST":
+            console.log("DATA DARI ACTION PAYLOAD==>", action.payload)
+            return {
+                ...state, outgoingList: action.payload
             }
         default:
             return state

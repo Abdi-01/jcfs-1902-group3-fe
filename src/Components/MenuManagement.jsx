@@ -112,7 +112,12 @@ const MenuManagement = (props) => {
                                                 </Box>
                                                 <Box my='15px' cursor='pointer'>
                                                     <Link to='/management-request'>
-                                                        <Text fontSize='12px'>Request List</Text>
+                                                        <Text fontSize='12px'>Incoming Request</Text>
+                                                    </Link>
+                                                </Box>
+                                                <Box my='15px' cursor='pointer'>
+                                                    <Link to='/outgoing-request'>
+                                                        <Text fontSize='12px'>Outgoing Request</Text>
                                                     </Link>
                                                 </Box>
                                             </Collapse>

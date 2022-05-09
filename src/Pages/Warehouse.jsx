@@ -13,6 +13,9 @@ class WarehousePage extends React.Component {
         super(props);
     }
 
+    componentDidMount() {
+        getWarehouse()
+    }
     state = {
         ModalAddWarehouse: false,
         selectedIndex: null,

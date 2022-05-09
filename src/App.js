@@ -32,6 +32,7 @@ import ManagementRequest from './Pages/ManagementRequest';
 import ListTransactionPage from './Pages/ListTransactionPage';
 import ListTransactionWarehousePage from './Pages/ListTransactionWarehousePage';
 import LoadingPage from './Pages/LoadingPage';
+import OutgoingRequest from './Pages/OutgoingRequest';
 
 
 function App() {
@@ -98,6 +99,7 @@ function App() {
         <Route path='/detail/product' element={<DetailProduct />} />
         <Route path='/detail/productreq' element={<DetailProductRequest />} />
         <Route path='/management-request' element={<ManagementRequest />} />
+        <Route path='/outgoing-request' element={<OutgoingRequest />} />
         <Route path="*" element={<NotFoundPage />} />        
       </Routes>
       <Footer />
