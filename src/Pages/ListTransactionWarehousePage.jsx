@@ -37,10 +37,11 @@ const ListTransactionWarehousePage = () => {
     }, [])
     const getData = async () => {
         try {
+            setLoading(true)
             let res = await dispatch(getTransactionAction())
             if (res.success) {
                 setTransaksi(res.data)
-                setLoading(!loading)
+                setLoading(false)
             }
         } catch (error) {
             console.log(error)
@@ -134,8 +135,8 @@ const ListTransactionWarehousePage = () => {
                             </Box>
                             <Box mt='15px' display='flex' justifyContent='end'>
                                 <Button size='xs' colorScheme='blackAlpha' bgColor='#6B3C3B' onClick={() => handleModal(!openModal, item)}>Detail Transaksi</Button>
-                                {item.idstatus === 7 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='green' onClick={() => btKonfirPembayaran(item.idtransaksi, item.receipt)}>Konfirmasi Pembayaran</Button>}
-                                {item.idstatus === 6 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='yellow' color='white' onClick={() => btKonfirMenungguBayar(item.idtransaksi)}>Konfirmasi</Button>}
+                                {item.idstatus === 7 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='green' onClick={() => btKonfirPembayaran(item.idtransaksi, item.receipt, item.idwarehouse)}>Konfirmasi Pembayaran</Button>}
+                                {item.idstatus === 6 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='yellow' color='white' onClick={() => btKonfirMenungguBayar(item.idtransaksi, item.idwarehouse)}>Konfirmasi</Button>}
                                 <ModalDetailTransaksi onOpen={openModal} onClose={() => setOpenModal(!openModal)} detailTransaksi={detail} />
                             </Box>
                         </Box>
@@ -160,7 +161,7 @@ const ListTransactionWarehousePage = () => {
         setLimitData(event.target.value)
         setPage(1)
     }
-    const btKonfirMenungguBayar = (idtransaksi) => {
+    const btKonfirMenungguBayar = (idtransaksi, idwarehouse) => {
         let data
         Swal.fire({
             title: 'Konfirmasi pesanan ini ?',
@@ -174,7 +175,8 @@ const ListTransactionWarehousePage = () => {
             if (res.isConfirmed) {
                 data = {
                     date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-                    idstatus: 7
+                    idstatus: 7,
+                    idwarehouse
                 }
                 dispatch(KonfirmasiPesananAction(idtransaksi, data))
                 Swal.fire(
@@ -200,7 +202,7 @@ const ListTransactionWarehousePage = () => {
             }
         })
     }
-    const btKonfirPembayaran = (idtransaksi, receipt) => {
+    const btKonfirPembayaran = (idtransaksi, receipt, idwarehouse) => {
         Swal.fire({
             title: 'Konfirmasi pesanan ini ?',
             text: 'Anda tidak dapat merubahnya kembali!',
@@ -216,7 +218,8 @@ const ListTransactionWarehousePage = () => {
             if (res.isConfirmed) {
                 let data = {
                     date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-                    idstatus: 8
+                    idstatus: 8,
+                    idwarehouse
                 }
                 dispatch(KonfirmasiPesananAction(idtransaksi, data))
                 Swal.fire(
