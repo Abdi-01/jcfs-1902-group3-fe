@@ -274,24 +274,11 @@ const CheckoutPage = () => {
                         <Box w='30vw' borderRadius='15px' boxShadow='md' p='5'>
                             <Box borderBottom='2px solid #F3F4F5'>
                                 <Text fontWeight='bold' mb='10px'>Alamat Pengiriman</Text>
-                                {
-                                    warehouseAdminList[0] &&
-                                        warehouseAdminList[0].idrole === 2 ?
-                                        <Box mt='20px' borderBottom='2px solid #F3F4F5'>
-                                            <Text fontWeight='semibold' mb='5px'>{warehouseAdminList[0].username}</Text>
-                                            <Text my='5px'>{warehouseAdminList[0].no_telpon}</Text>
-                                            <Text mb='10px' fontSize='13px'>{warehouseAdminList[0].alamat}</Text>
-                                        </Box>
-                                        :
-                                        <>
-                                            {printDefaultAlamat()}
-                                            < Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                                <Button colorScheme='gray' mb='15px' onClick={() => setOpenModalAlamat(!openModalAlamat)}>Pilih Alamat Lain</Button>
-                                                <ModalSetAlamat openModal={openModalAlamat} closeModal={() => setOpenModalAlamat(!openModalAlamat)} />
-                                            </Box>
-                                        </>
-                                }
-
+                                {printDefaultAlamat()}
+                                < Box mt='20px' borderBottom='5px solid #F3F4F5'>
+                                    <Button colorScheme='gray' mb='15px' onClick={() => setOpenModalAlamat(!openModalAlamat)}>Pilih Alamat Lain</Button>
+                                    <ModalSetAlamat openModal={openModalAlamat} closeModal={() => setOpenModalAlamat(!openModalAlamat)} />
+                                </Box>
                             </Box>
                             <Box mt='30px' borderBottom='2px solid #F3F4F5'>
                                 <Text fontWeight='bold' mb='10px'>Alamat Toko</Text>
