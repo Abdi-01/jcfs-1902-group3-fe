@@ -3,7 +3,7 @@ import { Box, Center, Icon, Image, Menu, Text, Modal, ModalOverlay, ModalContent
 import { FiPlusCircle, FiEdit, FiSave } from 'react-icons/fi'
 import { FaEdit } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
-import { addProductAction, getJenisProductAction, getProductAction, updateImgProductAction, updateProductAction } from '../redux/actions'
+import { addProductAction, getJenisProductAction, getProductAction, getProductWarehouseAction, updateImgProductAction, updateProductAction } from '../redux/actions'
 import { API_URL } from '../helper'
 import Swal from 'sweetalert2'
 
@@ -131,6 +131,7 @@ const ModalEditProduct = (props) => {
                 )
                 setData({ idmaterial: null, idkategori: null, idjenis_product: null, nama: '', harga: 0, deskripsi: '', berat: 0 })
                 dispatch(getProductAction())
+                dispatch(getProductWarehouseAction())
             }
         } catch (error) {
             console.log(error)
@@ -150,6 +151,7 @@ const ModalEditProduct = (props) => {
                     'success'
                 )
                 dispatch(getProductAction())
+                dispatch(getProductWarehouseAction())
                 btKlikCancel()
             }
         } catch (error) {

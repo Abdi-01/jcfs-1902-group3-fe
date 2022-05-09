@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import { Route, Routes } from 'react-router-dom';
 import MenuManagement from './Components/MenuManagement';
 import ManagementProduct from './Pages/ManagementProduct';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCartAction, getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction, getWarehouseAction, keepLoginAction, getWarehouse, getWarehouseAdmin } from './redux/actions';
+import { getCartAction, getJenisProductAction, getKategoriAction, getMaterialAction, getProductAction, getWarehouseAction, keepLoginAction, getWarehouse, getWarehouseAdmin, getProductWarehouseAction } from './redux/actions';
 import LandingPage from './Pages/LandingPage';
 import LoginPage from './Pages/LoginPage';
 import RegisterPage from './Pages/RegisterPage';
@@ -51,6 +53,7 @@ function App() {
     dispatch(getWarehouseAction())
     dispatch(getWarehouse())
     dispatch(getWarehouseAdmin())
+    dispatch(getProductWarehouseAction())
   }, [])
 
   return (

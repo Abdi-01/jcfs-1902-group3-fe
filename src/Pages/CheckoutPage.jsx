@@ -10,6 +10,8 @@ import { Navigate } from 'react-router'
 import { Pagination } from '@mantine/core'
 import { findNearest } from 'geolib'
 import Swal from 'sweetalert2'
+import GoOnTop from '../Components/GoOnTop'
+import BtnOnTop from '../Components/BtnOnTop'
 
 const CheckoutPage = () => {
 
@@ -20,6 +22,8 @@ const CheckoutPage = () => {
     const [limitData, setLimitData] = useState(4)
     const [page, setPage] = useState(1)
     const [printWarehouse, setPrintWarehouse] = useState([])
+    const [valuePrintWarehouse, setValuePrintWarehouse] = useState('')
+    const [valueSelectKurir, setValueSelectKurir] = useState('')
     const [getWarehouse, setGetWarehouse] = useState([])
     let dispatch = useDispatch()
 
@@ -180,6 +184,7 @@ const CheckoutPage = () => {
     const selectKurir = async (event) => {
         let temp
         let alamat = defaultAlamat.filter(item => item.idstatus === 4)
+        setValueSelectKurir(event.target.value)
         if (alamat && event.target.value) {
             temp = {
                 asal: alamat[0].idkota,
@@ -244,6 +249,17 @@ const CheckoutPage = () => {
         setLimitData(event.target.value)
         setPage(1)
     }
+    const selectNearWarehouse = (event) => {
+        setValuePrintWarehouse(event.target.value)
+        setSelectedWarehouse(printWarehouse[event.target.value])
+    }
+    const btModalAddress = () => {
+        setOpenModalAlamat(!openModalAlamat)
+        setValuePrintWarehouse('')
+        setValueSelectKurir('')
+        setSelectedWarehouse(null)
+        setDataOngkir({})
+    }
     return (
         <>
             {
@@ -275,7 +291,7 @@ const CheckoutPage = () => {
                                 <Text fontWeight='bold' mb='10px'>Alamat Pengiriman</Text>
                                 {printDefaultAlamat()}
                                 < Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                    <Button colorScheme='gray' mb='15px' onClick={() => setOpenModalAlamat(!openModalAlamat)}>Pilih Alamat Lain</Button>
+                                    <Button colorScheme='gray' mb='15px' onClick={btModalAddress}>Pilih Alamat Lain</Button>
                                     <ModalSetAlamat openModal={openModalAlamat} closeModal={() => setOpenModalAlamat(!openModalAlamat)} />
                                 </Box>
                             </Box>
@@ -290,7 +306,8 @@ const CheckoutPage = () => {
                                 </Box>
                             }
                             <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Select mb='10px' fontWeight='semibold' placeholder='pilih warehouse' disabled={carts.length > 0 ? false : true} onChange={(event) => setSelectedWarehouse(printWarehouse[event.target.value])}>
+                                <Select mb='10px' fontWeight='semibold' disabled={carts.length > 0 ? false : true} value={valuePrintWarehouse} onChange={(event) => selectNearWarehouse(event)}>
+                                    <option value='' selected>pilih warehouse</option>
                                     {printSelectWarehouse()}
                                 </Select>
                             </Box>
@@ -306,7 +323,8 @@ const CheckoutPage = () => {
                                 </Box>
                             }
                             <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Select mb='10px' fontWeight='semibold' placeholder='pilih pengiriman' onClick={(event) => selectKurir(event)}>
+                                <Select mb='10px' fontWeight='semibold' value={valueSelectKurir} onChange={(event) => selectKurir(event)}>
+                                    <option value=''>pilih pengiriman</option>
                                     <option value='jne'>JNE</option>
                                     <option value='tiki'>TIKI</option>
                                 </Select>
@@ -353,7 +371,9 @@ const CheckoutPage = () => {
                         </Box>
                     </Box>
                 </Box>
+                <GoOnTop />
             </Box>
+            {/* <BtnOnTop /> */}
         </>
     )
 }

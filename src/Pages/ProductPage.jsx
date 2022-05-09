@@ -8,6 +8,8 @@ import { transform } from 'framer-motion'
 import { Pagination } from '@mantine/core'
 import { API_URL } from '../helper'
 import LoadingPage from './LoadingPage'
+import GoOnTop from '../Components/GoOnTop'
+import BtnOnTop from '../Components/BtnOnTop'
 
 const ProductPage = () => {
 
@@ -172,11 +174,14 @@ const ProductPage = () => {
         <>
             {
                 loading === true ?
-                    <LoadingPage />
+                    <>
+                        <GoOnTop/>
+                        <LoadingPage />
+                    </>
                     :
                     <>
                         <Box marginX={'15vw'} marginY={'5vh'} >
-                            <Box my='5vh' >
+                            <Box mt='5vh' mb='5vh' >
                                 <Input placeholder='Cari Product' w='700px' boxShadow='sm' onChange={(event) => setValueProduct(event.target.value)} />
                             </Box>
                             <Box>
@@ -191,7 +196,7 @@ const ProductPage = () => {
                                     </HStack>
                                 </Box>
                             </Box>
-                            <Box mt='20vh' mb='15vh'>
+                            <Box mt='10vh' mb='10vh'>
                                 <Box>
                                     <Text fontSize={'lg'} fontWeight='semibold' >
                                         Pilih Produk
@@ -245,6 +250,8 @@ const ProductPage = () => {
                                 </Center>
                             </Box>
                         </Box>
+                        <GoOnTop />
+                        <BtnOnTop/>
                     </>
             }
         </>
