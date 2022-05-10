@@ -24,6 +24,7 @@ const MenungguPembayaranPage = () => {
     }, [])
     const getData = async () => {
         try {
+            setLoading(true)
             let token = localStorage.getItem('data')
             let res = await axios.get(`${API_URL}/transactions?idstatus=6`, {
                 headers: {
@@ -33,7 +34,7 @@ const MenungguPembayaranPage = () => {
 
             if (res.data.success) {
                 setTransaksiUser(res.data.dataTransaksi)
-                setLoading(!loading)
+                setLoading(false)
             }
         } catch (error) {
             console.log(error)
