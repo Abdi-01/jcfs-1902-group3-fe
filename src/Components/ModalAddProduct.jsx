@@ -94,17 +94,27 @@ const ModalAddProduct = (props) => {
         }
 
         try {
-            formData.append('data', JSON.stringify(data))
-            inputPhoto.forEach((item) => formData.append('images', item.file))
-            let res = await dispatch(addProductAction(formData))
-            if (res.success) {
+            let { idmaterial, idkategori, idjenis_product, nama, harga, deskripsi, berat, stock } = data
+            if (!idmaterial || !idkategori || !idjenis_product || !nama || harga || !deskripsi || !berat || !stock) {
                 Swal.fire(
-                    'Success!',
-                    'Data berhasil ditambah',
-                    'success'
+                    'Warning!',
+                    'Semua data harus di isi',
+                    'warning'
                 )
                 props.modalClose()
-                dispatch(getProductWarehouseAction())
+            } else {
+                formData.append('data', JSON.stringify(data))
+                inputPhoto.forEach((item) => formData.append('images', item.file))
+                let res = await dispatch(addProductAction(formData))
+                if (res.success) {
+                    Swal.fire(
+                        'Success!',
+                        'Data berhasil ditambah',
+                        'success'
+                    )
+                    props.modalClose()
+                    dispatch(getProductWarehouseAction())
+                }
             }
         } catch (error) {
             console.log(error)
@@ -174,8 +184,8 @@ const ModalAddProduct = (props) => {
                             <Box display='flex' justifyContent='space-between'>
                                 <FormLabel>Photo Product</FormLabel>
                                 <Box display='flex'>
-                                <Button mr='10px' colorScheme='green' size='xs' onClick={btAddPhoto}>Photo<Icon as={FiPlusCircle} boxSize='15px' ml='5px' /></Button>
-                                <Button colorScheme='red' size='xs' onClick={btDelPhoto}><Icon as={FiMinusCircle} boxSize='15px' mr='5px' />Photo</Button>
+                                    <Button mr='10px' colorScheme='green' size='xs' onClick={btAddPhoto}>Photo<Icon as={FiPlusCircle} boxSize='15px' ml='5px' /></Button>
+                                    <Button colorScheme='red' size='xs' onClick={btDelPhoto}><Icon as={FiMinusCircle} boxSize='15px' mr='5px' />Photo</Button>
                                 </Box>
                             </Box>
                             {printInputPhoto()}

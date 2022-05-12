@@ -35,10 +35,12 @@ const DetailProduct = () => {
         dispatch(getWarehouseAdmin())
     }, [])
 
-    const { username, verifiedStatus } = useSelector((state) => {
+    const { username, verifiedStatus, carts, iduser } = useSelector((state) => {
         return {
             username: state.userReducer.username,
-            verifiedStatus: state.userReducer.idstatus
+            verifiedStatus: state.userReducer.idstatus,
+            carts: state.transactionReducer.carts,
+            iduser: state.userReducer.iduser
         }
     })
 
@@ -89,7 +91,7 @@ const DetailProduct = () => {
         try {
             let temp = {
                 idproduct,
-                idstock: stock[0].idstock,
+                total_stock_product: totalStock[0].stok,
                 qty: Number(jumlah),
                 catatan
             }
@@ -105,10 +107,27 @@ const DetailProduct = () => {
                     'Anda harus verifikasi akun terlebih dahulu',
                     'info'
                 )
-            } else if (username && verifiedStatus === 3 ) {
-                let res = await dispatch(addCartAction(temp))
-                if (res.success) {
-                    setOpenCart(!openCart)
+            } else if (username && verifiedStatus === 3) {
+                let checkIdx = carts.findIndex(item => item.idproduct === temp.idproduct && item.iduser === iduser)
+                if (checkIdx >= 0) {
+                    carts[checkIdx].qty += temp.qty
+                    if (carts[checkIdx].qty <= totalStock[0].stok) {
+                        let res = await dispatch(addCartAction(temp))
+                        if (res.success) {
+                            setOpenCart(!openCart)
+                        }
+                    } else {
+                        Swal.fire(
+                            '',
+                            'Melebihi batas stock',
+                            'warning'
+                        )
+                    }
+                } else {
+                    let res = await dispatch(addCartAction(temp))
+                    if (res.success) {
+                        setOpenCart(!openCart)
+                    }
                 }
             }
         } catch (error) {
@@ -183,7 +202,7 @@ const DetailProduct = () => {
                                                     <Input value={jumlah} />
                                                     <InputRightElement children={<Icon as={AiOutlinePlus} />} cursor='pointer' onClick={btIncrement} />
                                                 </InputGroup>
-                                                <Center><Text ml='10px'>Stock : {totalStock[0].stok}</Text></Center>
+                                                <Center><Text ml='10px'>Stock : {totalStock[0].stok > 0 ? totalStock[0].stok : 'Kosong'}</Text></Center>
                                             </Box>
                                         </Box>
                                         <Box mt='15px'>
@@ -197,7 +216,7 @@ const DetailProduct = () => {
                                             <Text fontWeight='semibold'>Rp.{(jumlah * harga).toLocaleString()}</Text>
                                         </Box>
                                         <Box mt='20px'>
-                                            <Button colorScheme='blackAlpha' w='100%' bgColor='#6B3C3B' onClick={btKeranjang} ><Icon as={AiOutlinePlus} mr='10px' /> Keranjang</Button>
+                                            <Button colorScheme='blackAlpha' w='100%' bgColor='#6B3C3B' onClick={btKeranjang} disabled={totalStock[0].stok === 0 ? true : false}><Icon as={AiOutlinePlus} mr='10px'/> Keranjang</Button>
                                             <DrawerCart openCart={openCart} closeCart={() => setOpenCart(!openCart)} />
                                         </Box>
                                     </Box>

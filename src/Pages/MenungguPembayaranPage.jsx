@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import BtnOnTop from '../Components/BtnOnTop'
 import GoOnTop from '../Components/GoOnTop'
 import MenuManagement from '../Components/MenuManagement'
+import ModalDetailMenungguBayar from '../Components/ModalDetailMenungguBayar'
 import ModalUploadReceipt from '../Components/ModalUploadReceipt'
 import { API_URL } from '../helper'
 import { getTransactionAction } from '../redux/actions'
@@ -13,6 +14,7 @@ import LoadingPage from './LoadingPage'
 
 const MenungguPembayaranPage = () => {
     const [openModal, setOpenModal] = useState(false)
+    const [openModalDetail, setOpenModalDetail] = useState(false)
     const [detail, setDetail] = useState({})
     const [page, setPage] = useState(1)
     const [limitData, setLimitData] = useState(5)
@@ -44,6 +46,10 @@ const MenungguPembayaranPage = () => {
         setOpenModal(open)
         setDetail(item)
     }
+    const handleModalDetail = (open, item) => {
+        setOpenModalDetail(open)
+        setDetail(item)
+    }
     const printTransaksi = () => {
         if (transaksiUser.length > 0) {
             return transaksiUser.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
@@ -65,6 +71,8 @@ const MenungguPembayaranPage = () => {
                                     <Text mr='10px'>Rp.{(item.total_tagihan).toLocaleString()}</Text>
                                 </Box>
                                 <Box>
+                                    <Button size='sm' colorScheme='telegram' mt='15px' mr='5px' onClick={() => handleModalDetail(true, item)}>Detail</Button>
+                                    <ModalDetailMenungguBayar onOpen={openModalDetail} onClose={() => setOpenModalDetail(!openModalDetail)} detailTransaksi={detail}/>
                                     <Button size='sm' mt='15px' colorScheme='facebook' onClick={() => handleModal(true, item)}>Cara Pembayaran</Button>
                                 </Box>
                             </Box>
@@ -90,10 +98,11 @@ const MenungguPembayaranPage = () => {
     }
     const btPagination = (event) => {
         setPage(event)
-        window.scrollTo(0,0)  
+        window.scrollTo(0, 0)
     }
     return (
         <>
+            {console.log('isi transaksi', transaksiUser)}
             {
                 loading === true ?
                     <LoadingPage />
@@ -107,7 +116,7 @@ const MenungguPembayaranPage = () => {
                                 </Heading>
                                 <Box w='68vw' my='4vh' p='6' borderRadius='15px' border={'2px solid #F3F4F5'}>
                                     {printTransaksi()}
-                                    <ModalUploadReceipt open={openModal} onClose={() => setOpenModal(!openModal)} detailTrans={detail} />
+                                    <ModalUploadReceipt open={openModal} onClose={() => setOpenModal(!openModal)} />
                                     <Box mt='40px' mb='10px' display='flex' justifyContent='center'>
                                         <Box display='flex'>
                                             <Select w='20' mr='5' onChange={(event) => handleLImitData(event)}>
@@ -123,7 +132,7 @@ const MenungguPembayaranPage = () => {
                                 </Box>
                             </Box>
                         </Box>
-                        <BtnOnTop/>
+                        <BtnOnTop />
                     </Box>
             }
             <GoOnTop />

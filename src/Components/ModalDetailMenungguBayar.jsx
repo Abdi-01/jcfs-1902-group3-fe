@@ -2,7 +2,7 @@ import { Box, Center, Image, Modal, ModalBody, ModalCloseButton, ModalContent, M
 import React from 'react'
 import { API_URL } from '../helper'
 
-const ModalDetailTransaksi = (props) => {
+const ModalDetailMenungguBayar = (props) => {
     const { invoice, added_date, warehouse, detail, ongkir, total_tagihan, pajak } = props.detailTransaksi
     const printDetail = () => {
         if (detail.length > 0) {
@@ -53,7 +53,7 @@ const ModalDetailTransaksi = (props) => {
     return (
         <>
             {/* {console.log('isi detail', props.detailTransaksi)} */}
-            <Modal size='4xl' scrollBehavior='inside' isOpen={props.onOpen} onClose={props.onClose} >
+            <Modal size='3xl' scrollBehavior='inside' isOpen={props.onOpen} onClose={props.onClose} >
                 <ModalOverlay bg='blackAlpha.300' backdropFilter='blur(10px) hue-rotate(90deg)' />
                 <ModalContent>
                     <ModalHeader>
@@ -127,4 +127,4 @@ const ModalDetailTransaksi = (props) => {
     )
 }
 
-export default ModalDetailTransaksi
+export default ModalDetailMenungguBayar
