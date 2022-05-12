@@ -40,7 +40,7 @@ const CheckoutPage = () => {
 
     const btIncrement = (index, idcart) => {
         let temp = [...carts]
-        if (temp[index].qty < temp[index].stocks[0].qty) {
+        if (temp[index].qty < temp[index].total_stock_product) {
             temp[index].qty += 1
         }
         dispatch(updateQtyCartAction(idcart, { qty: temp[index].qty }))
@@ -92,7 +92,7 @@ const CheckoutPage = () => {
                                                 <Text mt='10px'>{item.qty} x Rp.{(item.products[0].harga.toLocaleString())}</Text>
                                             </Box>
                                             <Box mr='30px'>
-                                                <InputGroup w='95px'>
+                                                <InputGroup w='98px'>
                                                     <InputLeftElement children={<Icon as={AiOutlineMinus} />} cursor='pointer' onClick={() => btDecrement(index, item.idcart)} />
                                                     <Input value={item.qty} />
                                                     <InputRightElement children={<Icon as={AiOutlinePlus} />} cursor='pointer' onClick={() => btIncrement(index, item.idcart)} />
@@ -266,6 +266,9 @@ const CheckoutPage = () => {
             {
                 redirect && <Navigate to='/payment' />
             }
+            {
+                console.log('isi warehouse', selectedWarehouse)
+            }
             <Box marginX={'8vw'} marginY={'5vh'}>
                 <Box display='flex' justifyContent='space-between'>
                     <Box >
@@ -324,7 +327,7 @@ const CheckoutPage = () => {
                                 </Box>
                             }
                             <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Select mb='10px' fontWeight='semibold' value={valueSelectKurir} onChange={(event) => selectKurir(event)}>
+                                <Select mb='10px' fontWeight='semibold' value={valueSelectKurir} onChange={(event) => selectKurir(event)} disabled={valuePrintWarehouse ? false : true}>
                                     <option value=''>pilih pengiriman</option>
                                     <option value='jne'>JNE</option>
                                     <option value='tiki'>TIKI</option>
@@ -361,7 +364,7 @@ const CheckoutPage = () => {
                             <Box mt='15px'>
                                 <Center>
                                     {
-                                        carts.length > 0
+                                        carts.length > 0 && valueSelectKurir
                                             ?
                                             <Button colorScheme='blackAlpha' bgColor='#6B3C3B' w='100%' onClick={btCheckout}>Checkout</Button>
                                             :
