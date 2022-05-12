@@ -103,7 +103,7 @@ const ManagementRequest = (props) => {
         })
     }
 
-    const btProcess = async (idtransaksi_warehouse) => {
+    const btProcess = async (idtransaksi_warehouse, idproduct, idstock) => {
         try {
             let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
             let token = localStorage.getItem('data')
@@ -125,12 +125,12 @@ const ManagementRequest = (props) => {
                         'Proses Berhasil!',
                         'Request Sedang Dalam Proses.',
                         'success',
-                        await axios.patch(`${API_URL}/transactionwarehouse/konfirmasi/${idtransaksi_warehouse}`, data, {
+                        await axios.patch(`${API_URL}/transactionwarehouse/konfirmasi/${idtransaksi_warehouse}/${idproduct}/${idstock}`, data, {
                             headers: {
                                 'Authorization': `Bearer ${token}`
                             }
                         }),
-                        dispatch(getRequest())
+                        dispatch(getData())
                     )
                 }
             })
@@ -148,7 +148,7 @@ const ManagementRequest = (props) => {
                     console.log(err)
                 })
 
-            dispatch(getRequest())
+            dispatch(getData())
         } catch (error) {
             console.log(error)
         }
@@ -181,7 +181,7 @@ const ManagementRequest = (props) => {
                                 'Authorization': `Bearer ${token}`
                             }
                         }),
-                        dispatch(getRequest())
+                        dispatch(getData())
                     )
                 }
             })
@@ -199,7 +199,7 @@ const ManagementRequest = (props) => {
                     console.log(err)
                 })
 
-            dispatch(getRequest())
+            dispatch(getData())
         } catch (error) {
             console.log(error)
         }
@@ -213,9 +213,10 @@ const ManagementRequest = (props) => {
                         <Box mt='20px' p='4' border='2px solid #F3F4F5' borderRadius='10px'>
                             <Box display='flex'>
                                 <Text>Request {item.added_date.substr(0, 10)}</Text>                                
-                                {item.idstatus === 10 && idrole === 2 && <Badge colorScheme='red' variant={'subtle'} ml='2'>Rejected</Badge>}
-                                {item.idstatus === 8 && idrole === 2 && <Badge colorScheme='green' variant={'subtle'} ml='2'>On Process</Badge>}
-                                {item.idstatus === 7 && idrole === 2 && <Badge colorScheme='purple' variant={'subtle'} ml='2'>Antrian</Badge>}
+                                {item.idstatus === 10  && <Badge colorScheme='red' variant={'subtle'} ml='2'>Rejected</Badge>}
+                                {item.idstatus === 8  && <Badge colorScheme='green' variant={'subtle'} ml='2'>On Process</Badge>}
+                                {item.idstatus === 7  && <Badge colorScheme='purple' variant={'subtle'} ml='2'>Antrian</Badge>}
+                                {item.idstatus === 9  && <Badge colorScheme='messenger' variant={'subtle'} ml='2'>Diterima</Badge>}
                                 <Text fontWeight='semibold' ml='2' mr='2'>{item.invoice}</Text>
                                 {
                                     item.updated_date &&
@@ -223,7 +224,7 @@ const ManagementRequest = (props) => {
                                 }
                             </Box>
                             <Box mt='10px'>
-                                <Text fontWeight='semibold'>{item.warehouse}</Text>
+                                <Text fontWeight='semibold'>Pemohon : {item.username}</Text>
                                 <Text fontWeight='semibold'>Warehouse : {item.nama}</Text>
                             </Box>
                             <Box display='flex' justifyContent='space-between'>
@@ -246,7 +247,7 @@ const ManagementRequest = (props) => {
                             </Box>
                             <Box mt='15px' display='flex' justifyContent='end'>
                                 {item.idstatus === 7 && idrole === 2 && <Button size='xs' colorScheme='blackAlpha' onClick={() => btReject(item.idtransaksi_warehouse)} bgColor='red'>Reject</Button>}
-                                {item.idstatus === 7 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='green' onClick={() => btProcess(item.idtransaksi_warehouse)}>Process Request</Button>}
+                                {item.idstatus === 7 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='green' onClick={() => btProcess(item.idtransaksi_warehouse, item.idproduct, item.idstock)}>Process Request</Button>}
                             </Box>
                         </Box>
                     </>

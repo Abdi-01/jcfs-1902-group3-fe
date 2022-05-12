@@ -102,6 +102,59 @@ const OutgoingRequest = (props) => {
         })
     }    
 
+    const btDiterima = async (idtransaksi_warehouse, idproduct, idstock, index) => {
+        try {
+            let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            let token = localStorage.getItem('data')
+            // let temp = [...outgoingList]            
+            let data = {
+                idstatus: 9,
+                date,
+                qty: outgoingList[index].stock
+            }
+            Swal.fire({
+                title: 'Request Sudah Diterima?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Pesanan Sudah Diterima!'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Berhasil!',
+                        'Barang Sudah Diterima.',
+                        'success',
+                        await axios.patch(`${API_URL}/transactionwarehouse/diterima/${idtransaksi_warehouse}/${idproduct}/${idstock}`, data, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        }),
+                        dispatch(getData())
+                    )
+                }
+            })
+                // .then(res => {
+                //     console.log("cek res.data", res.data)
+                //     Swal.fire({
+                //         position: 'center',
+                //         icon: 'success',
+                //         title: 'Barang Diterima',
+                //         showConfirmButton: false,
+                //         timer: 1500
+                //     })
+                // })
+                .catch((err) => {
+                    console.log(err)
+                })
+
+            // dispatch(getData())
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const btBatal = async (idtransaksi_warehouse) => {
         try {
             let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -129,25 +182,25 @@ const OutgoingRequest = (props) => {
                                 'Authorization': `Bearer ${token}`
                             }
                         }),
-                        dispatch(outgoingRequest())
+                        dispatch(getData())
                     )
                 }
             })
-                .then(res => {
-                    console.log("cek res.data", res.data)
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'Batalkan Request',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                })
+                // .then(res => {
+                //     console.log("cek res.data", res.data)
+                //     Swal.fire({
+                //         position: 'center',
+                //         icon: 'success',
+                //         title: 'Batalkan Request',
+                //         showConfirmButton: false,
+                //         timer: 1500
+                //     })
+                // })
                 .catch((err) => {
                     console.log(err)
                 })
 
-            dispatch(getRequest())
+            // dispatch(getData())
         } catch (error) {
             console.log(error)
         }
@@ -164,6 +217,7 @@ const OutgoingRequest = (props) => {
                                 {item.idstatus === 10 && idrole === 2 && <Badge colorScheme='red' variant={'subtle'} ml='2'>Rejected</Badge>}
                                 {item.idstatus === 8 && idrole === 2 && <Badge colorScheme='green' variant={'subtle'} ml='2'>On Process</Badge>}
                                 {item.idstatus === 7 && idrole === 2 && <Badge colorScheme='purple' variant={'subtle'} ml='2'>Antrian</Badge>}
+                                {item.idstatus === 9 && idrole === 2 && <Badge colorScheme='messenger' variant={'subtle'} ml='2'>Diterima</Badge>}
                                 <Text fontWeight='semibold' ml='2' mr='2'>{item.invoice}</Text>
                                 {
                                     item.updated_date &&
@@ -194,6 +248,7 @@ const OutgoingRequest = (props) => {
                             </Box>
                             <Box mt='15px' display='flex' justifyContent='end'>
                                 {item.idstatus === 7 && idrole === 2 && <Button size='xs' colorScheme='blackAlpha' onClick={() => btBatal(item.idtransaksi_warehouse)} bgColor='red'>Batalkan</Button>}                                
+                                {item.idstatus === 8 && idrole === 2 && <Button size='xs' colorScheme='blackAlpha' onClick={() => btDiterima(item.idtransaksi_warehouse, item.idproduct, item.idstock, index)} bgColor='green'>Barang Diterima</Button>}                                
                             </Box>
                         </Box>
                     </>
@@ -211,6 +266,7 @@ const OutgoingRequest = (props) => {
     }
 
     console.log(`outgoingList`, outgoingList)
+    // console.log(`outgoingList.Stock Njeng`, outgoingList.stock[0])
     return (
         <>
             <Box>

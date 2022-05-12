@@ -226,6 +226,11 @@ const MenuManagement = (props) => {
                                                         <Link to='/transaction/admin/list'>
                                                             <Text fontSize='12px'>Daftar Transaksi</Text>
                                                         </Link>
+                                                        <Box my='15px' cursor='pointer'>
+                                                            <Link to='/management-request'>
+                                                                <Text fontSize='12px'>Incoming Request</Text>
+                                                            </Link>
+                                                        </Box>
                                                     </Box>
                                                 </Collapse>
                                             </Box>
