@@ -131,7 +131,7 @@ const ListTransactionPage = (props) => {
                                 </Box>
                                 <Box mt='15px' display='flex' justifyContent='end'>
                                     <Button size='xs' colorScheme='blackAlpha' bgColor='#6B3C3B' onClick={() => handleModal(!openModal, item)}>Detail Transaksi</Button>
-                                    {item.idstatus === 8 && <Button ml='10px' size='xs' colorScheme='green' onClick={() => btTerimaBarang(item.idtransaksi)}>Barang Diterima</Button>}
+                                    {item.idstatus === 8 && <Button ml='10px' size='xs' colorScheme='green' onClick={() => btTerimaBarang(item.idtransaksi, item.idwarehouse)}>Barang Diterima</Button>}
                                     <ModalDetailTransaksi onOpen={openModal} onClose={() => setOpenModal(!openModal)} detailTransaksi={detail} />
                                 </Box>
                             </Box>
@@ -163,10 +163,11 @@ const ListTransactionPage = (props) => {
         setLimitData(event.target.value)
         setPage(1)
     }
-    const btTerimaBarang = async (idtransaksi) => {
+    const btTerimaBarang = async (idtransaksi, idwarehouse) => {
         let data = {
             date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-            idstatus: 9
+            idstatus: 9,
+            idwarehouse
         }
         try {
             Swal.fire({
