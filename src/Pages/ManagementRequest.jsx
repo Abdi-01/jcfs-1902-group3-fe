@@ -9,6 +9,7 @@ import { API_URL } from '../helper'
 import { getRequest } from '../redux/actions'
 import { IoSearch } from 'react-icons/io5'
 import { BsCalendar2Week } from 'react-icons/bs'
+import moment from 'moment'
 
 const ManagementRequest = (props) => {
     const dispatch = useDispatch()
@@ -105,7 +106,7 @@ const ManagementRequest = (props) => {
 
     const btProcess = async (idtransaksi_warehouse, idproduct, idstock) => {
         try {
-            let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            let date = moment().format().slice(0, 19).replace('T', ' ');
             let token = localStorage.getItem('data')
             let data = {
                 idstatus: 8,
@@ -156,7 +157,7 @@ const ManagementRequest = (props) => {
 
     const btReject = async (idtransaksi_warehouse) => {
         try {
-            let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            let date = moment().format().slice(0, 19).replace('T', ' ');
             let token = localStorage.getItem('data')
             let data = {
                 idstatus: 10,

@@ -11,6 +11,7 @@ import { addCartAction } from '../redux/actions/transactionAction'
 import DrawerCart from '../Components/DrawerCart'
 import { addCartAdminAction, } from '../redux/actions/transactionAdminAction'
 import Swal from 'sweetalert2'
+import moment from 'moment'
 
 const DetailProductRequest = () => {
 
@@ -38,7 +39,7 @@ const DetailProductRequest = () => {
     })
 
     const RequestStock = async () => {
-        let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        let date = moment().format().slice(0, 19).replace('T', ' ');
         let token = localStorage.getItem('data')
         let data = {
             iduser: warehouseAdminList.iduser,

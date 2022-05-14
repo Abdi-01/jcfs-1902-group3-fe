@@ -11,6 +11,7 @@ import ModalUploadReceipt from '../Components/ModalUploadReceipt'
 import { API_URL } from '../helper'
 import { getTransactionAction } from '../redux/actions'
 import LoadingPage from './LoadingPage'
+import moment from 'moment'
 
 const MenungguPembayaranPage = () => {
     const [openModal, setOpenModal] = useState(false)
@@ -58,7 +59,7 @@ const MenungguPembayaranPage = () => {
                         <Box borderRadius='10px' my='20px' w='100%' p='3' boxShadow='md'>
                             <Box display='flex' w='100%' justifyContent='space-between'>
                                 <Box>
-                                    <Text fontWeight='semibold'>Belanja {item.added_date.substr(0, 10)}</Text>
+                                    <Text fontWeight='semibold'>Belanja {moment(item.added_date).locale('id').format('LL')}</Text>
                                 </Box>
                             </Box>
                             <Box my='15px' display='flex' justifyContent='space-between'>
@@ -116,7 +117,7 @@ const MenungguPembayaranPage = () => {
                                 </Heading>
                                 <Box w='68vw' my='4vh' p='6' borderRadius='15px' border={'2px solid #F3F4F5'}>
                                     {printTransaksi()}
-                                    <ModalUploadReceipt open={openModal} onClose={() => setOpenModal(!openModal)} />
+                                    <ModalUploadReceipt open={openModal} onClose={() => setOpenModal(!openModal)} detailTrans={detail}/>
                                     <Box mt='40px' mb='10px' display='flex' justifyContent='center'>
                                         <Box display='flex'>
                                             <Select w='20' mr='5' onChange={(event) => handleLImitData(event)}>
