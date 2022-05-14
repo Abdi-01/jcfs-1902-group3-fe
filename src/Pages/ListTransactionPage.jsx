@@ -14,6 +14,7 @@ import Swal from 'sweetalert2'
 import LoadingPage from './LoadingPage'
 import GoOnTop from '../Components/GoOnTop'
 import BtnOnTop from '../Components/BtnOnTop'
+import moment from 'moment'
 
 const ListTransactionPage = (props) => {
     const [status, setStatus] = useState([{ id: null, status: 'Semua' }, { id: 7, status: 'Menunggu Konfirmasi' }, { id: 8, status: 'Pesanan Diproses' }, { id: 9, status: 'Pesanan Diterima' }, { id: 10, status: 'Dibatalkan' }])
@@ -96,14 +97,16 @@ const ListTransactionPage = (props) => {
     const printTransaksi = () => {
         if (transaksi.length > 0) {
             return transaksi.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
+                let newAddedDate = moment(item.added_date).locale('id').format('LL')
                 return (
                     <>
                         {
                             item.idstatus !== 6 &&
                             <Box mt='20px' p='4' border='2px solid #F3F4F5' borderRadius='10px'>
                                 <Box display='flex'>
-                                    <Text>Belanja {item.added_date.substr(0, 10)}</Text>
-                                    <Text mx='10px'><Badge variant='subtle' colorScheme={item.idstatus === 7 ? 'yellow' : item.idstatus === 8 ? 'messenger' : 'green'}>{item.status}</Badge></Text>
+                                    {/* <Text>Belanja {item.added_date.substr(0, 10)}</Text> */}
+                                    <Text>Belanja {moment(item.added_date).locale('id').format('LL')}</Text>
+                                    <Text mx='10px'><Badge variant='subtle' colorScheme={item.idstatus === 7 ? 'yellow' : item.idstatus === 8 ? 'messenger' : item.idstatus === 10 ? 'red' : 'green'}>{item.status}</Badge></Text>
                                     <Text fontWeight='semibold'>{item.invoice}</Text>
                                 </Box>
                                 <Box mt='10px'>
@@ -165,7 +168,7 @@ const ListTransactionPage = (props) => {
     }
     const btTerimaBarang = async (idtransaksi, idwarehouse) => {
         let data = {
-            date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+            date: moment().format().slice(0, 19).replace('T', ' '),
             idstatus: 9,
             idwarehouse
         }

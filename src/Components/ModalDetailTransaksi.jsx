@@ -1,6 +1,7 @@
 import { Box, Center, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react'
 import React from 'react'
 import { API_URL } from '../helper'
+import moment from 'moment'
 
 const ModalDetailTransaksi = (props) => {
     const { invoice, added_date, warehouse, detail, ongkir, total_tagihan, pajak } = props.detailTransaksi
@@ -73,7 +74,7 @@ const ModalDetailTransaksi = (props) => {
                                     </Box>
                                     <Box my='10px' display='flex' justifyContent='space-between'>
                                         <Text>Tanggal Pembelian</Text>
-                                        <Text fontWeight='semibold'>{added_date.substr(0, 10)}</Text>
+                                        <Text fontWeight='semibold'>{moment(added_date).locale('id').format('LL')}</Text>
                                     </Box>
                                 </Box>
                                 <Box mt='15px' display='flex' justifyContent='space-between' borderBottom='8px solid  #F3F4F5'>

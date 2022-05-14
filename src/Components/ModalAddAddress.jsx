@@ -35,23 +35,32 @@ class ModalAddAddress extends React.Component {
             kecamatan,
             kode_pos,
             latitude: this.props.latitude ? this.props.latitude : latitude,
-            longitude : this.props.longitude ? this.props.longitude : longitude
+            longitude: this.props.longitude ? this.props.longitude : longitude
         }
-        let token = localStorage.getItem('data')
-        let res = await axios.post(`${API_URL}/users/addaddress`, data, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        if (res.data.success) {
+        if (nama_penerima === '' || alamat === '' || no_telpon === null || idprovinsi === null || idkota === null || kecamatan === '' || kode_pos === null || latitude === '' || longitude === '') {
             Swal.fire(
-                'Success!',
-                'Alamat berhasil ditambahkan',
-                'success'
+                'Warning!',
+                'Semua data harus di isi',
+                'warning'
             )
-            this.props.btClose();
-            this.props.getAddress();
+        } else {
+            let token = localStorage.getItem('data')
+            let res = await axios.post(`${API_URL}/users/addaddress`, data, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            if (res.data.success) {
+                Swal.fire(
+                    'Success!',
+                    'Alamat berhasil ditambahkan',
+                    'success'
+                )
+                this.props.btClose();
+                this.props.getAddress();
+            }
         }
+
     }
     getData = async () => {
         try {

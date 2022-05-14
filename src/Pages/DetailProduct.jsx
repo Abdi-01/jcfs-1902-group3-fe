@@ -14,6 +14,7 @@ import Swal from 'sweetalert2'
 import LoadingPage from './LoadingPage'
 import GoOnTop from '../Components/GoOnTop'
 import BtnOnTop from '../Components/BtnOnTop'
+import moment from 'moment'
 
 const DetailProduct = () => {
 

@@ -14,11 +14,12 @@ import Swal from 'sweetalert2'
 import LoadingPage from './LoadingPage'
 import GoOnTop from '../Components/GoOnTop'
 import BtnOnTop from '../Components/BtnOnTop'
+import moment from 'moment'
 
 const ListTransactionWarehousePage = () => {
     const [status, setStatus] = useState([{ id: null, status: 'Semua' }, { id: 6, status: 'Menunggu Pembayaran' }, { id: 7, status: 'Menunggu Konfirmasi' }, { id: 8, status: 'Pesanan Diproses' }, { id: 9, status: 'Pesanan Diterima' }, { id: 10, status: 'Dibatalkan' }])
     const [activeIdx, setActiveIdx] = useState(0)
-    const [transaksi, setTransaksi] = useState([])
+    // const [transaksi, setTransaksi] = useState([])
     const [openModal, setOpenModal] = useState(false)
     const [detail, setDetail] = useState({})
     const [page, setPage] = useState(1)
@@ -27,9 +28,10 @@ const ListTransactionWarehousePage = () => {
     const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
 
-    const { idrole } = useSelector((state) => {
+    const { idrole, transaksi } = useSelector((state) => {
         return {
-            idrole: state.userReducer.idrole
+            idrole: state.userReducer.idrole,
+            transaksi: state.transactionReducer.transaksi
         }
     })
     useEffect(() => {
@@ -38,11 +40,9 @@ const ListTransactionWarehousePage = () => {
     const getData = async () => {
         try {
             setLoading(true)
-            let res = await dispatch(getTransactionAction())
-            if (res.success) {
-                setTransaksi(res.data)
+            setInterval(() => {
                 setLoading(false)
-            }
+            }, 1000);
         } catch (error) {
             console.log(error)
         }
@@ -52,7 +52,6 @@ const ListTransactionWarehousePage = () => {
         try {
             let res = await dispatch(getTransactionAction({ idstatus: idstatus }))
             if (res.success) {
-                setTransaksi(res.data)
                 setFilter({ idstatus: null, fromDate: '', toDate: '' })
                 setPage(1)
             }
@@ -65,7 +64,6 @@ const ListTransactionWarehousePage = () => {
             setLoading(true)
             let res = await dispatch(getTransactionAction(filter))
             if (res.success) {
-                setTransaksi(res.data)
                 setLoading(false)
                 setActiveIdx(0)
                 setPage(1)
@@ -78,7 +76,6 @@ const ListTransactionWarehousePage = () => {
         try {
             let res = await dispatch(getTransactionAction())
             if (res.success) {
-                setTransaksi(res.data)
                 setFilter({ idstatus: null, fromDate: '', toDate: '' })
                 setActiveIdx(0)
                 setPage(1)
@@ -136,7 +133,7 @@ const ListTransactionWarehousePage = () => {
                             <Box mt='15px' display='flex' justifyContent='end'>
                                 <Button size='xs' colorScheme='blackAlpha' bgColor='#6B3C3B' onClick={() => handleModal(!openModal, item)}>Detail Transaksi</Button>
                                 {item.idstatus === 7 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='green' onClick={() => btKonfirPembayaran(item.idtransaksi, item.receipt, item.idwarehouse)}>Konfirmasi Pembayaran</Button>}
-                                {item.idstatus === 6 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='yellow' color='white' onClick={() => btKonfirMenungguBayar(item.idtransaksi, item.idwarehouse)}>Konfirmasi</Button>}
+                                {item.idstatus === 6 && idrole === 2 && <Button ml='10px' size='xs' colorScheme='red' color='white' onClick={() => btKonfirMenungguBayar(item.idtransaksi, item.idwarehouse)}>Batalkan Pesanan</Button>}
                                 <ModalDetailTransaksi onOpen={openModal} onClose={() => setOpenModal(!openModal)} detailTransaksi={detail} />
                             </Box>
                         </Box>
@@ -164,42 +161,28 @@ const ListTransactionWarehousePage = () => {
     const btKonfirMenungguBayar = (idtransaksi, idwarehouse) => {
         let data
         Swal.fire({
-            title: 'Konfirmasi pesanan ini ?',
+            title: 'Batalkan pesanan ini ?',
             text: 'Anda tidak dapat merubahnya kembali!',
             icon: 'warning',
             showDenyButton: true,
             confirmButtonColor: 'green',
-            confirmButtonText: 'Konfirmasi',
-            denyButtonText: 'Batalkan'
+            confirmButtonText: 'Ya',
+            denyButtonText: 'Tidak'
         }).then((res) => {
             if (res.isConfirmed) {
                 data = {
-                    date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-                    idstatus: 7,
+                    date: moment().format().slice(0, 19).replace('T', ' '),
+                    idstatus: 10,
                     idwarehouse
                 }
                 dispatch(KonfirmasiPesananAction(idtransaksi, data))
+                btfilterStatus()
                 Swal.fire(
                     'Berhasil!',
                     'Pesanan ini terkonfirmasi',
                     'success'
                 )
-                getData()
-                btfilterStatus()
-            } else if (res.isDenied) {
-                data = {
-                    date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-                    idstatus: 10
-                }
-                dispatch(KonfirmasiPesananAction(idtransaksi, data))
-                Swal.fire(
-                    'Berhasil!',
-                    'Pesanan ini terkonfirmasi',
-                    'success'
-                )
-                getData()
-                btfilterStatus()
-            }
+            } 
         })
     }
     const btKonfirPembayaran = (idtransaksi, receipt, idwarehouse) => {
@@ -217,18 +200,17 @@ const ListTransactionWarehousePage = () => {
         }).then((res) => {
             if (res.isConfirmed) {
                 let data = {
-                    date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+                    date: moment().format().slice(0, 19).replace('T', ' '),
                     idstatus: 8,
                     idwarehouse
                 }
                 dispatch(KonfirmasiPesananAction(idtransaksi, data))
+                btfilterStatus()
                 Swal.fire(
                     'Berhasil!',
                     'Pesanan ini terkonfirmasi',
                     'success'
                 )
-                getData()
-                btfilterStatus()
             }
         })
     }

@@ -22,7 +22,7 @@ export const userReducer = (state = INITIAL_STATE, action) => {
     // SWITCH...CASE : digunakan untuk menentukan data dari action.payload untuk disimpan ke bagian STATE yang dituju berdasarkan action.type
     switch (action.type) {
         case "LOGIN_SUCCESS":
-            console.log("DATA DARI ACTION PAYLOAD==>", action.payload)
+            // console.log("DATA DARI ACTION PAYLOAD==>", action.payload)
             return {
                 ...state,
                 iduser: action.payload.iduser,
@@ -42,17 +42,17 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         case "UPDATE_CART_USER":
             return { ...state, cart: action.payload }
         case "GET_ADDRESS":
-            console.log("GET_ADDRESS REDUCER", action.payload)
+            // console.log("GET_ADDRESS REDUCER", action.payload)
             return {
                 ...state, addressList: action.payload
             }
         case "GET_WAREHOUSE":
-            console.log("GET_WAREHOUSE REDUCER", action.payload)
+            // console.log("GET_WAREHOUSE REDUCER", action.payload)
             return {
                 ...state, warehouseList: action.payload
             }
         case "GET_ADMIN":
-            console.log("GET_ADMIN REDUCER", action.payload)
+            // console.log("GET_ADMIN REDUCER", action.payload)
             return {
                 ...state, adminList: action.payload
             }

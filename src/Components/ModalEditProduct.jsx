@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addProductAction, getJenisProductAction, getProductAction, getProductWarehouseAction, updateImgProductAction, updateProductAction } from '../redux/actions'
 import { API_URL } from '../helper'
 import Swal from 'sweetalert2'
+import moment from 'moment'
 
 const ModalEditProduct = (props) => {
 
@@ -108,7 +109,7 @@ const ModalEditProduct = (props) => {
         }
     }
     const btSimpan = async () => {
-        let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        let date = moment().format().slice(0, 19).replace('T', ' ');
         let temp = {
             idmaterial: data.idmaterial ? data.idmaterial : idmaterial,
             idkategori: data.idkategori ? data.idkategori : idkategori,
@@ -165,7 +166,7 @@ const ModalEditProduct = (props) => {
         <>
             {
                 // console.log('isi image edit', editImage, images)
-                // console.log('isi image',images.url)
+                console.log('isi detail',props.detailProduct)
             }
             <Modal isOpen={props.openEdit} closeOnOverlayClick={false} onClose={btKlikCancel} size='xl'>
                 <ModalOverlay />
