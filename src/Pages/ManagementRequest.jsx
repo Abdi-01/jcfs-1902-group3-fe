@@ -13,23 +13,15 @@ import moment from 'moment'
 
 const ManagementRequest = (props) => {
     const dispatch = useDispatch()
-    const [status, setStatus] = useState([{ id: null, status: 'Semua' }, { id: 7, status: 'Menunggu Konfirmasi' }, { id: 8, status: 'Pesanan Diproses' }, { id: 9, status: 'Pesanan Diterima' }, { id: 10, status: 'Dibatalkan' }])
+    const [status, setStatus] = useState([{ id: null, status: 'Semua' }, { id: 7, status: 'Antrian' }, { id: 8, status: 'On Process' }, { id: 9, status: 'Diterima' }, { id: 10, status: 'Rejected' }])
     const [page, setPage] = useState(1)
     const [limitData, setLimitData] = useState(5)
     const [activeIdx, setActiveIdx] = useState(0)
     const [filter, setFilter] = useState({ idstatus: null, fromDate: '', toDate: '' })
     const [loading, setLoading] = useState(true)
-    const [requestList, setRequestList] = useState([])
+    const [requestList, setRequestList] = useState([])    
 
-
-    // const { requestList } = useSelector((state) => {
-    //     return {
-    //         requestList: state.transactionAdminReducer.requestList
-    //     }
-    // })
-
-    useEffect(() => {
-        // dispatch(getRequest())
+    useEffect(() => {     
         getData()
     }, [])
 
@@ -209,11 +201,13 @@ const ManagementRequest = (props) => {
     const printRequest = () => {
         if (requestList.length > 0) {
             return requestList.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
+                let newAddedDate = moment(item.added_date).locale('id').format('LL')
+                let newUpdatedDate = moment(item.added_date).locale('id').format('LLL')
                 return (
                     <>
                         <Box mt='20px' p='4' border='2px solid #F3F4F5' borderRadius='10px'>
-                            <Box display='flex'>
-                                <Text>Request {item.added_date.substr(0, 10)}</Text>                                
+                            <Box display='flex'>                                
+                                <Text>Request {newAddedDate}</Text>                                
                                 {item.idstatus === 10  && <Badge colorScheme='red' variant={'subtle'} ml='2'>Rejected</Badge>}
                                 {item.idstatus === 8  && <Badge colorScheme='green' variant={'subtle'} ml='2'>On Process</Badge>}
                                 {item.idstatus === 7  && <Badge colorScheme='purple' variant={'subtle'} ml='2'>Antrian</Badge>}
@@ -221,7 +215,7 @@ const ManagementRequest = (props) => {
                                 <Text fontWeight='semibold' ml='2' mr='2'>{item.invoice}</Text>
                                 {
                                     item.updated_date &&
-                                    <Text marginLeft={'auto'}>Updated: {item.updated_date.slice(0, 19).replace('T', ' ')}</Text>
+                                    <Text marginLeft={'auto'}>Updated: {newUpdatedDate}</Text>
                                 }
                             </Box>
                             <Box mt='10px'>
