@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Navigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { getTransactionAction, uploadReceiptaAction } from '../redux/actions'
-
+import moment from 'moment'
 
 const ModalUploadReceipt = (props) => {
     const [receipt, setReceipt] = useState(null)
@@ -19,7 +19,7 @@ const ModalUploadReceipt = (props) => {
         props.onClose()
     }
     const btUnggah = async () => {
-        let tanggal = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        let tanggal = moment().format().slice(0, 19).replace('T', ' ');
         let temp = { ...receipt}
         let date = {date: tanggal}
         let formUnggah = new FormData()

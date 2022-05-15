@@ -16,10 +16,11 @@ const AdminRequest = () => {
     const [inIdwarehouse, setInIdwarehouse] = useState('')
     const [page, setPage] = useState(1)
     const [limitData, setLimitData] = useState(6)
-    const { productAdminList, warehouseList } = useSelector((state) => {
+    const { productAdminList, warehouseList, idwarehouse } = useSelector((state) => {
         return {
             productAdminList: state.transactionAdminReducer.productAdminList,
-            warehouseList: state.userReducer.warehouseList
+            warehouseList: state.userReducer.warehouseList,
+            idwarehouse: state.userReducer.idwarehouse
         }
     })
     useEffect(() => {
@@ -31,7 +32,13 @@ const AdminRequest = () => {
         if (warehouseList.length > 0) {
             return warehouseList.map((item, index) => {
                 return (
-                    <option key={item.idwarehouse} value={item.idwarehouse}>{item.nama}</option>
+                    <>
+                        {
+                            item.idwarehouse !== idwarehouse &&
+                            <option key={item.idwarehouse} value={item.idwarehouse}>{item.nama}</option>
+
+                        }
+                    </>
                 )
             })
         }

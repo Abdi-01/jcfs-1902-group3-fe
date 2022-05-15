@@ -8,7 +8,7 @@ const BtnOnTop = () => {
     }
     return (
         <>
-            <Box backgroundColor='#6B3C3B' display={window.scrollTo(0,0) ? 'none' : 'flex'} justifyContent='center'
+            <Box backgroundColor='#6B3C3B' display={'flex'} justifyContent='center'
              alignItems='center' borderRadius='full' boxSize='50px' cursor='pointer'
               position='fixed' bottom='20px' right='20px' onClick={onTop}>
                 <Icon as={GoArrowUp} boxSize='35px' color='white'  />

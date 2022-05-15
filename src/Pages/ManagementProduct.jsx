@@ -40,7 +40,7 @@ const ManagementProduct = (props) => {
             setLoading(true)
             setInterval(() => {
                 setLoading(false)
-            }, 500);
+            }, 1000);
         } catch (error) {
             console.log(error)
         }
