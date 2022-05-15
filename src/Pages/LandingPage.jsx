@@ -237,7 +237,7 @@ class LandingPage extends React.Component {
                         modalOpenForgot={this.state.modalOpenForgot}
                         btClose={() => this.setState({ modalOpenForgot: !this.state.modalOpenForgot })}
                     />
-                    <GoOnTop/>
+                    <GoOnTop />
                     <Box>
                         <Slider {...this.state.settingsCarousel}>
                             {this.printBanner()}
@@ -252,10 +252,33 @@ class LandingPage extends React.Component {
                         <div className='bg-container' style={{ width: "27vw", borderRadius: "9px", margin: "auto" }}>
                             <Tabs>
                                 <TabList>
-                                    <Tab className='col-6' style={{ fontWeight: 400, color: "#6b3c3b" }}>Register</Tab>
                                     <Tab className='col-6' style={{ fontWeight: 400, color: "#6b3c3b" }}>Login</Tab>
+                                    <Tab className='col-6' style={{ fontWeight: 400, color: "#6b3c3b" }}>Register</Tab>
                                 </TabList>
                                 <TabPanels>
+                                    <TabPanel>
+                                        <div style={{ textAlign: "center" }}>
+                                            <p style={{ fontWeight: 500, color: "#6b3c3b", fontSize: 27 }}>LOGIN</p>
+                                            <FormGroup style={{ marginTop: 25 }} >
+                                                <Input type="text" id="textEmail" placeholder="Email/Username"
+                                                    innerRef={(element) => this.emailLogin = element}
+                                                    style={{ width: 300, margin: "auto" }} />
+                                            </FormGroup>
+                                            <FormGroup style={{ marginTop: 25 }} >
+                                                <InputGroup style={{ width: 300, margin: "auto" }}>
+                                                    <Input id="textEmail" placeholder="Password"
+                                                        innerRef={(element) => this.passwordLogin = element} type={this.state.passType} />
+                                                    <InputGroupText style={{ cursor: "pointer" }} onClick={this.showPass}>
+                                                        {this.state.passShow}
+                                                    </InputGroupText>
+                                                </InputGroup>
+                                            </FormGroup>
+                                            <div>
+                                                <Button colorScheme='teal' style={{ color: "white", width: 300, borderRadius: 50, marginTop: 15 }} onClick={this.btLogin}>Login</Button>
+                                            </div>
+                                            <Button colorScheme='teal' variant='link' style={{ textAlign: "center", marginTop: 25 }} onClick={() => this.setState({ modalOpenForgot: !this.state.modalOpenForgot })}>Forgot Password</Button>
+                                        </div>
+                                    </TabPanel>
                                     <TabPanel>
                                         <div style={{ textAlign: "center" }}>
                                             <p style={{ fontWeight: 500, color: "#6b3c3b", fontSize: 27 }}>Register Account</p>
@@ -282,29 +305,6 @@ class LandingPage extends React.Component {
                                                 </FormGroup>
                                                 <Button colorScheme='teal' style={{ color: "white", width: 300, borderRadius: 50, marginTop: 15 }} onClick={this.btRegis}>Create Account</Button>
                                             </div>
-                                        </div>
-                                    </TabPanel>
-                                    <TabPanel>
-                                        <div style={{ textAlign: "center" }}>
-                                            <p style={{ fontWeight: 500, color: "#6b3c3b", fontSize: 27 }}>LOGIN</p>
-                                            <FormGroup style={{ marginTop: 25 }} >
-                                                <Input type="text" id="textEmail" placeholder="Email"
-                                                    innerRef={(element) => this.emailLogin = element}
-                                                    style={{ width: 300, margin: "auto" }} />
-                                            </FormGroup>
-                                            <FormGroup style={{ marginTop: 25 }} >
-                                                <InputGroup style={{ width: 300, margin: "auto" }}>
-                                                    <Input id="textEmail" placeholder="Password"
-                                                        innerRef={(element) => this.passwordLogin = element} type={this.state.passType} />
-                                                    <InputGroupText style={{ cursor: "pointer" }} onClick={this.showPass}>
-                                                        {this.state.passShow}
-                                                    </InputGroupText>
-                                                </InputGroup>
-                                            </FormGroup>
-                                            <div>
-                                                <Button colorScheme='teal' style={{ color: "white", width: 300, borderRadius: 50, marginTop: 15 }} onClick={this.btLogin}>Login</Button>
-                                            </div>
-                                            <Button colorScheme='teal' variant='link' style={{ textAlign: "center", marginTop: 25 }} onClick={() => this.setState({ modalOpenForgot: !this.state.modalOpenForgot })}>Forgot Password</Button>
                                         </div>
                                     </TabPanel>
                                 </TabPanels>
@@ -361,16 +361,16 @@ class LandingPage extends React.Component {
                     </Box>
                     <Box my='20px' display='flex' mx='20px' justifyContent='center'>
                         <Box mr='10px'>
-                            <Image src={inspirasi1} w='633px' h='791px' borderRadius='10px' boxShadow='md'/>
+                            <Image src={inspirasi1} w='633px' h='791px' borderRadius='10px' boxShadow='md' />
                         </Box>
                         <Box mr='10px'>
                             <Image src={inspirasi4} w='314px' h='314px' borderRadius='10px' boxShadow='md' />
-                            <Image src={inspirasi3} my='10px' w='314px' h='230px' borderRadius='10px' boxShadow='md'/>
-                            <Image src={inspirasi6} w='314px' h='230px' borderRadius='10px' boxShadow='md'/>
+                            <Image src={inspirasi3} my='10px' w='314px' h='230px' borderRadius='10px' boxShadow='md' />
+                            <Image src={inspirasi6} w='314px' h='230px' borderRadius='10px' boxShadow='md' />
                         </Box>
                         <Box>
-                            <Image src={inspirasi2} w='300px' h='390px' borderRadius='10px' boxShadow='md'/>
-                            <Image mt='10px' src={inspirasi5} w='300px' h='390px' borderRadius='10px' boxShadow='md'/>
+                            <Image src={inspirasi2} w='300px' h='390px' borderRadius='10px' boxShadow='md' />
+                            <Image mt='10px' src={inspirasi5} w='300px' h='390px' borderRadius='10px' boxShadow='md' />
                         </Box>
                     </Box>
                 </>
@@ -525,7 +525,7 @@ class LandingPage extends React.Component {
         return (
             <div>
                 {this.printLandingPage()}
-                <BtnOnTop/>
+                <BtnOnTop />
             </div>
         );
 
