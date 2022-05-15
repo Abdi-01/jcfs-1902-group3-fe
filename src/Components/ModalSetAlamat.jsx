@@ -5,33 +5,34 @@ import { BsCheckCircle } from 'react-icons/bs';
 import axios from 'axios';
 import { API_URL } from '../helper';
 import { getAddress } from '../redux/actions';
+import { Link } from 'react-router-dom';
 
 const ModalSetAlamat = (props) => {
     const [alamat, setAlamat] = useState([])
     let dispatch = useDispatch()
     useEffect(() => {
         getData()
-    },[])
+    }, [])
     const getData = async () => {
         try {
             let res = await dispatch(getAddress())
-            if(res.success){
+            if (res.success) {
                 setAlamat(res.data)
             }
         } catch (error) {
             console.log(error)
         }
     }
-    const btPilihAlamat = async(idaddress) => {
+    const btPilihAlamat = async (idaddress) => {
         try {
             let token = localStorage.getItem('data')
-            if(token){
-               let res =  await axios.patch(`${API_URL}/users/chooseaddress/${idaddress}`,{idstatus: 4},{
+            if (token) {
+                let res = await axios.patch(`${API_URL}/users/chooseaddress/${idaddress}`, { idstatus: 4 }, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 })
-                if(res.data.success){
+                if (res.data.success) {
                     props.closeModal()
                     getData()
                 }
@@ -81,15 +82,28 @@ const ModalSetAlamat = (props) => {
                     </>
                 )
             })
+        } else {
+            return (
+                <>
+                    <Box display='flex' justifyContent='center' my='15vh'>
+                        <Heading as='h3' size='md'>Anda belum memiliki alamat pengiriman</Heading>
+                    </Box>
+                    <Box display='flex' justifyContent='end' mb='3vh'>
+                        <Link to='/profile'> 
+                            <Button colorScheme='whatsapp'>Tambah alamat</Button>
+                        </Link>
+                    </Box>
+                </>
+            )
         }
     }
     return (
         <>
-        {/* {console.log('isi alamat', alamat)} */}
+            {/* {console.log('isi alamat', alamat)} */}
             <Modal isOpen={props.openModal} onClose={props.closeModal}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Pilih Alamat</ModalHeader>
+                    <ModalHeader mx='auto'>Pilih Alamat</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         {printAlamat()}

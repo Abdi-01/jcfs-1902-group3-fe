@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { API_URL } from '../helper'
 import { AiOutlineMinus, AiOutlinePlus, AiOutlineDelete } from 'react-icons/ai'
-import { deleteCartAction, getAddress, getCartAction, getOngkirAction, getWarehouseAdmin, getTransactionAction, getWarehouseAction, updateQtyCartAction } from '../redux/actions'
+import { deleteCartAction, getAddress, getCartAction, getOngkirAction, getWarehouseAdmin, getTransactionAction, getWarehouseAction, updateQtyCartAction, getProductWarehouseAction } from '../redux/actions'
 import ModalSetAlamat from '../Components/ModalSetAlamat'
 import axios from 'axios'
 import { Navigate } from 'react-router'
@@ -12,6 +12,7 @@ import { findNearest } from 'geolib'
 import Swal from 'sweetalert2'
 import GoOnTop from '../Components/GoOnTop'
 import BtnOnTop from '../Components/BtnOnTop'
+import moment from 'moment'
 
 const CheckoutPage = () => {
 
@@ -24,7 +25,6 @@ const CheckoutPage = () => {
     const [printWarehouse, setPrintWarehouse] = useState([])
     const [valuePrintWarehouse, setValuePrintWarehouse] = useState('')
     const [valueSelectKurir, setValueSelectKurir] = useState('')
-    const [getWarehouse, setGetWarehouse] = useState([])
     let dispatch = useDispatch()
 
     const { carts, defaultAlamat } = useSelector((state) => {
@@ -35,12 +35,11 @@ const CheckoutPage = () => {
     })
     useEffect(() => {
         getWarehouseTerdekat()
-        getDataWarehouse()
     }, [defaultAlamat])
 
     const btIncrement = (index, idcart) => {
         let temp = [...carts]
-        if (temp[index].qty < temp[index].stocks[0].qty) {
+        if (temp[index].qty < temp[index].total_stock_product) {
             temp[index].qty += 1
         }
         dispatch(updateQtyCartAction(idcart, { qty: temp[index].qty }))
@@ -92,7 +91,7 @@ const CheckoutPage = () => {
                                                 <Text mt='10px'>{item.qty} x Rp.{(item.products[0].harga.toLocaleString())}</Text>
                                             </Box>
                                             <Box mr='30px'>
-                                                <InputGroup w='95px'>
+                                                <InputGroup w='98px'>
                                                     <InputLeftElement children={<Icon as={AiOutlineMinus} />} cursor='pointer' onClick={() => btDecrement(index, item.idcart)} />
                                                     <Input value={item.qty} />
                                                     <InputRightElement children={<Icon as={AiOutlinePlus} />} cursor='pointer' onClick={() => btIncrement(index, item.idcart)} />
@@ -140,26 +139,12 @@ const CheckoutPage = () => {
                     )
                 }
             })
-        }
-    }
-    const getWarehouseTerdekat = async () => {
-        if (defaultAlamat.length > 0) {
-            let alamat = defaultAlamat.filter(item => item.idstatus === 4)
-            let dataCoordWarehouse = []
-            getWarehouse.forEach((item, index) => {
-                dataCoordWarehouse.push({ latitude: item.latitude, longitude: item.longitude })
-            })
-
-            let data = findNearest({ latitude: alamat[0].latitude, longitude: alamat[0].longitude }, dataCoordWarehouse)
-            try {
-                let res = await dispatch(getWarehouseAction(data))
-                if (res.success) {
-                    setPrintWarehouse(res.data)
-                }
-            } catch (error) {
-                console.log(error)
-            }
-
+        } else {
+            return (
+                <>
+                    <Text>Belum ada alamat yang dipilih</Text>
+                </>
+            )
         }
     }
     const printSelectWarehouse = () => {
@@ -171,11 +156,28 @@ const CheckoutPage = () => {
             })
         }
     }
-    const getDataWarehouse = async () => {
+    const getWarehouseTerdekat = async () => {
         try {
             let res = await axios.get(`${API_URL}/warehouse`)
             if (res.data.success) {
-                setGetWarehouse(res.data.dataWarehouse)
+                if (defaultAlamat.length > 0) {
+                    let alamat = defaultAlamat.filter(item => item.idstatus === 4)
+                    let dataCoordWarehouse = []
+                    if (res.data.dataWarehouse.length > 0) {
+                        res.data.dataWarehouse.forEach((item, index) => {
+                            dataCoordWarehouse.push({ latitude: item.latitude, longitude: item.longitude })
+                        })
+                        let data = findNearest({ latitude: alamat[0].latitude, longitude: alamat[0].longitude }, dataCoordWarehouse)
+                        try {
+                            let res = await dispatch(getWarehouseAction(data))
+                            if (res.success) {
+                                setPrintWarehouse(res.data)
+                            }
+                        } catch (error) {
+                            console.log(error)
+                        }
+                    }
+                }
             }
         } catch (error) {
             console.log(error)
@@ -202,9 +204,9 @@ const CheckoutPage = () => {
             }
         }
     }
-    
+
     const btCheckout = async () => {
-        let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        let date = moment().format().slice(0, 19).replace('T', ' ')
         let token = localStorage.getItem('data')
         let alamat = defaultAlamat.filter(item => item.idstatus === 4)
         let data = {
@@ -227,7 +229,8 @@ const CheckoutPage = () => {
                 })
                 if (res.data.success) {
                     dispatch(getCartAction())
-                    dispatch(getTransactionAction(6))
+                    dispatch(getTransactionAction())
+                    dispatch(getProductWarehouseAction())
                     setSelectedWarehouse(null)
                     setDataOngkir({})
                     Swal.fire(
@@ -307,7 +310,7 @@ const CheckoutPage = () => {
                                 </Box>
                             }
                             <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Select mb='10px' fontWeight='semibold' disabled={carts.length > 0 ? false : true} value={valuePrintWarehouse} onChange={(event) => selectNearWarehouse(event)}>
+                                <Select mb='10px' fontWeight='semibold' disabled={carts.length > 0 ? false : true} value={!carts.length ? '' : valuePrintWarehouse} onChange={(event) => selectNearWarehouse(event)}>
                                     <option value='' selected>pilih warehouse</option>
                                     {printSelectWarehouse()}
                                 </Select>
@@ -324,7 +327,7 @@ const CheckoutPage = () => {
                                 </Box>
                             }
                             <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Select mb='10px' fontWeight='semibold' value={valueSelectKurir} onChange={(event) => selectKurir(event)}>
+                                <Select mb='10px' fontWeight='semibold' value={!carts.length ? '' : valueSelectKurir} onChange={(event) => selectKurir(event)} disabled={carts.length > 0 ? false : true}>
                                     <option value=''>pilih pengiriman</option>
                                     <option value='jne'>JNE</option>
                                     <option value='tiki'>TIKI</option>
@@ -361,7 +364,7 @@ const CheckoutPage = () => {
                             <Box mt='15px'>
                                 <Center>
                                     {
-                                        carts.length > 0
+                                        carts.length > 0 && valueSelectKurir
                                             ?
                                             <Button colorScheme='blackAlpha' bgColor='#6B3C3B' w='100%' onClick={btCheckout}>Checkout</Button>
                                             :

@@ -5,7 +5,7 @@ import { AiOutlinePlusSquare, AiOutlineEdit, AiOutlineDelete } from 'react-icons
 import ModalAddProduct from '../Components/ModalAddProduct'
 import { useSelector, useDispatch } from 'react-redux'
 import ModalEditProduct from '../Components/ModalEditProduct'
-import { deleteProductAction, getProductWarehouseAction } from '../redux/actions'
+import { deleteProductAction, getProductWarehouseAction, sortingProductWarehouseAction } from '../redux/actions'
 import { Pagination } from '@mantine/core'
 import axios from 'axios'
 import { API_URL } from '../helper'
@@ -40,7 +40,7 @@ const ManagementProduct = (props) => {
             setLoading(true)
             setInterval(() => {
                 setLoading(false)
-            }, 500);
+            }, 1000);
         } catch (error) {
             console.log(error)
         }
@@ -137,19 +137,15 @@ const ManagementProduct = (props) => {
     }
     const btSorting = async (value) => {
         let temp = value.split('-')
-        let token = localStorage.getItem('data')
-        let res = await axios.get(`${API_URL}/products/admin?sort=${temp[0]}&order=${temp[1]}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        if (res.data.success) {
-            setDataProduct(res.data.dataProductWarehouse)
+        try {
+            await dispatch(sortingProductWarehouseAction(temp[0],temp[1]))
+        } catch (error) {
+            console.log(error)
         }
     }
     return (
         <>
-            {console.log('isi detail', dataProductAdmin)}
+            {/* {console.log('isi detail', dataProductAdmin)} */}
             {
                 loading === true ?
                     <LoadingPage />
@@ -165,7 +161,7 @@ const ManagementProduct = (props) => {
                                     <Box display='flex' justifyContent='space-between'>
                                         <Box display='flex'>
                                             <Input placeholder='cari Produk' w='15vw' onChange={(event) => setCariProduk({ ...cariProduk, namaProduk: event.target.value })} value={cariProduk.namaProduk} />
-                                            <Select placeholder='Kategori' w='10vw' mx='5px' onChange={(event) => setCariProduk({ ...cariProduk, kategori: event.target.value })} value={cariProduk.kategori}>
+                                            <Select placeholder='Kategori' w='14vw' mx='5px' onChange={(event) => setCariProduk({ ...cariProduk, kategori: event.target.value })} value={cariProduk.kategori}>
                                                 {printKategori()}
                                             </Select>
                                             <Button colorScheme='telegram' onClick={btFilter} mr='5px'>Filter</Button>

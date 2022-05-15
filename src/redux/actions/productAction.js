@@ -158,7 +158,7 @@ export const getProductWarehouseAction = (filter) => {
                             'Authorization': `Bearer ${token}`
                         }
                     })
-                } else if (filter.namaProduct) {
+                } else if (filter.namaProduk) {
                     res = await axios.get(`${API_URL}/products/admin?nama=${filter.namaProduk}`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
@@ -186,15 +186,46 @@ export const getProductWarehouseAction = (filter) => {
                 })
             }
 
+            if (res.data.success) {
+                dispatch({
+                    type: 'GET DATA PRODUCT WAREHOUSE',
+                    payload: res.data.dataProductWarehouse
+                })
+
+                return { success: res.data.success, data: res.data.dataProductWarehouse }
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+export const sortingProductWarehouseAction = (sort = null, order = null) => {
+    return async (dispatch) => {
+        try {
+            let token = localStorage.getItem('data')
+            let res
+            if(sort && order){
+                res = await axios.get(`${API_URL}/products/admin?sort=${sort}&order=${order}`, {
+                    headers : {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+            } else {
+                res = await axios.get(`${API_URL}/products/admin`, {
+                    headers : {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+            }
             if (res.data.success){
                 dispatch({
                     type: 'GET DATA PRODUCT WAREHOUSE',
                     payload: res.data.dataProductWarehouse
                 })
 
-                return {success: res.data.success, data: res.data.dataProductWarehouse}
+                return { success: res.data.success }
             }
-
         } catch (error) {
             console.log(error)
         }

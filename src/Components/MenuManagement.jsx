@@ -60,6 +60,7 @@ const MenuManagement = (props) => {
                                     idrole == 3 ?
                                         <Text ml='10px'>User</Text>
                                         :
+                                        idrole == 1 &&
                                         <Text ml='10px'>Super Admin</Text>
 
                             }

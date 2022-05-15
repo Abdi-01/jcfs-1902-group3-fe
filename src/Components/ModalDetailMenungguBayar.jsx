@@ -3,7 +3,7 @@ import React from 'react'
 import { API_URL } from '../helper'
 import moment from 'moment'
 
-const ModalDetailTransaksi = (props) => {
+const ModalDetailMenungguBayar = (props) => {
     const { invoice, added_date, warehouse, detail, ongkir, total_tagihan, pajak } = props.detailTransaksi
     const printDetail = () => {
         if (detail.length > 0) {
@@ -128,4 +128,4 @@ const ModalDetailTransaksi = (props) => {
     )
 }
 
-export default ModalDetailTransaksi
+export default ModalDetailMenungguBayar

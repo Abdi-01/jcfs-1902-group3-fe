@@ -1,5 +1,6 @@
 import axios from "axios"
 import { API_URL } from "../../helper"
+import { getProductWarehouseAction } from "./productAction"
 
 export const addCartAction = (data) => {
     return async (dispatch) => {
@@ -179,6 +180,8 @@ export const KonfirmasiPesananAction = (idtransaksi,data) => {
                     }
                 })
                 if(res.data.success){
+                    dispatch(getProductWarehouseAction())
+                    dispatch(getTransactionAction())
                     return {success: res.data.success}
                 }
             }

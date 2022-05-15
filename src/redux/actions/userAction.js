@@ -180,7 +180,7 @@ export const getWarehouse = () => {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            console.log(`dispatch getwarehouse`,res.data.warehouse)
+            // console.log(`dispatch getwarehouse`,res.data.warehouse)
             dispatch({
                 type: "GET_WAREHOUSE",
                 payload: res.data.warehouse
