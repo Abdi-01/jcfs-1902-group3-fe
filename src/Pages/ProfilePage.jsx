@@ -10,7 +10,7 @@ import { API_URL } from '../helper';
 import axios from 'axios';
 import ModalChangePassword from '../Components/ModalChangePassword';
 import ModalChangePhone from '../Components/ModalChangePhone';
-import { getAddress, onLogin } from '../redux/actions';
+import { getAddress, keepLoginAction, onLogin } from '../redux/actions';
 import Swal from 'sweetalert2';
 import ModalAddAddress from '../Components/ModalAddAddress';
 import { BsCheckCircle } from 'react-icons/bs';
@@ -52,23 +52,32 @@ class ProfilePage extends React.Component {
         let data = new FormData()
         data.append('photo', this.state.photo[0].file)
         console.log("cek data photo", data)
-        axios.patch(`${API_URL}/users/updatephoto`, data, {
-            headers: {
-                'Authorization': `Bearer ${token}`
+        Swal.fire({
+            title: 'Are you sure?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Ubah Foto Profil!'
+        }).then(async (result) => {
+            axios.patch(API_URL + `/users/updatephoto`, data, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('data')}`
+                }
+            })
+            this.props.keepLoginAction()
+            this.setState({
+                photo:[""]
+            })
+            // this.props.btClose()
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Berhasil!',
+                    'Foto Profil Berhasil Diubah',
+                    'success',
+                )
             }
         })
-            .then(res => {
-                console.log("cek res.data", res.data)
-                return Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Update Photo Berhasil',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-            }).then(result => {
-                window.location.reload()
-            })
             .catch((err) => {
                 console.log(err)
             })
@@ -430,4 +439,4 @@ const mapToProps = (state) => {
     }
 }
 
-export default connect(mapToProps, { getAddress, onLogin })(ProfilePage);
+export default connect(mapToProps, { getAddress, onLogin, keepLoginAction })(ProfilePage);

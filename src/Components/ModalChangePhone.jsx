@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Modal, ModalBody, ModalFooter, ModalHeader, Input } from 'reactstrap';
 import Swal from 'sweetalert2';
 import { API_URL } from '../helper';
+import { keepLoginAction } from '../redux/actions';
 
 class ModalChangePhone extends React.Component {
     constructor(props) {
@@ -20,27 +21,32 @@ class ModalChangePhone extends React.Component {
             no_telpon: this.inPhone.value
         }
 
-        axios.patch(API_URL + `/users/updatephone`, data, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('data')}`
+        Swal.fire({
+            title: 'Are you sure?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Ubah No Handphone!'
+        }).then(async (result) => {
+            axios.patch(API_URL + `/users/updatephone`, data, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('data')}`
+                }
+            })
+            this.props.keepLoginAction()
+            this.props.btClose()
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Berhasil!',
+                    'No Handphone Berhasil Diubah',
+                    'success',
+                )
             }
         })
-        .then(res => {
-            console.log("cek res.data", res.data)
-            return Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Update No Handphone Berhasil',
-                showConfirmButton: false,
-                timer: 1500
-            })                   
-        }).then(result => {
-            this.props.btClose()
-            window.location.reload()
-        })
-        .catch((err) => {
-            console.log(err)
-        })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     render() {
@@ -95,4 +101,4 @@ const mapToProps = ({ userReducer }) => {
     }
 }
 
-export default connect(mapToProps)(ModalChangePhone);
+export default connect(mapToProps,{keepLoginAction})(ModalChangePhone);

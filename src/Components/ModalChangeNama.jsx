@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Modal, ModalBody, ModalFooter, ModalHeader, Input } from 'reactstrap';
 import Swal from 'sweetalert2';
 import { API_URL } from '../helper';
+import { keepLoginAction } from '../redux/actions';
 
 class ModalChangeNama extends React.Component {
     constructor(props) {
@@ -15,29 +16,33 @@ class ModalChangeNama extends React.Component {
     onBtCancel = () => {
         this.props.btClose()
     }
-    onBtSave = () => {
+    onBtSave = async () => {
         let data = {
             nama: this.inNama.value
         }
-
-        axios.patch(API_URL + `/users/updatenama`, data, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('data')}`
+        Swal.fire({
+            title: 'Are you sure?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Ubah Nama!'
+        }).then(async (result) => {
+            axios.patch(API_URL + `/users/updatenama`, data, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('data')}`
+                }
+            })
+            this.props.keepLoginAction()
+            this.props.btClose()
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Berhasil!',
+                    'Nama Berhasil Diubah',
+                    'success',
+                )
             }
         })
-            .then(res => {
-                console.log("cek res.data", res.data)
-                return Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Update Nama Berhasil',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-            }).then(result => {
-                this.props.btClose()
-                window.location.reload()
-            })
             .catch((err) => {
                 console.log(err)
             })
@@ -95,4 +100,4 @@ const mapToProps = ({ userReducer }) => {
     }
 }
 
-export default connect(mapToProps)(ModalChangeNama);
+export default connect(mapToProps, { keepLoginAction })(ModalChangeNama);

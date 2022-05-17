@@ -29,25 +29,33 @@ class ModalAddAdmin extends React.Component {
             idwarehouse,
             no_telpon
         }
-        let token = localStorage.getItem('data')
-        let res = await axios.post(`${API_URL}/admin/addadmin`, data, {
-            headers: {
-                'Authorization': `Bearer ${token}`
+        let token = localStorage.getItem('data')        
+        Swal.fire({
+            title: 'Are you sure?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Create Admin!'
+        }).then(async (result) => {
+            await axios.post(`${API_URL}/admin/addadmin`, data, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Berhasil!',
+                    'Admin Berhasil di Buat',
+                    'success',
+                    )
+                    this.props.btClose()
+                    this.props.getAdmin() 
+                    this.setState({
+                        page:1
+                    })               
             }
         })
-            .then(res => {
-                console.log("cek res.data", res.data)
-                return Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Berhasil Tambah Admin',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-            }).then(result => {
-                this.props.btClose()
-                this.props.getAdmin()
-            })
             .catch((err) => {
                 console.log(err)
             })
