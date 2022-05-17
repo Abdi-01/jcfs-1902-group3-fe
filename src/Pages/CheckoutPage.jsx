@@ -50,7 +50,9 @@ const CheckoutPage = () => {
             temp[index].qty -= 1
         } else {
             let res = await dispatch(deleteCartAction(idcart))
-            if (res.success) {
+            if (!carts.length && res.success) {
+                setValuePrintWarehouse('')
+                setValueSelectKurir('')
                 setSelectedWarehouse(null)
                 setDataOngkir({})
             }
@@ -60,6 +62,8 @@ const CheckoutPage = () => {
     const btDeleteCart = async (idcart) => {
         let res = await dispatch(deleteCartAction(idcart))
         if (res.success) {
+            setValuePrintWarehouse('')
+            setValueSelectKurir('')
             setSelectedWarehouse(null)
             setDataOngkir({})
         }
@@ -327,7 +331,7 @@ const CheckoutPage = () => {
                                 </Box>
                             }
                             <Box mt='20px' borderBottom='5px solid #F3F4F5'>
-                                <Select mb='10px' fontWeight='semibold' value={!carts.length ? '' : valueSelectKurir} onChange={(event) => selectKurir(event)} disabled={carts.length > 0 ? false : true}>
+                                <Select mb='10px' fontWeight='semibold' value={!carts.length ? '' : valueSelectKurir} onChange={(event) => selectKurir(event)} disabled={carts.length > 0 && valuePrintWarehouse ? false : true}>
                                     <option value=''>pilih pengiriman</option>
                                     <option value='jne'>JNE</option>
                                     <option value='tiki'>TIKI</option>
