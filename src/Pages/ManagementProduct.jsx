@@ -169,8 +169,8 @@ const ManagementProduct = (props) => {
                                         </Box>
                                         <Box>
                                             <Select placeholder='Sorting berdasarkan' onChange={(event) => btSorting(event.target.value)}>
-                                                <option value="harga-asc">Harga Asc</option>
-                                                <option value="harga-desc">Harga Desc</option>
+                                                <option value="harga-asc">Harga Terrendah</option>
+                                                <option value="harga-desc">Harga Tertinggi</option>
                                                 <option value="nama-asc">A - Z</option>
                                                 <option value="nama-desc">Z - A</option>
                                                 <option value="added_date-desc">Reset</option>
