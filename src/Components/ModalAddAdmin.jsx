@@ -19,7 +19,7 @@ class ModalAddAdmin extends React.Component {
             nama: ""
         }
     }
-    
+
     btSimpan = async () => {
         const { password, email, username, idwarehouse, no_telpon } = this.state
         let data = {
@@ -29,7 +29,7 @@ class ModalAddAdmin extends React.Component {
             idwarehouse,
             no_telpon
         }
-        let token = localStorage.getItem('data')        
+        let token = localStorage.getItem('data')
         Swal.fire({
             title: 'Are you sure?',
             icon: 'warning',
@@ -38,22 +38,22 @@ class ModalAddAdmin extends React.Component {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, Create Admin!'
         }).then(async (result) => {
-            await axios.post(`${API_URL}/admin/addadmin`, data, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
             if (result.isConfirmed) {
+                await axios.post(`${API_URL}/admin/addadmin`, data, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
                 Swal.fire(
                     'Berhasil!',
                     'Admin Berhasil di Buat',
                     'success',
-                    )
-                    this.props.btClose()
-                    this.props.getAdmin() 
-                    this.setState({
-                        page:1
-                    })               
+                )
+                this.props.btClose()
+                this.props.getAdmin()
+                this.setState({
+                    page: 1
+                })
             }
         })
             .catch((err) => {

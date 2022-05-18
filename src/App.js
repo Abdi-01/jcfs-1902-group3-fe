@@ -71,7 +71,6 @@ function App() {
               <Route path='/product/checkout' element={<CheckoutPage />} />
               <Route path='/payment' element={<MenungguPembayaranPage />} />
               <Route path='/transaction/list' element={<ListTransactionPage />} />
-              <Route path="/resetpassword/:token" element={<ResetPasswordPage />} />              
               <Route path="/verification/:token" element={<VerifyPage />} />
             </>
             :
@@ -96,6 +95,7 @@ function App() {
                 :
                 <Route path="*" element={<LoadingPage />} />
         }
+        <Route path="/resetpassword/:token" element={<ResetPasswordPage />} />
         <Route path='/product/checkout' element={<CheckoutPage />} />
         <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
         <Route path="/" element={<LandingPage />} />

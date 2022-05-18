@@ -18,8 +18,8 @@ class AddAdminPage extends React.Component {
         ModalAddAdmin: false,
         page: 1,
         limit: 4,
-        selectedIndex:null,
-        dataEdit:{} 
+        selectedIndex: null,
+        dataEdit: {}
     }
 
     componentDidMount() {
@@ -41,21 +41,21 @@ class AddAdminPage extends React.Component {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, Delete!'
         }).then(async (result) => {
-            axios.delete(`${API_URL}/admin/deleteadmin/${iduser}`,{
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
             if (result.isConfirmed) {
+                await axios.delete(`${API_URL}/admin/deleteadmin/${iduser}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
                 Swal.fire(
                     'Berhasil!',
                     'Admin Berhasil di Delete',
                     'success',
-                    )
-                    this.props.getAdmin() 
-                    this.setState({
-                        page:1
-                    })               
+                )
+                this.props.getAdmin()
+                this.setState({
+                    page: 1
+                })
             }
         })
             .catch((err) => {
@@ -122,7 +122,7 @@ class AddAdminPage extends React.Component {
                                         colorScheme={'blackAlpha'}
                                         color='#6b3c3b'
                                         variant='outline'
-                                        onClick={() => this.setState({ ModalUpdateAdmin: !this.state.ModalUpdateAdmin, selectedIndex:index,dataEdit:value })}
+                                        onClick={() => this.setState({ ModalUpdateAdmin: !this.state.ModalUpdateAdmin, selectedIndex: index, dataEdit: value })}
                                     >
                                         Edit Admin
                                     </Button>
@@ -155,9 +155,9 @@ class AddAdminPage extends React.Component {
                 <ModalUpdateAdmin
                     ModalUpdateAdmin={this.state.ModalUpdateAdmin}
                     btClose={() => this.setState({ ModalUpdateAdmin: !this.state.ModalUpdateAdmin })}
-                    selectedIndex = {this.state.selectedIndex}
-                    dataEdit = {this.state.dataEdit}
-                />                
+                    selectedIndex={this.state.selectedIndex}
+                    dataEdit={this.state.dataEdit}
+                />
 
                 <Box style={{ padding: '3%' }}>
                     <Box style={{ textAlign: "right" }}>
