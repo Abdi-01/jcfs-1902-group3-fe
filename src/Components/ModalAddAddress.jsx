@@ -19,11 +19,12 @@ class ModalAddAddress extends React.Component {
             idkota: null,
             kecamatan: '',
             kode_pos: null,
-            latitude: this.props.latitude,
-            longitude: this.props.longitude
+            latitude: null,
+            longitude: null
 
         }
     }
+
     btSimpan = async () => {
         const { nama_penerima, alamat, no_telpon, idprovinsi, idkota, kecamatan, kode_pos, latitude, longitude } = this.state
         let data = {
@@ -37,7 +38,8 @@ class ModalAddAddress extends React.Component {
             latitude: this.props.latitude ? this.props.latitude : latitude,
             longitude: this.props.longitude ? this.props.longitude : longitude
         }
-        if (nama_penerima === '' || alamat === '' || no_telpon === null || idprovinsi === null || idkota === null || kecamatan === '' || kode_pos === null || latitude === '' || longitude === '') {
+        console.log('isi data alamat', data)
+        if (data.nama_penerima === '' || data.alamat === '' || data.no_telpon === null || data.idprovinsi === null || data.idkota === null || data.kecamatan === '' || data.kode_pos === null || data.latitude === null || data.longitude === null) {
             Swal.fire(
                 'Warning!',
                 'Semua data harus di isi',
@@ -58,6 +60,17 @@ class ModalAddAddress extends React.Component {
                 )
                 this.props.btClose();
                 this.props.getAddress();
+                this.setState({
+                    nama_penerima: '',
+                    alamat: '',
+                    no_telpon: null,
+                    idprovinsi: null,
+                    idkota: null,
+                    kecamatan: '',
+                    kode_pos: null,
+                    latitude: null,
+                    longitude: null
+                })
             }
         }
 
@@ -121,8 +134,8 @@ class ModalAddAddress extends React.Component {
             idkota: null,
             kecamatan: '',
             kode_pos: null,
-            latitude: '',
-            longitude: ''
+            latitude: null,
+            longitude: null
         })
     }
     render() {
@@ -141,19 +154,19 @@ class ModalAddAddress extends React.Component {
                     <ModalBody>
                         <FormGroup>
                             <Label>Nama Penerima</Label>
-                            <Input placeholder='nama penerima' onChange={(event) => this.handleInput(event, 'nama_penerima')} defaultValue={this.state.nama_penerima} />
+                            <Input placeholder='nama penerima' onChange={(event) => this.handleInput(event, 'nama_penerima')} value={this.state.nama_penerima} />
                         </FormGroup>
                         <InputGroup className='d-flex justify-content-between '>
                             <FormGroup style={{ width: '400px' }}>
                                 <Label>Provinsi</Label>
-                                <Input type='select' placeholder='Provinsi' onChange={(event) => this.handleKota(event)} defaultValue={this.state.provinsi}>
+                                <Input type='select' placeholder='Provinsi' onChange={(event) => this.handleKota(event)} DefaultValue={this.state.provinsi}>
                                     <option value='Provinsi' selected>Pilih Provinsi</option>
                                     {this.printProvinsi()}
                                 </Input>
                             </FormGroup>
                             <FormGroup style={{ width: '300px' }}>
                                 <Label>Kota</Label>
-                                <Input type='select' placeholder='Kota' onChange={(event) => this.handleInput(event, 'idkota')} defaultValue={this.state.kota}>
+                                <Input type='select' placeholder='Kota' onChange={(event) => this.handleInput(event, 'idkota')} DefaultValue={this.state.kota}>
                                     <option value='Kota' selected>Pilih Kota</option>
                                     {this.printKota()}
                                 </Input>
@@ -162,20 +175,20 @@ class ModalAddAddress extends React.Component {
                         <InputGroup className='d-flex justify-content-between'>
                             <FormGroup>
                                 <Label>Kecamatan</Label>
-                                <Input type='text' placeholder='kecamatan' onChange={(event) => this.handleInput(event, 'kecamatan')} defaultValue={this.state.kecamatan} />
+                                <Input type='text' placeholder='kecamatan' onChange={(event) => this.handleInput(event, 'kecamatan')} value={this.state.kecamatan} />
                             </FormGroup>
                             <FormGroup >
                                 <Label>Kode Pos</Label>
-                                <Input type='number' placeholder='kode pos' onChange={(event) => this.handleInput(event, 'kode_pos')} defaultValue={this.state.kode_pos} />
+                                <Input type='number' placeholder='kode pos' onChange={(event) => this.handleInput(event, 'kode_pos')} value={this.state.kode_pos} />
                             </FormGroup>
                             <FormGroup>
                                 <Label>No Telepon</Label>
-                                <Input type='number' placeholder='no telepon' onChange={(event) => this.handleInput(event, 'no_telpon')} defaultValue={this.state.no_telpon} />
+                                <Input type='number' placeholder='no telepon' onChange={(event) => this.handleInput(event, 'no_telpon')} value={this.state.no_telpon} />
                             </FormGroup>
                         </InputGroup>
                         <FormGroup>
                             <Label>Alamat Lengkap</Label>
-                            <Input type='textarea' placeholder='alamat lengkap' onChange={(event) => this.handleInput(event, 'alamat')} defaultValue={this.state.alamat} />
+                            <Input type='textarea' placeholder='alamat lengkap' onChange={(event) => this.handleInput(event, 'alamat')} value={this.state.alamat} />
                         </FormGroup>
                         <FormGroup>
                             <Label>Koordinat Alamat</Label>

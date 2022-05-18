@@ -97,7 +97,6 @@ const ListTransactionPage = (props) => {
     const printTransaksi = () => {
         if (transaksi.length > 0) {
             return transaksi.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
-                let newAddedDate = moment(item.added_date).locale('id').format('LL')
                 return (
                     <>
                         {
@@ -105,7 +104,7 @@ const ListTransactionPage = (props) => {
                             <Box mt='20px' p='4' border='2px solid #F3F4F5' borderRadius='10px'>
                                 <Box display='flex'>
                                     {/* <Text>Belanja {item.added_date.substr(0, 10)}</Text> */}
-                                    <Text>Belanja {moment(item.added_date).locale('id').format('LL')}</Text>
+                                    <Text>Belanja {moment(item.added_date.substr(0, 10)).locale('id').format(`LL`)}</Text>
                                     <Text mx='10px'><Badge variant='subtle' colorScheme={item.idstatus === 7 ? 'yellow' : item.idstatus === 8 ? 'messenger' : item.idstatus === 10 ? 'red' : 'green'}>{item.status}</Badge></Text>
                                     <Text fontWeight='semibold'>{item.invoice}</Text>
                                 </Box>

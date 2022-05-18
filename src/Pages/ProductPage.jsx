@@ -42,6 +42,7 @@ const ProductPage = () => {
                 setJenisProduct(dataJenis.dataJenisProduct)
                 setProduct(dataProduct.data)
                 setLoading(false)
+                setPage(1)
             } else {
                 setLoading(false)
             }
@@ -88,7 +89,7 @@ const ProductPage = () => {
         }
     }
     const printProduct = () => {
-        {console.log(`cek product page`, product)}
+        // {console.log(`cek product page`, product)}
         if (product.length > 0) {
             return product.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
                 return (
@@ -150,6 +151,7 @@ const ProductPage = () => {
                 setValueMaterial('')
                 setValueJenis('')
                 setLoading(false)
+                setPage(1)
             }
         } catch (error) {
             console.log(error)
@@ -161,6 +163,7 @@ const ProductPage = () => {
             let res = await dispatch(sortingProductAction(temp[0], temp[1]))
             if (res.success) {
                 setProduct(res.data)
+                setPage(1)
             }
         } catch (error) {
             console.log(error)
@@ -226,8 +229,8 @@ const ProductPage = () => {
                         <Box marginX={'15vw'} marginY={'5vh'} >
                             <Box w='250px' ml='auto' my='30px'>
                                 <Select placeholder='Sorting berdasarkan' onChange={(event) => handleSort(event.target.value)}>
-                                    <option value="harga-asc">Harga Asc</option>
-                                    <option value="harga-desc">Harga Desc</option>
+                                    <option value="harga-asc">Harga Terendah</option>
+                                    <option value="harga-desc">Harga Tertinggi</option>
                                     <option value="nama-asc">A - Z</option>
                                     <option value="nama-desc">Z - A</option>
                                     <option value="idproduct-asc">Reset</option>
