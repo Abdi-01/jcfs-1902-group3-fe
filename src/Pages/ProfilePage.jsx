@@ -60,17 +60,17 @@ class ProfilePage extends React.Component {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, Ubah Foto Profil!'
         }).then(async (result) => {
-            axios.patch(API_URL + `/users/updatephoto`, data, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('data')}`
-                }
-            })
-            this.props.keepLoginAction()
-            this.setState({
-                photo:[""]
-            })
             // this.props.btClose()
             if (result.isConfirmed) {
+                await axios.patch(API_URL + `/users/updatephoto`, data, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('data')}`
+                    }
+                })
+                this.props.keepLoginAction()
+                this.setState({
+                    photo: [""]
+                })
                 Swal.fire(
                     'Berhasil!',
                     'Foto Profil Berhasil Diubah',
@@ -415,8 +415,8 @@ class ProfilePage extends React.Component {
                             }
                         </Box>
                     </Box>
-                    <GoOnTop/>
-                    <BtnOnTop/>
+                    <GoOnTop />
+                    <BtnOnTop />
                 </Box>
             </Box>
         );

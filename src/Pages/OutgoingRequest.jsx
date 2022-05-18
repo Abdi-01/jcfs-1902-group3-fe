@@ -211,7 +211,7 @@ const OutgoingRequest = (props) => {
         if (outgoingList.length > 0) {
             return outgoingList.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
                 let newAddedDate = moment(item.added_date).locale('id').format('LL')
-                let newUpdatedDate = moment(item.updated_date).locale('id').format('LLL')
+                // let newUpdatedDate = moment(item.updated_date).locale('id').format('LL')
                 return (
                     <>
                         <Box mt='20px' p='4' border='2px solid #F3F4F5' borderRadius='10px'>
@@ -224,7 +224,7 @@ const OutgoingRequest = (props) => {
                                 <Text fontWeight='semibold' ml='2' mr='2'>{item.invoice}</Text>
                                 {
                                     item.updated_date &&
-                                    <Text marginLeft={'auto'}>Updated: {newUpdatedDate}</Text>
+                                    <Text marginLeft={'auto'}>Updated: {moment(item.updated_date).locale('id').format('LL')}</Text>
                                 }
                             </Box>
                             <Box mt='10px'>

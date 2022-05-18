@@ -202,7 +202,7 @@ const ManagementRequest = (props) => {
         if (requestList.length > 0) {
             return requestList.slice(page > 1 ? (page - 1) * limitData : page - 1, page * limitData).map((item, index) => {
                 let newAddedDate = moment(item.added_date).locale('id').format('LL')
-                let newUpdatedDate = moment(item.updated_date.substr(0,10)).locale('id').format('LLL')
+                // let newUpdatedDate = moment(item.updated_date.substr(0,10)).locale('id').format('LLL')
                 return (
                     <>
                         <Box mt='20px' p='4' border='2px solid #F3F4F5' borderRadius='10px'>
@@ -215,7 +215,7 @@ const ManagementRequest = (props) => {
                                 <Text fontWeight='semibold' ml='2' mr='2'>{item.invoice}</Text>
                                 {
                                     item.updated_date &&
-                                    <Text marginLeft={'auto'}>Updated: {newUpdatedDate}</Text>
+                                    <Text marginLeft={'auto'}>Updated: {moment(item.updated_date.substr(0,10)).locale('id').format('LL')}</Text>
                                 }
                             </Box>
                             <Box mt='10px'>

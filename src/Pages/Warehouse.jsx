@@ -54,35 +54,35 @@ class WarehousePage extends React.Component {
     }
 
     deleteWarehouse = (idwarehouse) => {
-        let token = localStorage.getItem('data')        
-            Swal.fire({
-                title: 'Are you sure?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, Delete!'
-            }).then(async (result) => {
-                axios.delete(`${API_URL}/admin/deletewarehouse/${idwarehouse}`, {
+        let token = localStorage.getItem('data')
+        Swal.fire({
+            title: 'Are you sure?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Delete!'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                await axios.delete(`${API_URL}/admin/deletewarehouse/${idwarehouse}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 })
-                if (result.isConfirmed) {
-                    Swal.fire(
-                        'Berhasil!',
-                        'Warehouse Berhasil di Delete',
-                        'success',
-                        )
-                        this.props.getWarehouse() 
-                        this.setState({
-                            page:1
-                        })               
-                }
-            })
-                .catch((err) => {
-                    console.log(err)
+                Swal.fire(
+                    'Berhasil!',
+                    'Warehouse Berhasil di Delete',
+                    'success',
+                )
+                this.props.getWarehouse()
+                this.setState({
+                    page: 1
                 })
+            }
+        })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     printWarehouseList = () => {
