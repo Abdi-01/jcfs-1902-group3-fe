@@ -21,7 +21,7 @@ class ModalAddWarehouse extends React.Component {
             kode_pos: null,
             latitude: '',
             longitude: '',
-            idstatus:1                  
+            idstatus: 1
         }
     }
     // nama_penerima, alamat, no_telpon, provinsi, kota, kecamatan, kode_pos
@@ -36,38 +36,38 @@ class ModalAddWarehouse extends React.Component {
             kode_pos,
             latitude,
             longitude,
-            idstatus            
+            idstatus
         }
-        let token = localStorage.getItem('data')        
-            Swal.fire({
-                title: 'Are you sure?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, Create Warehouse!'
-            }).then(async (result) => {
+        let token = localStorage.getItem('data')
+        Swal.fire({
+            title: 'Are you sure?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Create Warehouse!'
+        }).then( async (result) => {
+            if (result.isConfirmed) {
                 await axios.post(`${API_URL}/admin/addwarehouse`, data, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 })
-                if (result.isConfirmed) {
-                    Swal.fire(
-                        'Berhasil!',
-                        'Warehouse Berhasil di Buat',
-                        'success',
-                        )
-                        this.props.btClose()
-                        this.props.getWarehouse() 
-                        this.setState({
-                            page:1
-                        })               
-                }
-            })
-                .catch((err) => {
-                    console.log(err)
+                Swal.fire(
+                    'Berhasil!',
+                    'Warehouse Berhasil di Buat',
+                    'success',
+                )
+                this.props.btClose()
+                this.props.getWarehouse()
+                this.setState({
+                    page: 1
                 })
+            }
+        })
+            .catch((err) => {
+                console.log(err)
+            })
     }
     getData = async () => {
         try {
@@ -120,7 +120,7 @@ class ModalAddWarehouse extends React.Component {
     }
 
 
-    render() {        
+    render() {
         return (
             <div>
                 <Modal
@@ -133,7 +133,7 @@ class ModalAddWarehouse extends React.Component {
                     <ModalHeader style={{ margin: "auto" }}>
                         Add Warehouse
                     </ModalHeader>
-                    <ModalBody>                       
+                    <ModalBody>
                         <FormGroup>
                             <Label>Nama</Label>
                             <Input placeholder='nama' onChange={(event) => this.handleInput(event, 'nama')} />
@@ -156,25 +156,25 @@ class ModalAddWarehouse extends React.Component {
                         </InputGroup>
                         <InputGroup className='d-flex justify-content-between' style={{ justifyContent: "space-between" }}>
                             <Box className='col-3'>
-                                <FormGroup style={{width:"90%"}}>
+                                <FormGroup style={{ width: "90%" }}>
                                     <Label>Kecamatan</Label>
                                     <Input type='text' placeholder='kecamatan' onChange={(event) => this.handleInput(event, 'kecamatan')} />
                                 </FormGroup>
                             </Box>
                             <Box className='col-3'>
-                                <FormGroup style={{width:"90%"}}>
+                                <FormGroup style={{ width: "90%" }}>
                                     <Label>Kode Pos</Label>
                                     <Input type='number' placeholder='kode pos' onChange={(event) => this.handleInput(event, 'kode_pos')} />
                                 </FormGroup>
                             </Box>
                             <Box className='col-3'>
-                                <FormGroup style={{width:"90%"}}>
+                                <FormGroup style={{ width: "90%" }}>
                                     <Label>Latitude</Label>
                                     <Input type='text' placeholder='latitude' onChange={(event) => this.handleInput(event, 'latitude')} />
                                 </FormGroup>
                             </Box>
                             <Box className='col-3'>
-                                <FormGroup style={{width:"90%"}}>
+                                <FormGroup style={{ width: "90%" }}>
                                     <Label>Longitude</Label>
                                     <Input type='text' placeholder='longitude' onChange={(event) => this.handleInput(event, 'longitude')} />
                                 </FormGroup>
@@ -185,10 +185,10 @@ class ModalAddWarehouse extends React.Component {
                             <Input type='textarea' placeholder='alamat lengkap' onChange={(event) => this.handleInput(event, 'alamat')} />
                         </FormGroup>
                         <div style={{ float: "right", marginTop: 20 }}>
-                            <Button 
-                            colorScheme={'teal'}                            
-                            style={{ borderRadius: 10 }} 
-                            onClick={this.btSimpan} 
+                            <Button
+                                colorScheme={'teal'}
+                                style={{ borderRadius: 10 }}
+                                onClick={this.btSimpan}
                             >
                                 Simpan
                             </Button>
