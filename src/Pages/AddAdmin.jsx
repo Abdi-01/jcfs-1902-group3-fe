@@ -3,6 +3,7 @@ import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
 import { ButtonGroup, Card, CardBody, CardSubtitle, CardText, CardTitle, Input } from 'reactstrap';
+import Swal from 'sweetalert2';
 import ModalAddAdmin from '../Components/ModalAddAdmin';
 import ModalUpdateAdmin from '../Components/ModalUpdateAdmin';
 import { API_URL } from '../helper';
@@ -27,15 +28,37 @@ class AddAdminPage extends React.Component {
 
     deleteAdmin = (iduser) => {
         let token = localStorage.getItem('data')
-        axios.delete(`${API_URL}/admin/deleteadmin/${iduser}`,{
-            headers: {
-                'Authorization': `Bearer ${token}`
+        // axios.delete(`${API_URL}/admin/deleteadmin/${iduser}`,{
+        //     headers: {
+        //         'Authorization': `Bearer ${token}`
+        //     }
+        // })
+        Swal.fire({
+            title: 'Are you sure?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Delete!'
+        }).then(async (result) => {
+            axios.delete(`${API_URL}/admin/deleteadmin/${iduser}`,{
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Berhasil!',
+                    'Admin Berhasil di Delete',
+                    'success',
+                    )
+                    this.props.getAdmin() 
+                    this.setState({
+                        page:1
+                    })               
             }
         })
-            .then((res)=>{
-                this.props.getAdmin()
-            })
-            .catch((err)=>{
+            .catch((err) => {
                 console.log(err)
             })
     }

@@ -3,6 +3,7 @@ import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Card, CardBody, CardSubtitle, CardText, CardTitle, ButtonGroup } from 'reactstrap';
+import Swal from 'sweetalert2';
 import ModalAddWarehouse from '../Components/ModalAddWarehouse';
 import ModalUpdateWarehouse from '../Components/ModalUpdateWarehouse';
 import { API_URL } from '../helper';
@@ -14,7 +15,7 @@ class WarehousePage extends React.Component {
     }
 
     componentDidMount() {
-        getWarehouse()
+        this.props.getWarehouse()
     }
     state = {
         ModalAddWarehouse: false,
@@ -53,18 +54,35 @@ class WarehousePage extends React.Component {
     }
 
     deleteWarehouse = (idwarehouse) => {
-        let token = localStorage.getItem('data')
-        axios.delete(`${API_URL}/admin/deletewarehouse/${idwarehouse}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((res) => {
-                this.props.getWarehouse()
+        let token = localStorage.getItem('data')        
+            Swal.fire({
+                title: 'Are you sure?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete!'
+            }).then(async (result) => {
+                axios.delete(`${API_URL}/admin/deletewarehouse/${idwarehouse}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Berhasil!',
+                        'Warehouse Berhasil di Delete',
+                        'success',
+                        )
+                        this.props.getWarehouse() 
+                        this.setState({
+                            page:1
+                        })               
+                }
             })
-            .catch((err) => {
-                console.log(err)
-            })
+                .catch((err) => {
+                    console.log(err)
+                })
     }
 
     printWarehouseList = () => {

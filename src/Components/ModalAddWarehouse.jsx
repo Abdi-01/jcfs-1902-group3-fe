@@ -38,28 +38,36 @@ class ModalAddWarehouse extends React.Component {
             longitude,
             idstatus            
         }
-        let token = localStorage.getItem('data')
-        let res = await axios.post(`${API_URL}/admin/addwarehouse`, data, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(res => {
-                console.log("cek res.data", res.data)
-                return Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Berhasil Tambah Warehouse',
-                    showConfirmButton: false,
-                    timer: 1500
+        let token = localStorage.getItem('data')        
+            Swal.fire({
+                title: 'Are you sure?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Create Warehouse!'
+            }).then(async (result) => {
+                await axios.post(`${API_URL}/admin/addwarehouse`, data, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 })
-            }).then(result => {
-                this.props.btClose()
-                this.props.getWarehouse()
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Berhasil!',
+                        'Warehouse Berhasil di Buat',
+                        'success',
+                        )
+                        this.props.btClose()
+                        this.props.getWarehouse() 
+                        this.setState({
+                            page:1
+                        })               
+                }
             })
-            .catch((err) => {
-                console.log(err)
-            })
+                .catch((err) => {
+                    console.log(err)
+                })
     }
     getData = async () => {
         try {
@@ -112,8 +120,7 @@ class ModalAddWarehouse extends React.Component {
     }
 
 
-    render() {
-        // console.log("cek provinsi", this.state.provinsi)
+    render() {        
         return (
             <div>
                 <Modal
@@ -126,8 +133,7 @@ class ModalAddWarehouse extends React.Component {
                     <ModalHeader style={{ margin: "auto" }}>
                         Add Warehouse
                     </ModalHeader>
-                    <ModalBody>
-                        {/* <Input type='textarea' innerRef={(element) => this.inNama_Penerima = element} /> */}
+                    <ModalBody>                       
                         <FormGroup>
                             <Label>Nama</Label>
                             <Input placeholder='nama' onChange={(event) => this.handleInput(event, 'nama')} />
@@ -200,6 +206,5 @@ const mapToProps = (state) => {
         warehouseList: state.userReducer.warehouseList,
     }
 }
-// nama_penerima, alamat, no_telpon, provinsi, kota, kecamatan, kode_pos
 
 export default connect(mapToProps, { getWarehouse })(ModalAddWarehouse);
