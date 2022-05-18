@@ -71,39 +71,40 @@ function App() {
               <Route path='/product/checkout' element={<CheckoutPage />} />
               <Route path='/payment' element={<MenungguPembayaranPage />} />
               <Route path='/transaction/list' element={<ListTransactionPage />} />
+              <Route path="/resetpassword/:token" element={<ResetPasswordPage />} />
+              <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
+              <Route path="/verification/:token" element={<VerifyPage />} />
             </>
             :
             idrole == 2 ?
-            <>
-                <Route path='/transaction/admin/list' element={<ListTransactionWarehousePage />} />
-                <Route path='/management/product' element={<ManagementProduct />} />                
-                <Route path='/adminrequest' element={<AdminRequest />} />                
-                <Route path='/requeststock' element={<RequestStockPage />} />                
-              </>
-              :
-              idrole == 1?
               <>
                 <Route path='/transaction/admin/list' element={<ListTransactionWarehousePage />} />
-                <Route path='/warehouse' element={<WarehousePage />} />
-                <Route path='/addadmin' element={<AddAdminPage />} />
+                <Route path='/management/product' element={<ManagementProduct />} />
+                <Route path='/adminrequest' element={<AdminRequest />} />
+                <Route path='/requeststock' element={<RequestStockPage />} />
+                <Route path='/detail/productreq' element={<DetailProductRequest />} />
+                <Route path='/management-request' element={<ManagementRequest />} />
+                <Route path='/outgoing-request' element={<OutgoingRequest />} />
               </>
-          :
-          <Route path="*" element={<LoadingPage />} />
+              :
+              idrole == 1 ?
+                <>
+                  <Route path='/transaction/admin/list' element={<ListTransactionWarehousePage />} />
+                  <Route path='/warehouse' element={<WarehousePage />} />
+                  <Route path='/addadmin' element={<AddAdminPage />} />
+                  <Route path='/management-request' element={<ManagementRequest />} />
+                </>
+                :
+                <Route path="*" element={<LoadingPage />} />
         }
         <Route path='/product/checkout' element={<CheckoutPage />} />
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/resetpassword/:token" element={<ResetPasswordPage />} />
-        <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/verification/:token" element={<VerifyPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path='/product' element={<ProductPage />} />
         <Route path='/detail/product' element={<DetailProduct />} />
-        <Route path='/detail/productreq' element={<DetailProductRequest />} />
-        <Route path='/management-request' element={<ManagementRequest />} />
-        <Route path='/outgoing-request' element={<OutgoingRequest />} />
-        <Route path="*" element={<NotFoundPage />} />        
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
     </>
